@@ -22,14 +22,14 @@ const buildHash = (() => {
   if (process.env.NODE_ENV === 'production') {
     try {
       return computeContentBuildHash(__dirname)
-    } catch (e) {
+    } catch {
       return 'dev'
     }
   }
   try {
     const wheelPath = path.resolve(__dirname, 'public/patentlint-1.0.0-py3-none-any.whl')
     return `dev${statSync(wheelPath).mtimeMs}`
-  } catch (e) {
+  } catch {
     return 'dev'
   }
 })()

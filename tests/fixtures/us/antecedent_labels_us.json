@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 58,
+    "current_round": 59,
     "created": "2026-05-03T16:33:29.985652+00:00",
     "source": "tests/eval/phase2b_results_us.json",
     "source_phase": "Phase 2b LLM ensemble (Sonnet 4.6 + gpt-5-mini + Opus 4.7 escalation)",
@@ -613,6 +613,35 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-09-29T14:09:38.571996+00:00"
+      },
+      {
+        "round": 59,
+        "name": "r59_known_intro_predicate_tail",
+        "description": "US R59 - a reference that ran on into a predicate resolves against the drafter's own introduction of its head (reports #823-#959 cluster: drops / returns / only / writes / issues / spans / further cause / communicate / clamp). The 38 US antecedent FP reports were one SIDE: did_you_mean already named the introduced head in nearly every one. Last-resort additive tier after R58, so it can only silence. The head gets the walker's full basis test (ancestor intro, or a same-claim intro BEFORE the reference - an unordered check silenced gold-legit), quantifier heads excluded. The tail decides, measured on gold: unconditional silenced 220 gold-legit (compound nouns: axes / data / frequency); shipped classes = closed adverbs + adverb suffixes, -ing + object, a lone 3sg verb + object or preposition, and a base-form verb only after a plural or coordinated subject (grammar, not a word list). Withheld with numbers: base-form verbs after a singular subject (83 FP / 32 legit before a preposition - they read as compound nouns), multi-word 3sg tails (104 / 10). Result: silenced_walker_fp 231, coverage 2, unjudged 79, silenced_legit 11 read one by one (4 gold errors - head properly introduced; 3 duplicates whose claims stay flagged; participle tails on introduced heads; 1 gray article-less intro), UNPAIRED-NEW 0, real examiner guard LOST 0 / 1,383 recalled. US-only mechanism: CN/TW resolve over-captured tails through their own prefix fallback; no CJK mirror.",
+        "user_attested_issues": [
+          "#824",
+          "#825",
+          "#863",
+          "#864",
+          "#867",
+          "#868",
+          "#881",
+          "#904",
+          "#905",
+          "#929",
+          "#930",
+          "#931",
+          "#932",
+          "#937",
+          "#938",
+          "#942",
+          "#943",
+          "#957",
+          "#958",
+          "#959"
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-10-23T12:04:43.851147+00:00"
       }
     ],
     "last_updated": "2026-08-01"

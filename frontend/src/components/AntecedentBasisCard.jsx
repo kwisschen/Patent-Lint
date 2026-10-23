@@ -7,7 +7,7 @@ import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
 import { composeFeedback, sendReport, excerptAroundReference, candidateIntroExcerpt, SAMPLE_SIZE } from '../lib/feedback'
-import { useFeedback } from './FeedbackPicker'
+import { useFeedback } from '../hooks/useFeedback'
 import ReportModal from './ReportModal'
 
 // CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
@@ -447,6 +447,14 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   // filter was misleading users into a slightly worse subset at 96%
   // recall loss. Default-show-all is correct UX.
 
+  // Hooks first, before the empty-section return: a card that mounts with no
+  // findings and later receives some must call the same hooks on every
+  // render, or React throws "Rendered more hooks".
+  // Session-only review state, keyed per group (see groupKey below).
+  const [reviewed, setReviewed] = useState(() => new Set())
+  const { sendFeedback: sendBatchFeedback } = useFeedback()
+  const [batchModalOpen, setBatchModalOpen] = useState(false)
+
   if (!issues || issues.length === 0) return null
 
   // Group by claim_id → Set of display labels (reference_form when available, else term)
@@ -496,8 +504,7 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   // Stable per-group key (claim ids + term set) for the session-only review
   // state. No persistence / no server - matches the no-upload trust model;
   // refresh clears it.
-  const groupKey = (g) => `${g.claimIds.join(',')}|${g.terms.join(' ')}`
-  const [reviewed, setReviewed] = useState(() => new Set())
+  const groupKey = (g) => `${g.claimIds.join(',')}|${g.terms.join('\0')}`
   const toggleReviewed = (key) =>
     setReviewed((prev) => {
       const next = new Set(prev)
@@ -514,8 +521,6 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   // Bundle every finding in the section into ONE report. NEUTRAL disposition:
   // a §112 section is a mix of real defects and FPs, so a blanket FP/TP verdict
   // would poison the gold - the maintainer triages each finding on its merits.
-  const { sendFeedback: sendBatchFeedback } = useFeedback()
-  const [batchModalOpen, setBatchModalOpen] = useState(false)
   const BATCH_MAX = 25
   const buildBatchDiagnostics = () => {
     const findingsList = issues.slice(0, BATCH_MAX).map((f) => {

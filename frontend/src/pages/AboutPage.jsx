@@ -8,7 +8,7 @@ import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
 import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
 import { composeEnterprise, composeBuilderContact } from '../lib/feedback'
-import { useFeedback } from '../components/FeedbackPicker'
+import { useFeedback } from '../hooks/useFeedback'
 import { TESTS_DISPLAY, CHECKS_DISPLAY, CHECKS_BY_JURISDICTION } from '../generated/stats'
 
 function JurisdictionBadge({ code }) {

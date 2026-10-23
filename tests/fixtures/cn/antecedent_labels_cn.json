@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 70,
+    "current_round": 71,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -417,6 +417,20 @@
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-09-16T00:32:00.164017+00:00"
+      },
+      {
+        "round": 71,
+        "name": "r71_tail_compound_tier_and_jianli",
+        "description": "CN R71 (reports #872-#874, #876, #879). (1) Tail-compound LAST-RESORT tier, the mirror of TW R27/R43: the interior cut reads 连接 in a reference to a 连接器 compound as a verb and keeps only the modifier, while the introduction (包含X连接器) registers whole, so the pair never matches. Mirroring the TW guard IN PLACE was re-measured and still fails (7 gold-legit silenced, 24 UNPAIRED-NEW: protection exposes refnum-paren and trailing-verb tails the cut had been collecting, as in July). Shipped instead as an additive exact-match tier after every other path, gated so the protected form must EXTEND the default one (a quantifier-led reference otherwise re-normalized to a bare 连接器 and silenced a gold-legit finding). (2) 建立 joins the interior verb boundaries, gated off before measured compound heads (建立请求 30 / 响应 21 / 消息 15 / 模块 10 / 信令 / 完成 + device heads); the ungated form cut RRC建立消息 to RRC. Combined: silenced_walker_fp 5, silenced_legit 0, unjudged 3, paired shifts 1 (cleaner term), UNPAIRED-NEW 0; spec-support and term-quality unchanged (mid-word 995). TW R65 mirrors 建立 (TW campaign R65). (3) Spec-support: 中之/中另/中两 rejects (其中之一 fragments; 中两 is the parity mirror of TW #194) and a leading 作为 strip, mirrored to TW; zero corpus footprint, pinned by an end-to-end synthetic test. Bare-noun arm 3 (relative-clause intro, #875/#876/#877) is NOT in this round: no jurisdiction ships it and it needs its own measured round.",
+        "user_attested_issues": [
+          "#872",
+          "#873",
+          "#874",
+          "#876",
+          "#879"
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-10-23T10:15:36.928792+00:00"
       }
     ],
     "last_updated": "2026-08-01",

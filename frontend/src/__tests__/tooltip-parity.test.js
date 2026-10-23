@@ -13,7 +13,7 @@ import ja from '../i18n/locales/ja.json'
 import ko from '../i18n/locales/ko.json'
 import zhCN from '../i18n/locales/zh-CN.json'
 import zhTW from '../i18n/locales/zh-TW.json'
-import { getCitationTooltipKey } from '../components/CheckItem'
+import { getCitationTooltipKey } from '../lib/citations'
 
 const LOCALES = { de, ja, ko, 'zh-CN': zhCN, 'zh-TW': zhTW }
 

@@ -71,11 +71,26 @@ def numeral_context_excerpt(
     chosen = matches[0]
     if name_clean:
         needle = name_clean.lower()
-        for m in matches:
-            ctx = spec_text[max(0, m.start() - 30): m.end() + 30].lower()
-            if needle in ctx:
-                chosen = m
-                break
+        # First choice: the name written immediately before this numeral,
+        # i.e. the occurrence that actually pairs them. The ±30-char window
+        # alone also accepts an occurrence where the name sits near the
+        # numeral but labels a DIFFERENT one (`<outlier>100所連接的一
+        # <canonical>200`), so the canonical and outlier excerpts of one
+        # conflict came back identical and the report could not show where
+        # the outlier was used.
+        adjacent = next(
+            (m for m in matches
+             if spec_text[:m.start()].rstrip().lower().endswith(needle)),
+            None,
+        )
+        if adjacent is not None:
+            chosen = adjacent
+        else:
+            for m in matches:
+                ctx = spec_text[max(0, m.start() - 30): m.end() + 30].lower()
+                if needle in ctx:
+                    chosen = m
+                    break
     start = max(0, chosen.start() - before)
     end = min(len(spec_text), chosen.end() + after)
     snippet = spec_text[start:end].replace("\n", " ").replace("\t", " ").strip()

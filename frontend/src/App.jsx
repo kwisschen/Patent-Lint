@@ -81,6 +81,29 @@ function App() {
   // jurisdiction without forcing the user to re-upload. When provided
   // we also commit the new jurisdiction to App state so the picker
   // reflects what was actually analyzed.
+  const handleFile = async (uploadedFile, jurisdictionOverride) => {
+    setFile(uploadedFile)
+    setError(null)
+    setHomeState('analyzing')
+
+    const jurisdictionForRun = jurisdictionOverride || jurisdiction
+    if (jurisdictionOverride && jurisdictionOverride !== jurisdiction) {
+      setJurisdiction(jurisdictionOverride)
+    }
+
+    try {
+      if (!pyodide.ready) {
+        throw new Error(t('analysis.engineNotReady'))
+      }
+      const data = await pyodide.analyze(uploadedFile, jurisdictionForRun)
+      setResult(data)
+      setHomeState('results')
+    } catch (err) {
+      setError(formatAnalysisError(err.message, t))
+      setHomeState('idle')
+    }
+  }
+
   // DEV-ONLY: `?fixture=<name>` auto-loads a repo fixture so the viewport
   // harness can show the actual REPORT at every width, not just the empty
   // drop zone. A harness that only ever renders the landing page is half a
@@ -115,29 +138,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pyodide.ready])
 
-  const handleFile = async (uploadedFile, jurisdictionOverride) => {
-    setFile(uploadedFile)
-    setError(null)
-    setHomeState('analyzing')
-
-    const jurisdictionForRun = jurisdictionOverride || jurisdiction
-    if (jurisdictionOverride && jurisdictionOverride !== jurisdiction) {
-      setJurisdiction(jurisdictionOverride)
-    }
-
-    try {
-      if (!pyodide.ready) {
-        throw new Error(t('analysis.engineNotReady'))
-      }
-      const data = await pyodide.analyze(uploadedFile, jurisdictionForRun)
-      setResult(data)
-      setHomeState('results')
-    } catch (err) {
-      setError(formatAnalysisError(err.message, t))
-      setHomeState('idle')
-    }
-  }
-
   const handleDownloadPdf = async () => {
     if (!file || !pyodide.ready || !result) return
     setDownloading(true)
@@ -164,7 +164,7 @@ function App() {
   }, [homeState])
 
   useEffect(() => {
-    const handlePopState = (e) => {
+    const handlePopState = () => {
       if (homeState === 'results') {
         handleReset()
       }

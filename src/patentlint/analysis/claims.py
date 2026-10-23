@@ -402,6 +402,99 @@ _TRUNCATED_SELECTOR_TRAIL = re.compile(
 )
 
 
+# Measurement hook (tests/eval): called with (head, tail words, following text)
+# for every reference the R59 tier considers. None in production.
+_KNOWN_INTRO_TAIL_OBSERVER = None
+
+# US R59 - tails that can follow a complete, introduced noun phrase only as a
+# predicate. Closed adverbs, plus the adverb suffixes (a bare -ly test also
+# takes subassembly / supply / anomaly).
+_PREDICATE_TAIL_ADVERBS: frozenset[str] = frozenset({
+    "further", "also", "only", "then", "again", "back", "ahead", "together",
+    "therein", "thereby", "thereto", "thereon", "therefrom", "thereafter",
+    "respectively", "simultaneously", "additionally", "subsequently",
+    "previously", "currently", "still", "already",
+})
+_PREDICATE_TAIL_ADVERB_SUFFIXES: tuple[str, ...] = (
+    "ally", "ively", "ously", "ately", "ently", "antly", "edly", "ingly",
+    "fully", "lessly",
+)
+_OBJECT_START = re.compile(
+    r"\s*(?:the|a|an|each|said|one|two|three|its|their|it|them|all|any|"
+    r"at least|no|another|such|this|these|that|whether)\b"
+)
+_PREPOSITION_START = re.compile(
+    r"\s*(?:from|to|with|across|within|through|into|onto|on|in|at|for|by|"
+    r"between|via|under|over|along|toward|towards|against|about|as)\b"
+)
+
+
+def _is_predicate_tail(tail: list[str], following: str, head: str = "", preceding: str = "") -> bool:
+    """True when ``tail`` reads as a predicate run onto a complete noun phrase.
+
+    Shipped classes, measured on the gold corpus (US R59): an adverb; an -ing
+    form whose object follows; a lone 3rd-person-singular verb whose object or
+    preposition follows (`the timer circuit returns from`, `the firmware
+    module writes a flag`). A base-form verb (`clamp`, `meet`) is withheld: it reads
+    exactly like a compound noun (`the user device that`), 32 gold-legit
+    against 83 walker FPs before a preposition.
+    """
+    first = tail[0]
+    if first in _PREDICATE_TAIL_ADVERBS or (
+        len(first) > 5 and first.endswith(_PREDICATE_TAIL_ADVERB_SUFFIXES)
+    ):
+        return True
+    rest = " ".join(tail[1:])
+    if first.endswith("ing") and len(first) > 5 and _OBJECT_START.match(
+        " " + (rest + " " + following if rest else following)
+    ):
+        return True
+    if (
+        len(tail) == 1
+        and re.fullmatch(r"[a-z-]+(?:s|es)", first)
+        and not first.endswith("ss")
+        and (_OBJECT_START.match(following) or _PREPOSITION_START.match(following))
+    ):
+        return True
+    # A BASE-form verb needs a plural or coordinated subject, which a compound
+    # noun does not: `the X and the peripheral device communicate with`, `the
+    # two interference portions clamp`. Gated on that subject, not on the word.
+    if (
+        len(tail) == 1
+        and re.fullmatch(r"[a-z-]+", first)
+        and (_OBJECT_START.match(following) or _PREPOSITION_START.match(following))
+        and (
+            re.search(r"\band\s*$", preceding)
+            or (re.search(r"[a-z]s$", head) and not head.endswith("ss"))
+        )
+    ):
+        return True
+    return False
+
+
+def known_intro_with_predicate_tail(
+    term: str, head_has_basis, following: str, preceding: str = ""
+) -> str | None:
+    """US R59: resolve ``term`` against the longest introduced head it extends.
+
+    A reference that over-captured a predicate (`the gate lines drops from`)
+    is resolved by the drafter's own introduction of the head when the
+    remainder is a predicate tail. Last-resort and additive, so it can only
+    silence; the tail classes are what keep a longer compound (`the control
+    circuit board`) from resolving against `control circuit`.
+    """
+    words = term.split()
+    for n in range(len(words) - 1, 0, -1):
+        head = " ".join(words[:n])
+        if head_has_basis(head):
+            if _KNOWN_INTRO_TAIL_OBSERVER is not None:
+                _KNOWN_INTRO_TAIL_OBSERVER(head, words[n:], following)
+            if _is_predicate_tail(words[n:], following, head, preceding):
+                return head
+            return None
+    return None
+
+
 def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     """Check claims for antecedent basis issues.
 
@@ -811,6 +904,29 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                     term, claim_text_lower[:m.start()], claim_text_lower[m.end():]
                 )
                 if stem and stem in intros:
+                    has_basis = True
+            if not has_basis:
+                def _head_has_basis(head: str) -> bool:
+                    if head.lower() in _QUANTIFIER_STOPS or head.split()[0].isdigit():
+                        return False
+                    owners = [
+                        i for i in intros
+                        if _word_boundary_match(i, head) and _word_boundary_match(head, i)
+                    ]
+                    if not owners:
+                        return False
+                    if any(intros_by_term.get(i) != claim.id for i in owners):
+                        return True
+                    return not (
+                        all(i in pattern_a_offsets for i in owners)
+                        and not any(i in non_pattern_a_intros for i in owners)
+                        and all(min(pattern_a_offsets[i]) > m.start() for i in owners)
+                    )
+                known = known_intro_with_predicate_tail(
+                    term, _head_has_basis, claim_text_lower[m.end():],
+                    claim_text_lower[:m.start()],
+                )
+                if known is not None:
                     has_basis = True
 
             # US R48 (report #677): basis must PRECEDE the reference.

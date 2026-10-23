@@ -68,6 +68,8 @@ export default function ProveItModal({ open, onOpenChange }) {
   // Own local PerformanceObserver - starts fresh on mount
   useEffect(() => {
     if (!open) {
+      // Reset on close, alongside clearing the timers this effect owns.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEntries([])
       setTestSent(false)
       setNetworkActive(false)
@@ -153,6 +155,8 @@ export default function ProveItModal({ open, onOpenChange }) {
   const [visiblePanels, setVisiblePanels] = useState(0)
   useEffect(() => {
     if (!open) {
+      // Reset the stagger on close so the next open replays it.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisiblePanels(0)
       return
     }

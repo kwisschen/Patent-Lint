@@ -18,7 +18,7 @@
 //   safety net) - even a Gmail user who closes the tab by accident
 //   can paste elsewhere.
 // - Preference persists in localStorage across tab sessions.
-import { createContext, useCallback, useContext, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { AtSign, Clipboard, Lock, Mail } from 'lucide-react'
@@ -36,8 +36,7 @@ import {
   setFeedbackMethod,
   MAINTAINER_EMAIL,
 } from '../lib/feedback'
-
-const FeedbackContext = createContext(null)
+import { FeedbackContext } from '../hooks/useFeedback'
 
 export function FeedbackProvider({ children }) {
   const { t } = useTranslation()
@@ -171,12 +170,4 @@ function PickerButton({ onClick, icon, label }) {
       <span>{label}</span>
     </Button>
   )
-}
-
-export function useFeedback() {
-  const ctx = useContext(FeedbackContext)
-  if (!ctx) {
-    throw new Error('useFeedback must be used within a FeedbackProvider')
-  }
-  return ctx
 }

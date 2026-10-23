@@ -24,17 +24,19 @@ export default function LoadingOnboard({ progress, onReady }) {
   const [visible, setVisible] = useState(true)
   const [fading, setFading] = useState(false)
   const [revealCount, setRevealCount] = useState(0)
-  const [showRuntimeHint, setShowRuntimeHint] = useState(false)
+  // The stage message the hint timer fired for. Deriving the flag from it
+  // resets the hint on every stage change without a setState in the effect.
+  const [hintStage, setHintStage] = useState(null)
+  const showRuntimeHint = hintStage !== null && hintStage === progress.message
   const revealRef = useRef(0)
   const intervalRef = useRef(null)
 
   // Show the first-visit hint if we've been on the runtime stage longer
   // than RUNTIME_HINT_DELAY_MS. Resets on stage change.
   useEffect(() => {
-    setShowRuntimeHint(false)
     const isRuntimeStage = progress.message?.includes('Python runtime')
     if (!isRuntimeStage) return
-    const t = setTimeout(() => setShowRuntimeHint(true), RUNTIME_HINT_DELAY_MS)
+    const t = setTimeout(() => setHintStage(progress.message), RUNTIME_HINT_DELAY_MS)
     return () => clearTimeout(t)
   }, [progress.message])
 
@@ -55,9 +57,15 @@ export default function LoadingOnboard({ progress, onReady }) {
     return () => { clearTimeout(initialTimer); clearInterval(intervalRef.current) }
   }, [])
 
+  // The latest onReady, read when the fade finishes, so a parent passing a
+  // new callback each render does not restart the reveal timers.
+  const onReadyRef = useRef(onReady)
+  useEffect(() => { onReadyRef.current = onReady })
+
   // Handle ready state: stop interval → finish staggered reveal → fade out → signal parent
+  const reachedReady = progress.percent >= 100
   useEffect(() => {
-    if (progress.percent < 100) return
+    if (!reachedReady) return
 
     // Stop the interval so it doesn't race with our scheduled timeouts
     clearInterval(intervalRef.current)
@@ -73,9 +81,9 @@ export default function LoadingOnboard({ progress, onReady }) {
     }
     const fadeDelay = STAGGER_MS * remaining + READY_PAUSE_MS
     timers.push(setTimeout(() => setFading(true), fadeDelay))
-    timers.push(setTimeout(() => { setVisible(false); onReady?.() }, fadeDelay + FADE_DURATION_MS))
+    timers.push(setTimeout(() => { setVisible(false); onReadyRef.current?.() }, fadeDelay + FADE_DURATION_MS))
     return () => timers.forEach(clearTimeout)
-  }, [progress.percent >= 100])
+  }, [reachedReady])
 
   if (!visible) return null
 

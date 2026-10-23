@@ -333,6 +333,9 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # `中兩個`). Mirror of `中一` above - `中兩` never leads a real TIPO noun
     # (中央/中心 do not start `中兩`).
     "中兩",
+    # TW R65 (mirror of CN R71, #879) - the same fragment from 其中之一 /
+    # 其中另一. Neither 中之 nor 中另 opens a noun.
+    "中之", "中另",
     # 2026-06-11 - issue #246 (JP-translated 對位裝置 draft). `朝往` is an
     # adverb ("toward / heading to"), captured standalone from
     # `朝往前述基板吸引前述光罩的吸引機構`. Never a noun; no real TIPO noun
@@ -405,6 +408,8 @@ _TW_SUFFIX_ONLY_LEADS: frozenset[str] = frozenset({"部", "端", "埠"})
 #       symmetry audit keeps surfacing.
 _TW_SPEC_SUPPORT_LEADING_STRIPS: tuple[str, ...] = (
     "形成", "者", "且", "透過", "通過", "經由", "藉由", "利用",
+    # TW R65 (mirror of CN R71, #879) - 作為 ("as"), the coverb of 其中另一作為X.
+    "作為",
 )
 
 # R36 (#482/#486) - the measure word 筆 ("<n> items of <record>"), stranded at

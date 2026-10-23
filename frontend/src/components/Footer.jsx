@@ -4,7 +4,7 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { composeFooterFeedback } from '../lib/feedback'
-import { useFeedback } from './FeedbackPicker'
+import { useFeedback } from '../hooks/useFeedback'
 
 export default function Footer() {
   const { t } = useTranslation()

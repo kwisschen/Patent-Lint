@@ -7,7 +7,7 @@ import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
 import { composeFeedback, sendReport, excerptAround, SAMPLE_SIZE } from '../lib/feedback'
-import { useFeedback } from './FeedbackPicker'
+import { useFeedback } from '../hooks/useFeedback'
 import ReportModal from './ReportModal'
 
 function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdiction }) {

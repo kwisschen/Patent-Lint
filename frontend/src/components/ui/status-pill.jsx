@@ -84,4 +84,4 @@ function StatusPill({
   )
 }
 
-export { StatusPill, statusPillVariants }
+export { StatusPill }

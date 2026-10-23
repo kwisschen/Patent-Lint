@@ -43,6 +43,10 @@ export default function NetworkWidget({ pyodideReady }) {
   useEffect(() => {
     if (!pyodideReady) return
     const initial = getOutgoingHistory()
+    // Seeding from the outgoing-request store at subscribe time is the
+    // external-store sync this rule permits in spirit; it runs once per
+    // pyodideReady flip, not per render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEvents(initial)
     setCount(initial.length)
     const unsubscribe = subscribeOutgoing((event) => {

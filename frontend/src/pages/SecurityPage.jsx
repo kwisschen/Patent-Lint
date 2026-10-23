@@ -20,7 +20,7 @@ import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { composeEnterprise } from '../lib/feedback'
-import { useFeedback } from '../components/FeedbackPicker'
+import { useFeedback } from '../hooks/useFeedback'
 
 /* ------------------------------------------------------------------ */
 /*  Section 1 - Hero                                                   */
@@ -30,11 +30,9 @@ function HeroSection({ onShowProveIt }) {
   const { t } = useTranslation()
   const location = useLocation()
   const [ref, isInView] = useInView()
-  const [demoKey, setDemoKey] = useState(Date.now())
-
-  useEffect(() => {
-    setDemoKey(Date.now())
-  }, [location.key])
+  // A fresh key per navigation remounts the demo video so it restarts from
+  // the top; the router already gives every navigation a unique key.
+  const demoKey = location.key
 
   return (
     <section

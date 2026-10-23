@@ -192,7 +192,7 @@ export function useUpdateCheck() {
             recordDismissal(targetHash)
           },
         })
-      } catch (e) {
+      } catch {
         // Silent fail - offline, version.json missing, CORS, etc.
       }
     }

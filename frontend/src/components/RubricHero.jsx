@@ -47,11 +47,6 @@ export default function RubricHero({ data, animate = false }) {
 
   const grade = data?.rubric_grade
 
-  // Completeness gate - no grade emitted, surface the gap.
-  if (grade?.completeness_gap?.missing_sections?.length) {
-    return <CompletenessGate missingSections={grade.completeness_gap.missing_sections} t={t} />
-  }
-
   // Donut arc breakdown (same math as the legacy HealthDonut).
   const allChecks = [
     ...(data.specification_checks || []),
@@ -64,6 +59,23 @@ export default function RubricHero({ data, animate = false }) {
     if (counts[c.status] !== undefined) counts[c.status]++
   })
   const total = counts.pass + counts.verify + counts.amend
+
+  // Every hook runs before the early returns below: a hero that mounts empty
+  // and then receives findings would otherwise call more hooks on the second
+  // render than the first, and React throws "Rendered more hooks".
+  const amendCount = useCountUp(counts.amend, 600, animate)
+  const verifyCount = useCountUp(counts.verify, 600, animate)
+  const passCount = useCountUp(counts.pass, 600, animate)
+  const countMap = { amend: amendCount, verify: verifyCount, pass: passCount }
+
+  const finalLetter = grade?.letter || '-'
+  const score = grade?.score ?? 0
+  const animatedScore = useCountUp(score, 600, animate)
+
+  // Completeness gate - no grade emitted, surface the gap.
+  if (grade?.completeness_gap?.missing_sections?.length) {
+    return <CompletenessGate missingSections={grade.completeness_gap.missing_sections} t={t} />
+  }
 
   // Defensive: if no grade *and* no findings, render nothing (caller handles).
   if (!grade && total === 0) return null
@@ -116,14 +128,6 @@ export default function RubricHero({ data, animate = false }) {
     return { ...seg, d }
   })
 
-  const amendCount = useCountUp(counts.amend, 600, animate)
-  const verifyCount = useCountUp(counts.verify, 600, animate)
-  const passCount = useCountUp(counts.pass, 600, animate)
-  const countMap = { amend: amendCount, verify: verifyCount, pass: passCount }
-
-  const finalLetter = grade?.letter || '-'
-  const score = grade?.score ?? 0
-  const animatedScore = useCountUp(score, 600, animate)
   // The letter tracks the counting number instead of jumping straight to the
   // final grade. Previously the hero rendered the FINAL letter beside an
   // INTERMEDIATE score for the whole 600ms count-up, so a reader glancing
