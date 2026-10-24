@@ -1359,6 +1359,106 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 29: '到所述芯部构件的与所述芯部构件相反的第二侧的第二引'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 29,
+            "term": "第二侧",
+            "reference_form": "所述第二侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 41: '到所述芯部构件的与所述芯部构件相反的第二侧的第二引'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 41,
+            "term": "第二侧",
+            "reference_form": "所述第二侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116250152A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 20: 'E)导线的第二导线与所述凸形连接器的第二IDC触点相邻'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "第二IDC",
+            "reference_form": "所述第二IDC"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119523165A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 6: '蒸汽烟系统，其中所述蒸汽烟装置主体的第一形状要求预填'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "第一形状",
+            "reference_form": "所述第一形状"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121216181A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 7: '于使来自所述电连接器的所述安装端中的第一部分穿透，以'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "第一部分",
+            "reference_form": "所述第一部分"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

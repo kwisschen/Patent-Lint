@@ -1279,6 +1279,46 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 2: '括經展現與該目標遺傳組分特異性結合的第二親合性結合元件功能化的'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "第二親合性結合元件",
+            "reference_form": "該第二親合性結合元件"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202314331A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 6: '之該第一光反射為朝向該第三表面傳播之第二光，且在透'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "第二光",
+            "reference_form": "該第二光"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

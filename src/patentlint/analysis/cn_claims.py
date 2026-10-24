@@ -4505,7 +4505,7 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     return not _bare_noun_compound_char_cn(text[j])
 
 
-_RELATIVE_CLAUSE_RELATIONS_CN: tuple[str, ...] = ("于", "与", "和", "对", "向", "沿", "朝")
+_NEW_ARGUMENT_COVERBS_CN: tuple[str, ...] = ("用于", "以", "对", "为", "将", "被", "使")
 
 
 def has_possessive_introduction_cn(
@@ -4554,10 +4554,11 @@ def has_possessive_introduction_cn(
     # protect AND still cover the unambiguous locative-attribute
     # pattern (顶面/底面/侧面/端面 - non-ordinal short nouns that R9 was
     # designed for), exclude terms starting with the 第 ordinal prefix.
-    # Wave C (Christopher's ruling 2026-10-24, mirror of TW): an ordinal head
-    # IS introduced when the possessor is itself an introduced element and no
-    # relation precedes the determiner, which keeps the reading-(b) cases
-    # above (a relative clause on 相关的) protected.
+    # Wave C (Christopher's rulings 2026-10-24, mirror of TW): an ordinal head
+    # IS introduced by a possessive or relative clause when the noun right
+    # after the determiner is itself an introduced element (所述X的第一Y,
+    # 垂直于所述X的第二方向). The determiner governing the ordinal itself
+    # (该固定的第一抗原) stays a reference.
     ordinal = t.startswith("第")
     if ordinal and not intros_by_term:
         return False
@@ -4566,12 +4567,17 @@ def has_possessive_introduction_cn(
         for det in ("所述", "前述", "该"):
             k = look_back.rfind(det)
             if k >= 0:
-                if look_back[:k].endswith(_RELATIVE_CLAUSE_RELATIONS_CN):
-                    return False
                 owner = look_back[k + len(det):].strip()
-                return owner in intros_by_term or (
-                    strip_leading_quantifier_cn(owner) in intros_by_term
-                )
+                stripped = strip_leading_quantifier_cn(owner)
+                for base in (owner, stripped):
+                    for term in intros_by_term:
+                        if len(term) >= 2 and base.startswith(term):
+                            # The element opening its own clause (用於 / 以 /
+                            # 對 ...) is not what the 的 phrase modifies.
+                            return not any(
+                                c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_CN
+                            )
+                return False
         return False
 
     def _scan(text: str, limit: int | None) -> bool:

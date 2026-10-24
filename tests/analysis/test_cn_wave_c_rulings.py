@@ -21,10 +21,13 @@ def test_ordinal_possessive_with_an_introduced_possessor():
         "2. 如权利要求1所述的系统，其中所述第二参数为一温度上限。")
 
 
-def test_relation_before_the_determiner_is_a_relative_clause():
+def test_relative_clause_on_an_introduced_element_introduces():
     claim = Claim(id=1, text="所述立柱沿垂直于所述底座的第二方向延伸。", independent=True)
-    assert not has_possessive_introduction_cn(
+    assert has_possessive_introduction_cn(
         claim.text, [claim], "第二方向", 99, {"底座": (1, 1)})
+    claim = Claim(id=1, text="所述控制器用于网络中的第一转发装置。", independent=True)
+    assert not has_possessive_introduction_cn(
+        claim.text, [claim], "第一转发装置", 99, {"控制器": (1, 1)})
 
 
 def test_short_bare_object_of_a_verb():

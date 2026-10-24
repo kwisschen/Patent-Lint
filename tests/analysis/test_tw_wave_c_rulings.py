@@ -31,17 +31,19 @@ class TestOrdinalPossessive:
             "1. 一種系統，包括一控制器，並依據所述控制器之第二參數調整一輸出。",
             "2. 如請求項1所述的系統，其中所述第二參數為一溫度上限。")
 
-    def test_relative_clause_is_not_a_possessive(self):
-        # The text before 的 names an introduced element, but the relation in
-        # front of the determiner makes it a relative clause: 第二方向 still
-        # needs its own introduction.
+    def test_relative_clause_on_an_introduced_element_introduces(self):
+        # Ruling 3 (2026-10-24): the relative clause introduces the ordinal.
         from patentlint.analysis.tw_claims import has_possessive_introduction_tw
 
-        intros = {"底座": (1, 1), "比較器": (1, 1)}
+        intros = {"底座": (1, 1), "控制器": (1, 1)}
         claim = Claim(id=1, text="所述立柱沿垂直於所述底座的第二方向延伸。", independent=True)
-        assert not has_possessive_introduction_tw(claim.text, [claim], "第二方向", 99, intros)
-        claim = Claim(id=1, text="一分壓電路連接所述比較器的第一接腳。", independent=True)
-        assert has_possessive_introduction_tw(claim.text, [claim], "第一接腳", 99, intros)
+        assert has_possessive_introduction_tw(claim.text, [claim], "第二方向", 99, intros)
+        # The determiner governing the ordinal itself is a reference.
+        claim = Claim(id=1, text="其中該固定的第一抗原結合於該底座。", independent=True)
+        assert not has_possessive_introduction_tw(claim.text, [claim], "第一抗原", 99, intros)
+        # The element opening its own clause is not what 的 modifies.
+        claim = Claim(id=1, text="所述控制器用於網路中的第一轉發裝置。", independent=True)
+        assert not has_possessive_introduction_tw(claim.text, [claim], "第一轉發裝置", 99, intros)
 
     def test_possessor_must_be_introduced(self):
         from patentlint.analysis.tw_claims import has_possessive_introduction_tw

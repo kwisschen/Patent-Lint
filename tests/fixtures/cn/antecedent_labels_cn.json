@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 73,
+    "current_round": 74,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -447,6 +447,14 @@
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-10-24T05:12:58.319756+00:00"
+      },
+      {
+        "round": 74,
+        "name": "r74_relative_clause_ordinal_intro",
+        "description": "CN R74 (wave C; mirror of TW R69). The relative clause on an introduced element introduces the ordinal it modifies (与所述芯部构件相反的第二侧). This reverses the R20 reading (b) for relative clauses on Christopher's 2026-10-24 ruling. Coverb guard (用于/以/对/为/将/被/使) rejected 所述目标信息用于移动网络中的第一转发设备 and 所述手柄以对临床用户的... Gate vs the post-R73 snapshot: 59 FP, 0 legit after 5 corrections, 0 false fires, UNPAIRED-NEW 0.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-10-24T12:11:48.055094+00:00"
       }
     ],
     "last_updated": "2026-08-01",

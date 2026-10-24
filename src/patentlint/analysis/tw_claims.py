@@ -7043,7 +7043,7 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     return not _bare_noun_compound_char_tw(text[j])
 
 
-_RELATIVE_CLAUSE_RELATIONS_TW: tuple[str, ...] = ("於", "與", "和", "對", "向", "沿", "朝")
+_NEW_ARGUMENT_COVERBS_TW: tuple[str, ...] = ("用於", "以", "對", "為", "將", "被", "使")
 
 
 def has_possessive_introduction_tw(
@@ -7099,11 +7099,12 @@ def has_possessive_introduction_tw(
     # CN-conservative reading for cross-jurisdiction parity. Covers
     # the unambiguous locative-attribute cases (頂面/底面/側面/端面 -
     # non-ordinal short nouns that R9 was designed for).
-    # Ordinal heads (wave C, Christopher's ruling 2026-10-24): `所述X之第一Y`
-    # and `所述X的第一Y` introduce the first Y of X when X is itself an
-    # introduced element. Requiring that is what separates the possessive from
-    # the relative clause with the same surface (所述X連接的第一Y, 垂直於所述X
-    # 的第二方向), which stays a reference needing its own introduction.
+    # Ordinal heads (wave C, Christopher's rulings 2026-10-24): `所述X的第一Y`,
+    # `所述X之第一Y` and the relative clause on an introduced element
+    # (垂直於所述X的第二方向, 在該X後進行之第三步驟) introduce the ordinal when
+    # the noun right after the determiner is itself an introduced element.
+    # That is what keeps `該固定的第一抗原` out: there the determiner governs
+    # the ordinal itself, and it is a reference.
     ordinal = t.startswith("第")
     if ordinal and not intros_by_term:
         return False
@@ -7113,18 +7114,19 @@ def has_possessive_introduction_tw(
         for det in ("所述", "前述", "該"):
             k = look_back.rfind(det)
             if k >= 0:
-                # 垂直於所述X的第二方向 / 與所述X正交的第二方向: a relation
-                # right before the determiner makes the 的 phrase a relative
-                # clause even when X is introduced.
-                if look_back[:k].endswith(_RELATIVE_CLAUSE_RELATIONS_TW):
-                    return False
                 owner = look_back[k + len(det):].strip()
-                # Only a quantifier may come off (該複數個導電元件): the full
-                # normalizer would strip a verb (第三表面傳播 -> 第三表面) and
-                # pass the relative clause 傳播之第二光.
-                return owner in intros_by_term or (
-                    strip_leading_quantifier(owner) in intros_by_term
-                )
+                # Only a quantifier may come off (該複數個導電元件); what
+                # follows the element may be a predicate (第一方向正交).
+                stripped = strip_leading_quantifier(owner)
+                for base in (owner, stripped):
+                    for term in intros_by_term:
+                        if len(term) >= 2 and base.startswith(term):
+                            # The element opening its own clause (用於 / 以 /
+                            # 對 ...) is not what the 的 phrase modifies.
+                            return not any(
+                                c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_TW
+                            )
+                return False
         return False
 
     def _scan(text: str, limit: int | None) -> bool:
