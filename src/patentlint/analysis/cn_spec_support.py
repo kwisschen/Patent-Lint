@@ -51,10 +51,14 @@ CN terms worth spec-support analysis).
 
 from __future__ import annotations
 
+import collections
 import re
 
 from patentlint.analysis.cjk_tokenize import tokenize_cn
 from patentlint.analysis.cn_claims import (
+    _F10_SINGLE_CHAR_SUFFIXES_CN,
+    _INTERIOR_VERB_BOUNDARIES_CN,
+    _TRAILING_VERB_DENYLIST_CN,
     extract_introductions_cn,
     normalize_arabic_ordinal_to_cjk,
     normalize_reference_term_cn,
@@ -747,6 +751,74 @@ _LATIN_TERM_CN_RE = re.compile(r"[A-Za-z][A-Za-z0-9 .\-/+]*")
 _MEASURE_RESIDUE_CN_RE = re.compile(r"^(?:或多[种个条]|或更多[种个条]|[种个条])")
 
 
+# Reference-confirmed terms: mirror of the TW pass (wave C); see
+# tw_spec_support._confirm_against_references_tw for the reasoning.
+_BOUNDED_REFERENCE_CN_RE = re.compile(
+    r"(?:所述|前述|该)((?:(?!所述|前述|该)[\u4e00-\u9fffA-Za-z0-9]){2,16}?)"
+    r"(?=[，。；：、,.;:（(的之与及和或\s]|$)"
+)
+_BARE_ORDINAL_CN_RE = re.compile(r"第[一二三四五六七八九十百\d]+")
+_PREDICATE_OPENING_CHARS_CN: frozenset[str] = frozenset(
+    "更具做将以使于在并且而也均皆已才则即被从往给把让令呈"
+)
+_FORMATION_VERBS_CN: frozenset[str] = frozenset({"成型", "成形", "形成", "构成", "而成"})
+_PREDICATE_VERBS_CN: tuple[str, ...] = tuple(sorted(
+    {v for v in tuple(_INTERIOR_VERB_BOUNDARIES_CN) + tuple(_TRAILING_VERB_DENYLIST_CN)
+     if len(v) >= 2} | {"使用"},
+    key=len, reverse=True,
+))
+
+
+def _opens_predicate_cn(rest: str) -> bool:
+    # 發送定時有關的資訊: the element is the head after 的, and the front is
+    # its relative clause, so the run-on reading does not apply.
+    if re.search(r"[的之].", rest):
+        return False
+    for verb in _PREDICATE_VERBS_CN:
+        if rest.startswith(verb):
+            tail = rest[len(verb):]
+            if tail and tail[0] in _F10_SINGLE_CHAR_SUFFIXES_CN:
+                return False
+            if (len(tail) in (2, 3) and not set(tail) & _PREDICATE_OPENING_CHARS_CN
+                    and tail not in _PREDICATE_VERBS_CN
+                    and tail not in _FORMATION_VERBS_CN):
+                return False
+            return True
+    return rest[0] in _PREDICATE_OPENING_CHARS_CN
+
+
+def _confirm_against_references_cn(
+    inventory: list[tuple[int, str]], claims: list[Claim]
+) -> list[tuple[int, str]]:
+    refs: set[str] = set()
+    for claim in claims:
+        for m in _BOUNDED_REFERENCE_CN_RE.finditer(claim.text):
+            # 如請求項1所述的X: that 所述 closes the preamble, it is no reference.
+            if not m.group(1).startswith("的"):
+                refs.add(m.group(1))
+    head_counts = collections.Counter(t[-1] for t in refs if len(t) >= 2)
+    out: list[tuple[int, str]] = []
+    seen: set[str] = set()
+    for cid, term in inventory:
+        last = term[-1]
+        ends_as_noun = last not in _PREDICATE_OPENING_CHARS_CN and (
+            last in _F10_SINGLE_CHAR_SUFFIXES_CN or head_counts[last] >= 2
+        )
+        if term not in refs and not ends_as_noun:
+            heads = [
+                r for r in refs
+                if len(r) >= _MIN_INVENTORY_LENGTH and len(r) < len(term)
+                and term.startswith(r) and not _BARE_ORDINAL_CN_RE.fullmatch(r)
+                and _opens_predicate_cn(term[len(r):])
+            ]
+            if heads:
+                term = max(heads, key=len)
+        if term not in seen:
+            seen.add(term)
+            out.append((cid, term))
+    return out
+
+
 def _is_quantified_back_reference_cn(orig: str, norm: str, claim_text: str) -> bool:
     """所述至少一X: a reference the quantifier arm registered as an intro."""
     if (orig == norm or not orig.startswith(_QUANTIFIER_OPENERS_CN)
@@ -901,6 +973,8 @@ def _build_inventory_cn(
                     continue
                 seen[final] = claim.id
                 inventory.append((claim.id, final))
+    inventory = _confirm_against_references_cn(inventory, claims)
+    seen = {t: cid for cid, t in inventory}
     # A back-reference counts only when nothing introduced covers its head
     # (the extractor can miss the real introduction). Mirror of TW.
     for claim_id, final in deferred:

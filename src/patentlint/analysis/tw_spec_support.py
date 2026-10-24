@@ -37,11 +37,14 @@ axis from "is this term in the spec at all".
 
 from __future__ import annotations
 
+import collections
 import re
 
 from patentlint.analysis.cjk_tokenize import tokenize_tw
 from patentlint.analysis.tw_claims import (
     _F10_SINGLE_CHAR_SUFFIXES_TW,
+    _INTERIOR_VERB_BOUNDARIES,
+    _TRAILING_VERB_DENYLIST,
     extract_introductions_tw,
     normalize_arabic_ordinal_to_cjk,
     normalize_reference_term,
@@ -1337,6 +1340,103 @@ def _is_parenthetical_gloss_tw(term: str, claim_text: str) -> bool:
 _MEASURE_RESIDUE_TW_RE = re.compile(r"^(?:或多[種個條]|或更多[種個條]|[種個條])")
 
 
+# A bounded reference: the drafter pointing back at an element, with a real
+# boundary after the noun. What sits between is the drafter's own name for it.
+_BOUNDED_REFERENCE_TW_RE = re.compile(
+    r"(?:所述|前述|該等|該些|該)((?:(?!所述|前述|該)[\u4e00-\u9fffA-Za-z0-9]){2,16}?)"
+    r"(?=[，。；：、,.;:（(的之與及和或\s]|$)"
+)
+
+
+_BARE_ORDINAL_TW_RE = re.compile(r"第[一二三四五六七八九十百\d]+")
+# Characters that only ever open a predicate or a new clause after a noun.
+_PREDICATE_OPENING_CHARS_TW: frozenset[str] = frozenset(
+    "更具做將以使於在並且而也均皆已才則即被從往給把讓令呈"
+)
+
+
+_PREDICATE_VERBS_TW: tuple[str, ...] = tuple(sorted(
+    {v for v in _INTERIOR_VERB_BOUNDARIES + _TRAILING_VERB_DENYLIST if len(v) >= 2}
+    | {"使用"},
+    key=len, reverse=True,
+))
+
+
+# A verb followed by one of these is a verb chain (延伸成型), never a name.
+_FORMATION_VERBS_TW: frozenset[str] = frozenset({"成型", "成形", "形成", "構成", "而成"})
+
+
+def _opens_predicate_tw(rest: str) -> bool:
+    """True if what follows the confirmed head starts a predicate, not a noun.
+
+    A verb from the walker's own lists counts unless it heads a compound right
+    away (感測器, 處理器: verb + a component suffix is a noun).
+    """
+    # 發送定時有關的資訊: the element is the head after 的, and the front is
+    # its relative clause, so the run-on reading does not apply.
+    if re.search(r"[的之].", rest):
+        return False
+    for verb in _PREDICATE_VERBS_TW:
+        if rest.startswith(verb):
+            tail = rest[len(verb):]
+            if tail and tail[0] in _F10_SINGLE_CHAR_SUFFIXES_TW:
+                return False
+            # Verb + a closing two- or three-character noun reads both ways: a name
+            # (任務執行程式, 優惠使用評價) or a run-on onto the object
+            # (第一層獲得指示). Nothing on the surface separates them, so it
+            # is left alone.
+            if (len(tail) in (2, 3) and not set(tail) & _PREDICATE_OPENING_CHARS_TW
+                    and tail not in _PREDICATE_VERBS_TW
+                    and tail not in _FORMATION_VERBS_TW):
+                return False
+            return True
+    return rest[0] in _PREDICATE_OPENING_CHARS_TW
+
+
+def _confirm_against_references_tw(
+    inventory: list[tuple[str, str]], claims: list[Claim]
+) -> list[tuple[str, str]]:
+    """Shrink a run-on term to the name the drafter actually refers back to.
+
+    An inventory term no reference ever repeats, whose proper prefix IS
+    repeated as a bounded reference and continues with something that does not
+    extend a noun (側板 + 延伸成型), names the prefix. The specification is
+    never consulted here: nearly any short prefix appears in it, so shrinking
+    toward it would turn unsupported terms into supported ones.
+    """
+    refs: set[str] = set()
+    for claim in claims:
+        for m in _BOUNDED_REFERENCE_TW_RE.finditer(claim.text):
+            # 如請求項1所述的X: that 所述 closes the preamble, it is no reference.
+            if not m.group(1).startswith("的"):
+                refs.add(m.group(1))
+    # The drafter's own noun heads: the characters their bounded references
+    # end in (never the inventory, which is the dirty data being checked). A term ending in one of them (冷卻介質移動通道,
+    # 演算法執行單元, 電壓幅值給定值) is a compound name, not a run-on, whatever
+    # verb sits inside it; a run-on ends in a function word or half a word.
+    head_counts = collections.Counter(t[-1] for t in refs if len(t) >= 2)
+    out: list[tuple[str, str]] = []
+    seen: set[str] = set()
+    for cid, term in inventory:
+        last = term[-1]
+        ends_as_noun = last not in _PREDICATE_OPENING_CHARS_TW and (
+            last in _F10_SINGLE_CHAR_SUFFIXES_TW or head_counts[last] >= 2
+        )
+        if term not in refs and not ends_as_noun:
+            heads = [
+                r for r in refs
+                if len(r) >= _MIN_INVENTORY_LENGTH and len(r) < len(term)
+                and term.startswith(r) and not _BARE_ORDINAL_TW_RE.fullmatch(r)
+                and _opens_predicate_tw(term[len(r):])
+            ]
+            if heads:
+                term = max(heads, key=len)
+        if term not in seen:
+            seen.add(term)
+            out.append((cid, term))
+    return out
+
+
 def _inventory_terms_tw(
     orig: str, norm: str, claim: Claim, claim_norms: set[str]
 ) -> list[str]:
@@ -1407,6 +1507,8 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
                 elif final not in seen:
                     seen[final] = claim.id
                     inventory.append((claim.id, final))
+    inventory = _confirm_against_references_tw(inventory, claims)
+    seen = {t: cid for cid, t in inventory}
     # A back-reference counts only when nothing introduced covers its head:
     # the extractor can miss the real introduction, and then the reference is
     # the element's only entry.

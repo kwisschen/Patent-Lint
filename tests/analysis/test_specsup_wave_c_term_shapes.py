@@ -131,3 +131,40 @@ class TestCnMirrors:
         out = _cn("1. 一种组合物，包括一添加剂，所述添加剂选自由甲醇、乙醇和丙二醇组成的群组。")
         assert "群组" not in out and "丙二醇" in out
         assert not any("组成的" in t for t in out)
+
+
+class TestReferenceConfirmedTerms:
+    """A run-on term shrinks to the name the drafter refers back to."""
+
+    def test_run_on_shrinks_to_the_referenced_head(self):
+        out = _tw("1. 一種散熱器，包括一殼體，所述殼體的一側板延伸成型一凸緣，所述凸緣抵接於所述側板。")
+        assert "側板" in out and "側板延伸成型" not in out
+
+    def test_no_reference_no_shrink(self):
+        out = _tw("1. 一種散熱器，包括一殼體，所述殼體的一側板延伸成型一凸緣。")
+        assert "側板" not in out
+
+    def test_compound_with_a_suffix_head_is_kept(self):
+        # 感測 heads 感測器: verb + component suffix is a noun.
+        out = _tw("1. 一種裝置，包括一探頭感測器，所述探頭電連接一主機。")
+        assert "探頭感測器" in out
+
+    def test_verb_plus_closing_noun_is_left_alone(self):
+        # 訊號執行程式 (a name) / 第一層獲得指示 (a run-on) read both ways;
+        # neither shrinks, even with the head referenced.
+        out = _tw("1. 一種系統，包括一訊號執行程式，其中所述訊號的強度大於一閾值。")
+        assert "訊號執行程式" in out
+
+    def test_coordination_is_not_a_predicate(self):
+        out = _tw("1. 一種組成物，包括一抗體或其片段，所述抗體為單株抗體。")
+        assert not any(t == "抗體" for t in out) or any("片段" in t for t in out)
+
+
+class TestReferenceConfirmedTermsCn:
+    def test_run_on_shrinks_to_the_referenced_head(self):
+        out = _cn("1. 一种散热器，包括一壳体，所述壳体的一侧板延伸成型一凸缘，所述凸缘抵接于所述侧板。")
+        assert "侧板" in out and "侧板延伸成型" not in out
+
+    def test_relative_clause_head_is_not_shrunk_away(self):
+        out = _cn("1. 一种方法，包括：发送一发送时长有关的信息，其中所述发送时长的单位为毫秒。")
+        assert "发送时长" not in out or any("信息" in t for t in out)
