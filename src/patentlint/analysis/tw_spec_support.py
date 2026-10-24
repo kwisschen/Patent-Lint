@@ -500,6 +500,12 @@ _TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
 # "使用者介面" as a claim term should match both bare "使用者介面" in
 # spec and "於該使用者介面上" in spec.
 _TW_LEADING_PREPOSITIONS: tuple[str, ...] = ("於", "到", "在", "自", "由")
+# Words that open with one of those prepositions (自動聚焦系統, 自由端, 到達角).
+# A census over the 1,073-draft TW corpus found each of these heading real
+# terms (自動 36, 自主 28, 到達 23); the strip turned 自動聚焦系統 into 動聚焦系統.
+_TW_PREPOSITION_WORD_HEADS: tuple[str, ...] = (
+    "自動", "自主", "自舉", "自身", "自由", "自然", "自我", "自旋", "到達",
+)
 
 # Trailing parenthetical reference numerals per 專利法施行細則 §19 - drafters
 # inline element numerals like 容器本體(100), 第一長度(L1), 栓軸部(2212a)
@@ -591,6 +597,8 @@ def _normalize_for_spec_support_tw(text: str, claim_text: str = "") -> str:
     # strip below, so the whole clause survives normalization (#496).
     t = _strip_leading_fragments(t)
     for prep in _TW_LEADING_PREPOSITIONS:
+        if t.startswith(_TW_PREPOSITION_WORD_HEADS):
+            break
         if t.startswith(prep) and len(t) > len(prep):
             t = t[len(prep):]
             break
@@ -1099,6 +1107,8 @@ def _drop_clause_fragment_tw(orig: str, term: str) -> str:
     # element, captured by its own arm; this span is the verb's complement.
     if "coverb_article" in m and re.match(r"[至到]一", term):
         return ""
+    if "temporal_hou" in m and len(term) >= 4 and term.endswith("後才"):
+        term = term[:-2]  # `加熱後才` ("only after heating") -> `加熱`
     if "temporal_hou" in m and len(term) >= 3 and term.endswith("後"):
         term = term[:-1]  # `濾波後` ("after filtering") -> `濾波`
     if "comparison_yu" in m and term.endswith(("不同於", "相同於")):
@@ -1126,8 +1136,91 @@ def _spec_support_final_term_tw(orig: str, norm: str, claim_text: str) -> str:
     norm = _strip_trailing_bufen_before_verb(norm, claim_text)
     orig = _strip_trailing_predicate_before_marker(orig, claim_text)
     norm = _strip_trailing_predicate_before_marker(norm, claim_text)
+    if _MARKUSH_GROUP_RE.match(orig) or (
+            orig in ("之群組", "的群組") and _MARKUSH_GROUP_RE.search(claim_text)):
+        return ""
+    # A capture running into the frame keeps the alternative in front of it
+    # (甲、乙及丙所組成之群組 -> 丙): that member is a claimed element.
+    frame = _MARKUSH_GROUP_RE.search(norm)
+    if frame:
+        norm = norm[: frame.start()]
+        if len(norm) < _MIN_INVENTORY_LENGTH:
+            return ""
     term = _normalize_for_spec_support_tw(norm or orig, claim_text)
-    return _drop_clause_fragment_tw(orig, term)
+    term = _drop_clause_fragment_tw(orig, term)
+    term = _cut_at_relative_suo_tw(term)
+    term = _strip_paired_predicate_tail_tw(term, claim_text)
+    # An interior cut can expose a conjunction the earlier strips ran before
+    # (一第一閥門及至少一第二閥門 cut at 至少 leaves 第一閥門及).
+    term = _strip_trailing_conjunction(term)
+    # A comparison verb is the predicate on the element before it (閾值等於,
+    # 濃度高於): keep the element. The noun capture stops at 於, so the verb
+    # usually arrives as its first character alone (頻率等, 頂部低).
+    term = _strip_stranded_comparison_tw(term, claim_text)
+    for verb in _TW_COMPARISON_VERBS:
+        if term.endswith(verb):
+            head = term[: -len(verb)]
+            if len(head) >= _MIN_INVENTORY_LENGTH and not head.endswith(_TW_CONJUNCTIONS + ("或",)):
+                term = head
+            break
+    # Otherwise a name never ends in the preposition 於 or a determiner:
+    # 有嵌設於 and 鎖定程序以固定該 are a verb phrase cut off before its object.
+    if term.endswith(("於", "該")) and not term.endswith("應該"):
+        return ""
+    return term if len(term) >= _MIN_INVENTORY_LENGTH else ""
+
+
+def _strip_stranded_comparison_tw(term: str, claim_text: str) -> str:
+    if (len(term) - 1 >= _MIN_INVENTORY_LENGTH and term[-1] in "等大小高低多少優差"
+            and term + "於" in claim_text):
+        # 上限值或小於 leaves the alternative's 或 behind too.
+        return term[:-2] if term[-2] == "或" and len(term) - 2 >= _MIN_INVENTORY_LENGTH else term[:-1]
+    return term
+
+
+_TW_COMPARISON_VERBS: tuple[str, ...] = (
+    "大於或等於", "小於或等於", "大於", "小於", "等於", "高於", "低於",
+    "多於", "少於", "優於", "差於",
+)
+
+
+# The Markush frame 選自由A、B及C所組成之群組: the group is the frame, not an
+# element of the claim.
+_MARKUSH_GROUP_RE = re.compile(r"(?:所組成|組成)[之的]群組")
+
+# 所 + verb is a relative clause on the noun before it (感測裝置所量測的溫度值,
+# 設定檔所列之參數): the element is the noun. Words that end in 所 (場所,
+# 處所, 研究所) and 所 opening 所有 / 所以 / 所在 are not that construction.
+_SUO_WORD_LEADS_TW: frozenset[str] = frozenset("場處究診廁務出易住")
+_SUO_WORD_TAILS_TW: frozenset[str] = frozenset("有以在")
+
+
+def _cut_at_relative_suo_tw(term: str) -> str:
+    # Only a short verb may follow 所 to the end of the term: a longer run is
+    # the attributive 第一所預測製程圖案, where 所預測 sits inside the name.
+    for i in range(max(_MIN_INVENTORY_LENGTH, len(term) - 4), len(term) - 1):
+        if (term[i] == "所" and term[i - 1] not in _SUO_WORD_LEADS_TW
+                and term[i + 1] not in _SUO_WORD_TAILS_TW):
+            return term[:i]
+    return term
+
+
+# A predicate tail and the text that proves it verbal when it follows the term
+# in the claim: 由一石墨片製成 (made of), 正處於 (is in), 判定是否
+# (determines whether), 更經由 (further via).
+_TW_PAIRED_PREDICATE_TAILS: tuple[tuple[str, str], ...] = (
+    ("製", "成"), ("正處", "於"), ("判定", "是否"), ("更", "經"),
+)
+
+
+def _strip_paired_predicate_tail_tw(term: str, claim_text: str) -> str:
+    for tail, follow in _TW_PAIRED_PREDICATE_TAILS:
+        if not term.endswith(tail) or len(term) - len(tail) < _MIN_INVENTORY_LENGTH:
+            continue
+        pos = claim_text.find(term)
+        if pos >= 0 and claim_text.startswith(follow, pos + len(term)):
+            return term[: -len(tail)]
+    return term
 
 
 def _starts_inside_compound_tw(orig: str, norm: str) -> bool:
@@ -1141,12 +1234,11 @@ def _starts_inside_compound_tw(orig: str, norm: str) -> bool:
     spans are load-bearing introductions (dropping them there manufactured 51
     findings), and an inventory drop can only remove a phrase, never add one.
     """
-    return (
-        bool(norm)
-        and norm[0] in _F10_SINGLE_CHAR_SUFFIXES_TW
-        and orig[:2] in _COMPOUND_HEAD_VERBS_TW
-        and orig == orig[:2] + norm
-    )
+    if not norm or not orig.startswith(orig[:2] + norm):
+        return False
+    if orig[:2] in _COMPOUND_HEAD_VERBS_TW:
+        return norm[0] in _F10_SINGLE_CHAR_SUFFIXES_TW
+    return norm[0] == "器" and orig[:2] in _ACTUATOR_HEAD_VERBS_TW
 
 
 # Verbs that head connector-family compounds (連接器 / 連接柱 / 連結件). A
@@ -1155,6 +1247,122 @@ def _starts_inside_compound_tw(orig: str, norm: str) -> bool:
 # one that forms such compounds; whatever it leaves behind (器..., 柱...) is a
 # fragment whatever precedes it.
 _COMPOUND_HEAD_VERBS_TW: frozenset[str] = frozenset({"連接", "連結"})
+# 執行 heads only 執行器 (actuator): with any other suffix character it is the
+# verb taking a real object (執行層析分離製程, 執行模組更新).
+_ACTUATOR_HEAD_VERBS_TW: frozenset[str] = frozenset({"執行"})
+
+
+_BACK_REFERENCE_PREFIXES_TW: tuple[str, ...] = ("所述", "前述", "上述", "該")
+_QUANTIFIER_OPENERS_TW: tuple[str, ...] = ("至少", "一", "複數", "多", "數", "兩")
+
+
+def _is_quantified_back_reference_tw(
+    orig: str, norm: str, claim_text: str
+) -> bool:
+    """A quantified span the drafter wrote as a BACK-REFERENCE (所述至少一X).
+
+    The quantifier arm matches 至少一X wherever it occurs, so in 所述至少一X it
+    registers the reference as a new introduction, and with nothing ahead of
+    the noun scan to stop it the capture runs on into the predicate
+    (X彎折成型, X呈L形). The element itself is introduced elsewhere and
+    inherits that introduction's support outcome, so the inventory skips the
+    span when every occurrence of it follows a determiner.
+    """
+    # The noun must open right after the quantifier (至少一個 / 一或多個 are the
+    # longest, 4 characters). A noun further into the span is a different
+    # element: in 所述一對卡持臂的支撐部 the 支撐部 is new, and only the
+    # possessor 卡持臂 is a reference.
+    if (orig == norm or not orig.startswith(_QUANTIFIER_OPENERS_TW)
+            or not 0 < orig.find(norm) <= 4):
+        return False
+    # Test the quantified noun itself, not the recorded span: the extractor
+    # can record a later 所述兩X內 while the first mention 包括兩X, is the
+    # real introduction.
+    quantified = orig[: orig.find(norm) + len(norm)]
+    start = claim_text.find(quantified)
+    if start < 0:
+        return False
+    while start >= 0:
+        if not claim_text[:start].endswith(_BACK_REFERENCE_PREFIXES_TW):
+            return False
+        start = claim_text.find(quantified, start + 1)
+    return True
+
+
+# Characters before 一 that make it part of a word (第一 / 唯一 / 統一 / 歸一化 / 進一步,
+# the compound ordinal 第十一), not a quantifier opening a new element.
+_YI_WORD_LEADS_TW: frozenset[str] = frozenset("第唯同統單進萬均逐專劃整歸十百千")
+# ...and what follows 一 in a chemical name (乳糖一水合物, 一氧化碳).
+_YI_CHEMICAL_HEADS_TW: tuple[str, ...] = ("水合", "氧化", "價")
+
+
+def _spans_two_introductions_tw(term: str, claim_norms: set[str]) -> bool:
+    """The term runs from one element, through a predicate, into the next.
+
+    側板延展形成一凸緣 and 輸出電流減去一偏移電流 are clauses: the 一 inside
+    them opens a second element that the claim introduces on its own. Neither
+    reading of the whole span names an element, and both nouns reach the
+    inventory through their own introductions.
+    """
+    for i in range(2, len(term) - 1):
+        if term[i] != "一" or term[i - 1] in _YI_WORD_LEADS_TW:
+            continue
+        rest = term[i + 1:]
+        # A fraction (四分之一波片) or a chemical name is one word.
+        if term[i - 2:i] == "分之" or rest.startswith(_YI_CHEMICAL_HEADS_TW):
+            continue
+        if any(len(n) >= 2 and n != term and (n.startswith(rest) or rest.startswith(n))
+               for n in claim_norms):
+            return True
+    return False
+
+
+_LATIN_TERM_RE = re.compile(r"[A-Za-z][A-Za-z0-9 .\-/+]*")
+
+
+def _is_parenthetical_gloss_tw(term: str, claim_text: str) -> bool:
+    """A Latin gloss of the CJK name before it: 同步訊號(Sync).
+
+    The CJK name is the element and is checked on its own; the gloss is a
+    translation of it, not a second element.
+    """
+    if not _LATIN_TERM_RE.fullmatch(term):
+        return False
+    return re.search(
+        r"[\u4e00-\u9fff][（(]" + re.escape(term) + r"[)）]", claim_text
+    ) is not None
+
+
+# What a split quantifier leaves on a back-reference (所述一或多種X -> 種X).
+_MEASURE_RESIDUE_TW_RE = re.compile(r"^(?:或多[種個條]|或更多[種個條]|[種個條])")
+
+
+def _inventory_terms_tw(
+    orig: str, norm: str, claim: Claim, claim_norms: set[str]
+) -> list[str]:
+    """The inventory terms one introduction contributes, after every filter."""
+    root = _spec_support_final_term_tw(orig, norm, claim.text)
+    if not root:
+        return []
+    out = []
+    for final in _split_on_conjunction(root):
+        if not final or len(final) < _MIN_INVENTORY_LENGTH:
+            continue
+        if len(final) > _MAX_INVENTORY_LENGTH:
+            continue
+        if _has_leading_reject(final) or _has_interior_reject(final):
+            continue
+        # R52: lexeme-gated leading conjunction (並 + verb).
+        if _has_leading_conjunction_tw(final):
+            continue
+        if final in _TW_GENERIC_TERMS or _is_boilerplate(final):
+            continue
+        if _spans_two_introductions_tw(final, claim_norms):
+            continue
+        if _is_parenthetical_gloss_tw(final, claim.text):
+            continue
+        out.append(final)
+    return out
 
 
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
@@ -1178,10 +1386,11 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
     """
     seen: dict[str, int] = {}
     inventory: list[tuple[str, str]] = []
+    deferred: list[tuple[str, str]] = []
     for claim in claims:
-        for orig, norm in extract_introductions_tw(
-            claim, suppress_dep_preamble=True
-        ):
+        pairs = extract_introductions_tw(claim, suppress_dep_preamble=True)
+        claim_norms = {norm for _orig, norm in pairs}
+        for orig, norm in pairs:
             # 部分 verb-gate (#292/#305): an over-capture ending in 部分 that is
             # immediately FOLLOWED by a content verb in the claim text is the
             # adverbial 部分 ("partly", e.g. 延伸部部分延伸 = "the extension partly
@@ -1191,25 +1400,22 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
             # so it is untouched (a blanket trailing strip would FN-drop those).
             if _starts_inside_compound_tw(orig, norm):
                 continue
-            root = _spec_support_final_term_tw(orig, norm, claim.text)
-            if not root:
-                continue
-            for final in _split_on_conjunction(root):
-                if not final or len(final) < _MIN_INVENTORY_LENGTH:
-                    continue
-                if len(final) > _MAX_INVENTORY_LENGTH:
-                    continue
-                if _has_leading_reject(final) or _has_interior_reject(final):
-                    continue
-                # R52: lexeme-gated leading conjunction (並 + verb).
-                if _has_leading_conjunction_tw(final):
-                    continue
-                if final in _TW_GENERIC_TERMS or _is_boilerplate(final):
-                    continue
-                if final in seen:
-                    continue
-                seen[final] = claim.id
-                inventory.append((claim.id, final))
+            back_reference = _is_quantified_back_reference_tw(orig, norm, claim.text)
+            for final in _inventory_terms_tw(orig, norm, claim, claim_norms):
+                if back_reference:
+                    deferred.append((claim.id, final))
+                elif final not in seen:
+                    seen[final] = claim.id
+                    inventory.append((claim.id, final))
+    # A back-reference counts only when nothing introduced covers its head:
+    # the extractor can miss the real introduction, and then the reference is
+    # the element's only entry.
+    for claim_id, final in deferred:
+        core = _MEASURE_RESIDUE_TW_RE.sub("", final)
+        if final in seen or any(core.startswith(t) for t in seen):
+            continue
+        seen[final] = claim_id
+        inventory.append((claim_id, final))
     return inventory
 
 

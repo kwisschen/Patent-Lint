@@ -49,6 +49,16 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # SHA-256 of NFKC-normalised fragments taken from reporters' unfiled drafts and
 # since scrubbed. Plaintext deliberately absent; see the module docstring.
 BANNED_HASHES: frozenset[str] = frozenset({
+    # 2026-10-24, wave C TW spec-support batch: comment examples taken from
+    # the reports while fixing them, replaced with synthesized ones before commit.
+    "39f80661b9adb7248b52335152e18bde47b826769da76ba43ea6df6a98e25197",
+    "c2ff8ee5f605ce5688e78d41e88aadb7ed245841c6af76c9528390a5762e5c76",
+    "85a94c540001b705ca30990e2fb988c471cd98a1ec1aad99c3cfd7bdf2e810fc",
+    "f2b21581d427bb6d9c0fb646f1d61c09fcaec79bd1b86c97df13dddf85026384",
+    "bad03dad7713e0690bd981dc7ff98ee891ed9b7ce42e3544b8885b764d22d26b",
+    "fb06b5f4f44469623df3e209b90f7fdc9f419a2ad6413af4c6a4bd407b60666b",
+    "ebfb64c32505e200504f2a3c14b8a5dba8f751e531e38df461d69df8eca1eda1",
+    "ca51c7e1950eeb4e129632149b2f4b2f301639f39b592e8ea496c0b071d75149",
     # 2026-09-29, reports #796 / #800 (TW D1): an element name quoted into a
     # shipped source comment while fixing the report.
     "4841f318b5bfa960370c76c9dbc70bfce4e010d374011c955470e3ffe441f292",

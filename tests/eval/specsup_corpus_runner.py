@@ -201,6 +201,10 @@ def _term_defects(juris: str, term: str) -> list[str]:
         # (以擷取一, 傳遞一). The walker calls this the object-final shape.
         if term and term[-1] in "\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341":
             out.append("ends in a bare quantifier")
+        # Nor does one end in the preposition 於/于 or a determiner (有嵌設於,
+        # 以固定該): that is a verb phrase cut off before its object.
+        if term.endswith(("於", "于", "該", "该")) and not term.endswith(("應該", "应该")):
+            out.append("ends in a preposition or determiner")
     else:
         low = " " + term.lower()
         for tl in _PREDICATE_TAILS_US:
