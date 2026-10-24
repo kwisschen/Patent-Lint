@@ -2131,10 +2131,14 @@ class TestBareNounHelper:
             txt, [_claim(1, txt)], "識別資料", ro)
 
     def test_short_term_below_gate(self):
-        """A 2-char term is too generic - below the ≥4-char gate."""
-        txt = "包含軸承，所述軸承轉動。"
+        """A 2-char term at a bare clause boundary stays below the gate; as the
+        object of an introducing verb it counts (wave C ruling, 2026-10-24)."""
+        txt = "，軸承轉動，所述軸承轉動。"
         ro = txt.find("所述軸承")
         assert not has_bare_noun_introduction_tw(txt, [_claim(1, txt)], "軸承", ro)
+        txt = "包含軸承，所述軸承轉動。"
+        ro = txt.find("所述軸承")
+        assert has_bare_noun_introduction_tw(txt, [_claim(1, txt)], "軸承", ro)
 
     def test_digit_paren_term_excluded(self):
         """Paren-numeral terms route through the paren-asymmetry path."""

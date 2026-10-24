@@ -67,7 +67,9 @@ def test_coordinator_is_not_a_predicate():
                  "第二節點與", "第二節點") is None
 
 
-def test_ordinal_possessive_stays_out_as_in_r9():
-    assert "第一輸入端" in _flagged(
+def test_ordinal_possessive_with_an_introduced_possessor_counts():
+    # Wave C ruling (2026-10-24): the R9 ordinal exclusion is lifted when the
+    # possessor is itself introduced.
+    assert "第一輸入端" not in _flagged(
         "1. 一種電路，包括：一放大器，所述放大器的第一輸入端耦接一基準電壓。",
         "2. 如請求項1所述的電路，其中一分壓電路連接所述放大器的所述第一輸入端。")

@@ -51,10 +51,14 @@ CN terms worth spec-support analysis).
 
 from __future__ import annotations
 
+import collections
 import re
 
 from patentlint.analysis.cjk_tokenize import tokenize_cn
 from patentlint.analysis.cn_claims import (
+    _F10_SINGLE_CHAR_SUFFIXES_CN,
+    _INTERIOR_VERB_BOUNDARIES_CN,
+    _TRAILING_VERB_DENYLIST_CN,
     extract_introductions_cn,
     normalize_arabic_ordinal_to_cjk,
     normalize_reference_term_cn,
@@ -365,6 +369,14 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
 # are CN-native prepositions absent from TW practice).
 # 作为 ("as") is the coverb of 其中另一作为X; CN R71 (#879), mirror of TW R65.
 _CN_LEADING_PREPOSITIONS: tuple[str, ...] = ("作为", "于", "到", "在", "自", "由", "从", "向", "对")
+# Words that open with one of those prepositions (从动带轮, 对象, 向量, 自由端).
+# A census over the CN corpus intros found each heading real terms (自动 64,
+# 从动 60, 对象 58, 自由 27, 对接 17, 向量 15, 在线 15); the strip cut them to
+# 动带轮 / 象 / 量. Mirror of the TW guard (wave C).
+_CN_PREPOSITION_WORD_HEADS: tuple[str, ...] = (
+    "自动", "自由", "自主", "自身", "自适应", "自锁", "从动", "从属",
+    "对象", "对应", "对接", "向量", "在线",
+)
 
 # Reference numerals per 专利法实施细则 §21 - drafters inline element
 # numerals like 底座(10). NON-ANCHORED to handle:
@@ -503,6 +515,8 @@ def _normalize_for_spec_support_cn(
     t = _PAREN_REF_NUMERAL_RE.sub("", text).strip()
     t = _BARE_REF_NUMERAL_CN_RE.sub("", t).strip()
     for prep in _CN_LEADING_PREPOSITIONS:
+        if t.startswith(_CN_PREPOSITION_WORD_HEADS):
+            break
         if t.startswith(prep) and len(t) > len(prep):
             t = t[len(prep):]
             break
@@ -515,6 +529,8 @@ def _normalize_for_spec_support_cn(
         strict_qualifier_matching=strict_qualifier_matching,
     )
     t = _strip_trailing_conjunction_cn(t)
+    # Before the token strip, which takes the 于 off 等于 and strands 等.
+    t = _strip_comparison_verb_cn(t)
     t = _strip_spec_support_trailing_tokens_cn(t)
     # #321 parity - re-run the conjunction strip after the token strip: a token
     # strip can remove an intervening predicate/preposition and re-expose a
@@ -525,7 +541,9 @@ def _normalize_for_spec_support_cn(
     t = _BARE_REF_NUMERAL_CN_RE.sub("", t).strip()
     # R60 - interior transfer coverb, last so it runs on the stripped head.
     t = _cut_at_interior_coverb_cn(t)
-    return t
+    # A comparison verb is the predicate on the element before it (阈值等于,
+    # 浓度高于): keep the element.
+    return _strip_comparison_verb_cn(t)
 
 
 def _strip_spec_support_trailing_tokens_cn(term: str) -> str:
@@ -719,6 +737,160 @@ def _collect_spec_text_cn(doc: CnPatentDocument) -> str:
     return normalize_arabic_ordinal_to_cjk("\n".join(parts))
 
 
+# Mirrors of the TW wave C inventory rules; see tw_spec_support for the
+# reasoning behind each.
+_BACK_REFERENCE_PREFIXES_CN: tuple[str, ...] = ("所述", "前述", "上述", "该")
+_QUANTIFIER_OPENERS_CN: tuple[str, ...] = ("至少", "一", "多", "数", "两")
+_MARKUSH_GROUP_CN_RE = re.compile(r"(?:所|由)?组成[之的]群组")
+_YI_WORD_LEADS_CN: frozenset[str] = frozenset("第唯同统单进万均逐专划整归十百千")
+_YI_CHEMICAL_HEADS_CN: tuple[str, ...] = ("水合", "氧化", "价")
+_LATIN_TERM_CN_RE = re.compile(r"[A-Za-z][A-Za-z0-9 .\-/+]*")
+
+
+# What a split quantifier leaves on a back-reference (所述一或多種X -> 種X).
+_MEASURE_RESIDUE_CN_RE = re.compile(r"^(?:或多[种个条]|或更多[种个条]|[种个条])")
+
+
+# Reference-confirmed terms: mirror of the TW pass (wave C); see
+# tw_spec_support._confirm_against_references_tw for the reasoning.
+_BOUNDED_REFERENCE_CN_RE = re.compile(
+    r"(?:所述|前述|该)((?:(?!所述|前述|该)[\u4e00-\u9fffA-Za-z0-9]){2,16}?)"
+    r"(?=[，。；：、,.;:（(的之与及和或\s]|$)"
+)
+_BARE_ORDINAL_CN_RE = re.compile(r"第[一二三四五六七八九十百\d]+")
+_PREDICATE_OPENING_CHARS_CN: frozenset[str] = frozenset(
+    "更具做将以使于在并且而也均皆已才则即被从往给把让令呈"
+)
+_FORMATION_VERBS_CN: frozenset[str] = frozenset({"成型", "成形", "形成", "构成", "而成"})
+_PREDICATE_VERBS_CN: tuple[str, ...] = tuple(sorted(
+    {v for v in tuple(_INTERIOR_VERB_BOUNDARIES_CN) + tuple(_TRAILING_VERB_DENYLIST_CN)
+     if len(v) >= 2} | {"使用"},
+    key=len, reverse=True,
+))
+
+
+def _opens_predicate_cn(rest: str) -> bool:
+    # 發送定時有關的資訊: the element is the head after 的, and the front is
+    # its relative clause, so the run-on reading does not apply.
+    if re.search(r"[的之].", rest):
+        return False
+    for verb in _PREDICATE_VERBS_CN:
+        if rest.startswith(verb):
+            tail = rest[len(verb):]
+            if tail and tail[0] in _F10_SINGLE_CHAR_SUFFIXES_CN:
+                return False
+            if (len(tail) in (2, 3) and not set(tail) & _PREDICATE_OPENING_CHARS_CN
+                    and tail not in _PREDICATE_VERBS_CN
+                    and tail not in _FORMATION_VERBS_CN):
+                return False
+            return True
+    return rest[0] in _PREDICATE_OPENING_CHARS_CN
+
+
+def _confirm_against_references_cn(
+    inventory: list[tuple[int, str]], claims: list[Claim]
+) -> list[tuple[int, str]]:
+    refs: set[str] = set()
+    for claim in claims:
+        for m in _BOUNDED_REFERENCE_CN_RE.finditer(claim.text):
+            # 如請求項1所述的X: that 所述 closes the preamble, it is no reference.
+            if not m.group(1).startswith("的"):
+                refs.add(m.group(1))
+    head_counts = collections.Counter(t[-1] for t in refs if len(t) >= 2)
+    out: list[tuple[int, str]] = []
+    seen: set[str] = set()
+    for cid, term in inventory:
+        last = term[-1]
+        ends_as_noun = last not in _PREDICATE_OPENING_CHARS_CN and (
+            last in _F10_SINGLE_CHAR_SUFFIXES_CN or head_counts[last] >= 2
+        )
+        if term not in refs and not ends_as_noun:
+            heads = [
+                r for r in refs
+                if len(r) >= _MIN_INVENTORY_LENGTH and len(r) < len(term)
+                and term.startswith(r) and not _BARE_ORDINAL_CN_RE.fullmatch(r)
+                and _opens_predicate_cn(term[len(r):])
+            ]
+            if heads:
+                term = max(heads, key=len)
+        if term not in seen:
+            seen.add(term)
+            out.append((cid, term))
+    return out
+
+
+def _is_quantified_back_reference_cn(orig: str, norm: str, claim_text: str) -> bool:
+    """所述至少一X: a reference the quantifier arm registered as an intro."""
+    if (orig == norm or not orig.startswith(_QUANTIFIER_OPENERS_CN)
+            or not 0 < orig.find(norm) <= 4):
+        return False
+    # Test the quantified noun itself, not the recorded span: the extractor
+    # can record a later 所述兩X內 while the first mention 包括兩X, is the
+    # real introduction.
+    quantified = orig[: orig.find(norm) + len(norm)]
+    start = claim_text.find(quantified)
+    if start < 0:
+        return False
+    while start >= 0:
+        if not claim_text[:start].endswith(_BACK_REFERENCE_PREFIXES_CN):
+            return False
+        start = claim_text.find(quantified, start + 1)
+    return True
+
+
+def _spans_two_introductions_cn(term: str, claim_norms: set[str]) -> bool:
+    """侧板延展形成一凸缘: a clause running into a second introduced element."""
+    for i in range(2, len(term) - 1):
+        if term[i] != "一" or term[i - 1] in _YI_WORD_LEADS_CN:
+            continue
+        rest = term[i + 1:]
+        if term[i - 2:i] == "分之" or rest.startswith(_YI_CHEMICAL_HEADS_CN):
+            continue
+        if any(len(n) >= 2 and n != term and (n.startswith(rest) or rest.startswith(n))
+               for n in claim_norms):
+            return True
+    return False
+
+
+def _is_parenthetical_gloss_cn(term: str, claim_text: str) -> bool:
+    """A Latin gloss of the CJK name before it: 同步信号(Sync)."""
+    if not _LATIN_TERM_CN_RE.fullmatch(term):
+        return False
+    return re.search(
+        r"[\u4e00-\u9fff][（(]" + re.escape(term) + r"[)）]", claim_text
+    ) is not None
+
+
+_CN_COMPARISON_VERBS: tuple[str, ...] = (
+    "大于或等于", "小于或等于", "大于", "小于", "等于", "高于", "低于",
+    "多于", "少于", "优于", "差于",
+)
+
+
+def _strip_stranded_comparison_cn(term: str, claim_text: str) -> str:
+    """The CN noun capture stops at 于, so 阈值等于 arrives as 阈值等.
+
+    Strip the stranded first character of the comparison verb when the claim
+    shows the 于 right after it. Run on both the inventory and the Tier-2 raw
+    index so the two key the same term.
+    """
+    if (len(term) - 1 >= _MIN_INVENTORY_LENGTH and term[-1] in "等大小高低多少优差"
+            and term + "于" in claim_text):
+        # 上限值或小於 leaves the alternative's 或 behind too.
+        return term[:-2] if term[-2] == "或" and len(term) - 2 >= _MIN_INVENTORY_LENGTH else term[:-1]
+    return term
+
+
+def _strip_comparison_verb_cn(term: str) -> str:
+    for verb in _CN_COMPARISON_VERBS:
+        if term.endswith(verb):
+            head = term[: -len(verb)]
+            if len(head) >= _MIN_INVENTORY_LENGTH and not head.endswith(("或", "及", "与", "和")):
+                return head
+            break
+    return term
+
+
 def _build_inventory_cn(
     claims: list[Claim],
     *,
@@ -734,14 +906,34 @@ def _build_inventory_cn(
     """
     seen: dict[str, int] = {}
     inventory: list[tuple[int, str]] = []
+    deferred: list[tuple[int, str]] = []
     for claim in claims:
-        for orig, norm in extract_introductions_cn(
+        pairs = extract_introductions_cn(
             claim,
             strict_qualifier_matching=strict_qualifier_matching,
-        ):
-            root = _normalize_for_spec_support_cn(
-                norm or orig,
-                strict_qualifier_matching=strict_qualifier_matching,
+        )
+        claim_norms = {norm for _orig, norm in pairs}
+        for orig, norm in pairs:
+            back_reference = _is_quantified_back_reference_cn(
+                orig, norm, claim.text
+            )
+            if _MARKUSH_GROUP_CN_RE.match(orig) or (
+                    orig in ("之群组", "的群组")
+                    and _MARKUSH_GROUP_CN_RE.search(claim.text)):
+                continue
+            # A capture running into the frame keeps the alternative in front
+            # of it (A、B和光干涉组成的群组 -> 光干涉). Mirror of TW.
+            frame = _MARKUSH_GROUP_CN_RE.search(norm or orig)
+            if frame:
+                norm = (norm or orig)[: frame.start()]
+                if len(norm) < _MIN_INVENTORY_LENGTH:
+                    continue
+            root = _strip_stranded_comparison_cn(
+                _normalize_for_spec_support_cn(
+                    norm or orig,
+                    strict_qualifier_matching=strict_qualifier_matching,
+                ),
+                claim.text,
             )
             if not root:
                 continue
@@ -762,12 +954,35 @@ def _build_inventory_cn(
                     continue
                 if final in _CN_GENERIC_TERMS or _is_boilerplate_cn(final):
                     continue
+                # A name never ends in the preposition 于 or a determiner
+                # (以固定该): that is a verb phrase cut off before its object.
+                # Comparison verbs were already stripped by the normalizer.
+                # Mirror of TW (wave C).
+                if final.endswith(("于", "该")) and not final.endswith("应该"):
+                    continue
                 if final in contamination_terms:
+                    continue
+                if _spans_two_introductions_cn(final, claim_norms):
+                    continue
+                if _is_parenthetical_gloss_cn(final, claim.text):
+                    continue
+                if back_reference:
+                    deferred.append((claim.id, final))
                     continue
                 if final in seen:
                     continue
                 seen[final] = claim.id
                 inventory.append((claim.id, final))
+    inventory = _confirm_against_references_cn(inventory, claims)
+    seen = {t: cid for cid, t in inventory}
+    # A back-reference counts only when nothing introduced covers its head
+    # (the extractor can miss the real introduction). Mirror of TW.
+    for claim_id, final in deferred:
+        core = _MEASURE_RESIDUE_CN_RE.sub("", final)
+        if final in seen or any(core.startswith(t) for t in seen):
+            continue
+        seen[final] = claim_id
+        inventory.append((claim_id, final))
     return inventory
 
 
@@ -846,9 +1061,12 @@ def check_spec_support_cn(
             claim,
             strict_qualifier_matching=strict_qualifier_matching,
         ):
-            final = _normalize_for_spec_support_cn(
-                norm or orig,
-                strict_qualifier_matching=strict_qualifier_matching,
+            final = _strip_stranded_comparison_cn(
+                _normalize_for_spec_support_cn(
+                    norm or orig,
+                    strict_qualifier_matching=strict_qualifier_matching,
+                ),
+                claim.text,
             )
             if not final:
                 continue

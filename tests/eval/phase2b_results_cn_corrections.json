@@ -359,6 +359,1106 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN103141021B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 21: '和第三端子设置得靠近所述整体式磁芯的第一侧，所述公'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 1: '所述引线框组件被附接到所述芯部构件的第一侧，使得被'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 1: '所述引线框组件被附接到所述芯部构件的第一侧，使得被'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 1: '所述引线框组件被附接到所述芯部构件的第一侧，使得被'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 22: '单个第一类型的引线框组件在所述壳体的第一端处被附接'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 22,
+            "term": "第一端",
+            "reference_form": "所述第一端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 22: '单个第二类型的引线框组件在所述壳体的第二端处附接到'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 22,
+            "term": "第二端",
+            "reference_form": "所述第二端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 24: '述突出部中的第一部分从所述芯部构件的第一侧延伸，并'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 24,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 29: '引线框组件包括被附接到所述芯部构件的第一侧的第一引'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 29,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 41: '引线框组件包括被附接到所述芯部构件的第一侧的第一引'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 41,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115435069A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 4: '的第一齿轮接地，同时将所述行星组件的第二齿轮接地或者'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第二齿轮",
+            "reference_form": "所述第二齿轮"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116169498A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 20: '三子集，所述配合接口部分在所述插槽的第一侧上，并且'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116169498A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24 (TW and CN): an ordinal possessive 所述X的第一Y introduces the first Y of X when X is itself introduced and no relation precedes the determiner. First mention in claim 26: '集，所述配合接口部分在所述第二插槽的第一侧上，并且'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 26,
+            "term": "第一侧",
+            "reference_form": "所述第一侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103404011B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 18: '决定单元，其基于阈值和为三角波'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "阈值",
+            "reference_form": "所述阈值"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104335561B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 4: '括向紧急服务发送通信。'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "通信",
+            "reference_form": "所述通信"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104335561B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 4: '括向紧急服务发送通信。'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "通信",
+            "reference_form": "所述通信"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104335561B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 14: '器向紧急服务发送通信。'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "通信",
+            "reference_form": "所述通信"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104335561B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 14: '器向紧急服务发送通信。'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "通信",
+            "reference_form": "所述通信"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105354747B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 17: '相关联的服务提供策略，和/或与'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "策略",
+            "reference_form": "所述策略"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105409068B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 4: '(1)接合而形成电连接的锁定电连'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "电连接",
+            "reference_form": "所述电连接"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN110166977B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 9: '向所述AMF发送终端的V2X配'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "终端",
+            "reference_form": "所述终端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN110166977B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 25: '向所述AMF发送终端的V2X配'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "终端",
+            "reference_form": "所述终端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN110166977B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 25: '向所述AMF发送终端的V2X配'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 27,
+            "term": "终端",
+            "reference_form": "所述终端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112019005B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '所述电感器中产生电流：(1)给'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "电流",
+            "reference_form": "所述电流"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112019005B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 9: '所述电感器中产生电流：(1)给'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "电流",
+            "reference_form": "所述电流"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112019005B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 15: '所述电感器中产生电流：(1)给'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "电流",
+            "reference_form": "所述电流"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113276826A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 9: '台(120)发送命令的计算机，'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "命令",
+            "reference_form": "所述命令"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113376364B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 162: '于闭合相态时位于结合点之上的样品'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 179,
+            "term": "结合点",
+            "reference_form": "所述结合点"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114502083A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 54: '表面之间限定具有厚度的间隙，其'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 54,
+            "term": "厚度",
+            "reference_form": "所述厚度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114761863A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 16: '变换的平面处设置光圈，所述光圈'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "光圈",
+            "reference_form": "所述光圈"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114793385A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '所述电子器件包括管脚，所述管脚'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 22,
+            "term": "管脚",
+            "reference_form": "所述管脚"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114793385A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '所述电子器件包括管脚，所述管脚'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 23,
+            "term": "管脚",
+            "reference_form": "所述管脚"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114793385A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '所述电子器件包括管脚，所述管脚'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 26,
+            "term": "管脚",
+            "reference_form": "所述管脚"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115606055A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '孔，所述内孔具有侧壁；外密封部'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "侧壁",
+            "reference_form": "所述侧壁"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115699428A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '池模块，并且包括上盖；以及灭火'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "上盖",
+            "reference_form": "所述上盖"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116170328A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 2: '和遗传算法，确定最优的最大偏差'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "最优",
+            "reference_form": "所述最优"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116438438A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 86: '发出的发射光生成信号；以及基于'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 86,
+            "term": "信号",
+            "reference_form": "所述信号"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116438438A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 99: '发出的发射光生成信号；以及基于'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 99,
+            "term": "信号",
+            "reference_form": "所述信号"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116438438A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 168: '接收的发射光生成信号；光收集系'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 168,
+            "term": "信号",
+            "reference_form": "所述信号"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116710682A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 21: '方法，包括：通过阀组件将液压流体'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "阀组件",
+            "reference_form": "所述阀组件"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN118199366A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 8: '布置成从电源接收电力的初级绕组'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "电力",
+            "reference_form": "所述电力"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN118391429A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 3: '体(1)上开设有安装口，所述安装'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "安装口",
+            "reference_form": "所述安装口"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120342228A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '述第一组开关接收电流；第二电容'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "电流",
+            "reference_form": "所述电流"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120342228A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 7: '述第一组开关接收电流的第一电容'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "电流",
+            "reference_form": "所述电流"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121465722A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '其适于计算已通过导管被递送到患'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "导管",
+            "reference_form": "该导管"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121465722A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 1: '其适于计算已通过导管被递送到患'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "导管",
+            "reference_form": "所述导管"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121487812A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 63: '方法，还包括经由电导管在所述控制'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 64,
+            "term": "电导管",
+            "reference_form": "所述电导管"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121536914A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 4: '艺液体冷凝以形成保存的工艺液体'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "保存",
+            "reference_form": "所述保存"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121536914A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 4: '气，所述蒸气包括蒸发的工艺液体'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "蒸发",
+            "reference_form": "所述蒸发"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121536914A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 5: '少一者冷凝以形成保存的工艺用水'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "保存",
+            "reference_form": "所述保存"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121536914A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb is an introduction. First mention in claim 7: '少一者冷凝以形成保存的工艺用水'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "保存",
+            "reference_form": "所述保存"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 29: '到所述芯部构件的与所述芯部构件相反的第二侧的第二引'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 29,
+            "term": "第二侧",
+            "reference_form": "所述第二侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115428275B",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 41: '到所述芯部构件的与所述芯部构件相反的第二侧的第二引'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 41,
+            "term": "第二侧",
+            "reference_form": "所述第二侧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116250152A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 20: 'E)导线的第二导线与所述凸形连接器的第二IDC触点相邻'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "第二IDC",
+            "reference_form": "所述第二IDC"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119523165A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 6: '蒸汽烟系统，其中所述蒸汽烟装置主体的第一形状要求预填'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "第一形状",
+            "reference_form": "所述第一形状"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121216181A",
+      "jurisdiction": "CN",
+      "source": "wave-c-ruling-3-relative-clause (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: a possessive or relative clause on an introduced element introduces the ordinal it modifies. First mention in claim 7: '于使来自所述电连接器的所述安装端中的第一部分穿透，以'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "第一部分",
+            "reference_form": "所述第一部分"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

@@ -4461,6 +4461,23 @@ def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
     return False
 
 
+def _bare_noun_verb_led_cn(text: str, i: int) -> bool:
+    """True if the occurrence at i is the object of an introducing verb."""
+    if i == 0 or text[i - 1] in ("该", "一"):
+        return False
+    if i >= 2 and text[i - 2:i] in ("所述", "前述"):
+        return False
+    # After 进行 / 执行 / 运行 the word is an action, after 经 a participle.
+    if text[:i].endswith(_BARE_NOUN_ACTION_LEADS_CN) or text.startswith("经", i):
+        return False
+    return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_CN)
+
+
+_BARE_NOUN_ACTION_LEADS_CN: tuple[str, ...] = ("进行", "执行", "运行", "实行", "实施", "经")
+# A word followed straight by a determiner is a verb taking its object.
+_BARE_NOUN_OBJECT_DETERMINERS_CN: tuple[str, ...] = ("该", "所述", "前述", "一")
+
+
 _BARE_NOUN_MARKUSH_CLOSERS_CN: tuple[str, ...] = ("二者", "三者", "四者", "任一", "任意")
 
 # R36 (2026-05-29): CJK noun-enumeration conjunctions accepted as left
@@ -4488,8 +4505,12 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     return not _bare_noun_compound_char_cn(text[j])
 
 
+_NEW_ARGUMENT_COVERBS_CN: tuple[str, ...] = ("用于", "以", "对", "为", "将", "被", "使")
+
+
 def has_possessive_introduction_cn(
-    claim_text: str, chain: list, term: str, ref_offset: int
+    claim_text: str, chain: list, term: str, ref_offset: int,
+    intros_by_term=None,
 ) -> bool:
     """R37 (2026-06-01) - TW R9 parity (issue #134 generalization).
 
@@ -4533,7 +4554,30 @@ def has_possessive_introduction_cn(
     # protect AND still cover the unambiguous locative-attribute
     # pattern (顶面/底面/侧面/端面 - non-ordinal short nouns that R9 was
     # designed for), exclude terms starting with the 第 ordinal prefix.
-    if t.startswith("第"):
+    # Wave C (Christopher's rulings 2026-10-24, mirror of TW): an ordinal head
+    # IS introduced by a possessive or relative clause when the noun right
+    # after the determiner is itself an introduced element (所述X的第一Y,
+    # 垂直于所述X的第二方向). The determiner governing the ordinal itself
+    # (该固定的第一抗原) stays a reference.
+    ordinal = t.startswith("第")
+    if ordinal and not intros_by_term:
+        return False
+
+    def _possessor_introduced(look_back: str) -> bool:
+        for det in ("所述", "前述", "该"):
+            k = look_back.rfind(det)
+            if k >= 0:
+                owner = look_back[k + len(det):].strip()
+                stripped = strip_leading_quantifier_cn(owner)
+                for base in (owner, stripped):
+                    for term in intros_by_term:
+                        if len(term) >= 2 and base.startswith(term):
+                            # The element opening its own clause (用於 / 以 /
+                            # 對 ...) is not what the 的 phrase modifies.
+                            return not any(
+                                c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_CN
+                            )
+                return False
         return False
 
     def _scan(text: str, limit: int | None) -> bool:
@@ -4548,7 +4592,10 @@ def has_possessive_introduction_cn(
             # 15-char window before that marker contains 所述/前述/该.
             if idx >= 1 and text[idx - 1] in ("的", "之"):
                 look_back = text[max(0, idx - 16):idx - 1]
-                if any(marker in look_back for marker in ("所述", "前述", "该")):
+                if ordinal:
+                    if _possessor_introduced(look_back):
+                        return True
+                elif any(marker in look_back for marker in ("所述", "前述", "该")):
                     # Right-clean intentionally skipped (same rationale as
                     # has_possessive_introduction_tw - verb-start chars
                     # would block legitimate intros of short locatives).
@@ -4577,7 +4624,11 @@ def has_bare_noun_introduction_cn(
     for the (a) compound-boundary and (b) possessive guards.
     """
     t = (term or "").strip()
-    if len(t) < _BARE_NOUN_MIN_LEN_CN:
+    # A shorter noun counts only as the object of an introducing verb
+    # (连接电阻的第一端): Christopher's ruling 2026-10-24 that an article-less
+    # earlier mention is an introduction. Mirror of TW.
+    short = len(t) < _BARE_NOUN_MIN_LEN_CN
+    if len(t) < 2:
         return False
     if any(ch.isdigit() for ch in t) or "(" in t:
         return False
@@ -4591,9 +4642,11 @@ def has_bare_noun_introduction_cn(
                 return False
             if limit is not None and idx >= limit:
                 return False
-            if _bare_noun_left_clean_cn(text, idx) and _bare_noun_right_clean_cn(
-                text, idx + n
-            ):
+            left = (_bare_noun_verb_led_cn(text, idx) if short
+                    else _bare_noun_left_clean_cn(text, idx))
+            if short and text.startswith(_BARE_NOUN_OBJECT_DETERMINERS_CN, idx + n):
+                left = False
+            if left and _bare_noun_right_clean_cn(text, idx + n):
                 return True
             start = idx + 1
 
@@ -4952,7 +5005,7 @@ def check_antecedent_basis_cn(
             # The intro extractors miss article-less data / attribute
             # nouns; this closes the gap. See has_bare_noun_introduction_cn.
             if resolved_intro is None and has_possessive_introduction_cn(
-                claim.text, chain, normalized_term, m.start()
+                claim.text, chain, normalized_term, m.start(), intros_by_term
             ):
                 continue
 

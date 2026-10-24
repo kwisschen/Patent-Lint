@@ -33,8 +33,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 LABELS_PATH = PROJECT_ROOT / 'tests/fixtures/us/antecedent_labels_us.json'
 
-from patentlint.analysis.claims import check_antecedent_basis
-from tests.eval.round1_corpus_harness import load_corpus, _build_doc
+from patentlint.analysis.claims import check_antecedent_basis  # noqa: E402 (after sys.path)
+from tests.eval.round1_corpus_harness import load_corpus, _build_doc  # noqa: E402
 
 
 def main() -> None:
@@ -70,15 +70,15 @@ def main() -> None:
 
     # Build key set
     label_keys = {
-        (l['fixture'], l['claim_id'], l['term'], l['reference_form'])
-        for l in labels
+        (lab['fixture'], lab['claim_id'], lab['term'], lab['reference_form'])
+        for lab in labels
     }
 
     # Drift counts
     label_only = label_keys - walker_keys
     walker_only = walker_keys - label_keys
     both = label_keys & walker_keys
-    print(f'\nDrift analysis:')
+    print('\nDrift analysis:')
     print(f'  In both: {len(both)}')
     print(f'  Label-only (walker drift): {len(label_only)}')
     print(f'  Walker-only (new findings): {len(walker_only)}')
