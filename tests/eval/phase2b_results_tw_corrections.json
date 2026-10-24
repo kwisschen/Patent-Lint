@@ -679,6 +679,606 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TWI861425B",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an ordinal possessive 所述X的/之第一Y introduces the first Y of X when X is itself introduced. The claim's first mention is the possessive in claim 4: '較長壁部分中的每一個定位，\\n該外殼的第一段在該第一'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第一段",
+            "reference_form": "該第一段"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI861425B",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an ordinal possessive 所述X的/之第一Y introduces the first Y of X when X is itself introduced. The claim's first mention is the possessive in claim 4: '度大於該殼體的最大高度，並且該外殼的第二段在該第二'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第二段",
+            "reference_form": "該第二段"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWM652480U",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-1-ordinal-possessive (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an ordinal possessive 所述X的/之第一Y introduces the first Y of X when X is itself introduced. The claim's first mention is the possessive in claim 8: '：一第三構件，其在該複數個導電元件之第三位置處接觸該'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "第三位置",
+            "reference_form": "該等第三位置"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW201347344A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 18: '膠囊，其被安置在電極層及電極像素'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "電極層",
+            "reference_form": "該電極層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW201942563A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 29: '第一光柵饋入經由物鏡且至流量槽'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 31,
+            "term": "物鏡",
+            "reference_form": "該物鏡"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202218626A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 17: '料係包含與配置於受試者之頭部之複'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "受試者",
+            "reference_form": "前述受試者"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 79: '裝置包括用於接收器具的通道，該'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 79,
+            "term": "器具",
+            "reference_form": "該器具"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 126: '少一個偵測器經由多工器與該感測單'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 127,
+            "term": "多工器",
+            "reference_form": "該多工器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202303891A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 1: '孔（TSV），在基底的第一區域'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "基底",
+            "reference_form": "所述基底"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202303891A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 11: '在基底的第一區域'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "基底",
+            "reference_form": "所述基底"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202311968A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 17: '的控制器發送包括檔案的至少檔案'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "檔案",
+            "reference_form": "所述檔案"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202313138A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 31: '(34)，其位於氣囊之內部，該'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 31,
+            "term": "氣囊",
+            "reference_form": "該氣囊"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202313138A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 31: '(34)，其位於氣囊之內部，該'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 34,
+            "term": "氣囊",
+            "reference_form": "該氣囊"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202313138A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 35: '(34)，其位於氣囊之內部，該'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 35,
+            "term": "氣囊",
+            "reference_form": "該氣囊"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202313138A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 37: '(34)，其位於氣囊之內部，該'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 37,
+            "term": "氣囊",
+            "reference_form": "該氣囊"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202327186A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 5: '中：前述本體包括安裝面以及貫穿前'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "安裝面",
+            "reference_form": "前述安裝面"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202327306A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 15: '避免輸出資料以在該刪餘'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 28,
+            "term": "資料",
+            "reference_form": "該資料"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202332739A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 15: '溶膠凝膠材料包括金屬之至少兩種'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "金屬",
+            "reference_form": "該金屬"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202332739A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 15: '溶膠凝膠材料包括金屬之至少兩種'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "金屬",
+            "reference_form": "該金屬"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 18: '壓向外部裝置提供電力、以及在降'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "電力",
+            "reference_form": "所述電力"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202342731A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 4: '烷能力、減少透過動物之甲烷排放'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "動物",
+            "reference_form": "該動物"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202345033A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 11: '在該輸入層處接收輸入；'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "輸入",
+            "reference_form": "該等輸入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202345033A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 16: '在該輸入層處接收輸入；'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "輸入",
+            "reference_form": "該等輸入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202527391A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 4: '之端部連結而形成頂部；前述頂部'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "頂部",
+            "reference_form": "前述頂部"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202537793A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 1: '個空氣噴出口，在臂頂板的下表面開'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "臂頂板",
+            "reference_form": "前述臂頂板"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202537925A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 8: '維進行排列以形成排列的纖維層。'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 12,
+            "term": "排列",
+            "reference_form": "所述排列"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202537925A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 8: '維進行排列以形成排列的纖維層。'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "排列",
+            "reference_form": "所述排列"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI895322B",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 16: '眼睛的光包括來自水準場的光和來自'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "水準場",
+            "reference_form": "所述水準場"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWM676930U",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. The claim's first mention is in claim 8: '第一中間部分包括間隙；  所述'. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "間隙",
+            "reference_form": "所述間隙"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202345909A",
+      "jurisdiction": "TW",
+      "source": "wave-c-ruling-2-bare-object (2026-10-24)",
+      "_note": "Christopher's ruling 2026-10-24: an article-less earlier mention as the object of an introducing verb (including a bare possessor in that object) is an introduction, as in CN. Claim 47 depends on claims 42/46, whose chain includes claim 1: '該mRNA包含抗原之編碼' introduces 抗原 bare as the possessor in the object of 包含. Read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 47,
+            "term": "抗原",
+            "reference_form": "該抗原"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

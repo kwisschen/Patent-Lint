@@ -1156,10 +1156,15 @@ class TestBareNounHelperCn:
             txt, [_claim(1, txt)], "标识数据", ro)
 
     def test_short_term_below_gate(self):
+        # At a bare clause boundary a 2-char term stays below the gate; as the
+        # object of an introducing verb it counts (wave C ruling, 2026-10-24).
         from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
-        txt = "包括轴承，所述轴承转动。"
+        txt = "，轴承转动，所述轴承转动。"
         ro = txt.find("所述轴承")
         assert not has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "轴承", ro)
+        txt = "包括轴承，所述轴承转动。"
+        ro = txt.find("所述轴承")
+        assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "轴承", ro)
 
     # R36 (2026-05-29) - issues #141 / #142. Drafter wrote
     # `限位于第三位置或第四位置二者之一` then referenced both `该第三位置`

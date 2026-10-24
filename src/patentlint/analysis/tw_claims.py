@@ -7008,6 +7008,25 @@ def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
     return False
 
 
+def _bare_noun_verb_led_tw(text: str, i: int) -> bool:
+    """True if the occurrence at i is the object of an introducing verb."""
+    if i == 0 or text[i - 1] in ("該", "一"):
+        return False
+    if i >= 2 and text[i - 2:i] in ("所述", "前述", "該等", "該些"):
+        return False
+    # After 進行 / 執行 / 運行 the word is an action (進行評分, 執行定位), after
+    # 經 a participle (經擴增的樣本); neither names an element.
+    if text[:i].endswith(_BARE_NOUN_ACTION_LEADS_TW) or text.startswith("經", i):
+        return False
+    return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW)
+
+
+_BARE_NOUN_ACTION_LEADS_TW: tuple[str, ...] = ("進行", "執行", "運行", "實行", "實施", "經")
+# A word followed straight by a determiner is a verb taking its object
+# (識別該產品, 啟動該程序), not a noun.
+_BARE_NOUN_OBJECT_DETERMINERS_TW: tuple[str, ...] = ("該", "所述", "前述", "一")
+
+
 def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     """True if the term is not the head of a longer noun compound (guard a)."""
     if j >= len(text):
@@ -7024,8 +7043,12 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     return not _bare_noun_compound_char_tw(text[j])
 
 
+_RELATIVE_CLAUSE_RELATIONS_TW: tuple[str, ...] = ("於", "與", "和", "對", "向", "沿", "朝")
+
+
 def has_possessive_introduction_tw(
-    claim_text: str, chain: list, term: str, ref_offset: int
+    claim_text: str, chain: list, term: str, ref_offset: int,
+    intros_by_term=None,
 ) -> bool:
     """R9 (2026-06-01) - issue #134.
 
@@ -7076,7 +7099,32 @@ def has_possessive_introduction_tw(
     # CN-conservative reading for cross-jurisdiction parity. Covers
     # the unambiguous locative-attribute cases (頂面/底面/側面/端面 -
     # non-ordinal short nouns that R9 was designed for).
-    if t.startswith("第"):
+    # Ordinal heads (wave C, Christopher's ruling 2026-10-24): `所述X之第一Y`
+    # and `所述X的第一Y` introduce the first Y of X when X is itself an
+    # introduced element. Requiring that is what separates the possessive from
+    # the relative clause with the same surface (所述X連接的第一Y, 垂直於所述X
+    # 的第二方向), which stays a reference needing its own introduction.
+    ordinal = t.startswith("第")
+    if ordinal and not intros_by_term:
+        return False
+    markers = ("之", "的") if ordinal else ("之",)
+
+    def _possessor_introduced(look_back: str) -> bool:
+        for det in ("所述", "前述", "該"):
+            k = look_back.rfind(det)
+            if k >= 0:
+                # 垂直於所述X的第二方向 / 與所述X正交的第二方向: a relation
+                # right before the determiner makes the 的 phrase a relative
+                # clause even when X is introduced.
+                if look_back[:k].endswith(_RELATIVE_CLAUSE_RELATIONS_TW):
+                    return False
+                owner = look_back[k + len(det):].strip()
+                # Only a quantifier may come off (該複數個導電元件): the full
+                # normalizer would strip a verb (第三表面傳播 -> 第三表面) and
+                # pass the relative clause 傳播之第二光.
+                return owner in intros_by_term or (
+                    strip_leading_quantifier(owner) in intros_by_term
+                )
         return False
 
     def _scan(text: str, limit: int | None) -> bool:
@@ -7106,9 +7154,12 @@ def has_possessive_introduction_tw(
             # walker references would strip qualifiers to the same noun
             # the drafter consistently uses (`頂面型`), so the search
             # term doesn't mismatch in practice.
-            if idx >= 1 and text[idx - 1] == "之":
+            if idx >= 1 and text[idx - 1] in markers:
                 look_back = text[max(0, idx - 16):idx - 1]
-                if any(marker in look_back for marker in ("所述", "前述", "該")):
+                if ordinal:
+                    if _possessor_introduced(look_back):
+                        return True
+                elif any(marker in look_back for marker in ("所述", "前述", "該")):
                     return True
             start = idx + 1
 
@@ -7136,7 +7187,12 @@ def has_bare_noun_introduction_tw(
     possessive guards.
     """
     t = (term or "").strip()
-    if len(t) < _BARE_NOUN_MIN_LEN_TW:
+    # A shorter noun counts only as the object of an introducing verb
+    # (連接電阻的第一端): Christopher's ruling 2026-10-24, the TW reading of
+    # the CN rule that an article-less earlier mention is an introduction. At
+    # a bare clause or list boundary a short noun is too generic to be one.
+    short = len(t) < _BARE_NOUN_MIN_LEN_TW
+    if len(t) < 2:
         return False
     if any(ch.isdigit() for ch in t) or "(" in t:
         return False
@@ -7150,9 +7206,11 @@ def has_bare_noun_introduction_tw(
                 return False
             if limit is not None and idx >= limit:
                 return False
-            if _bare_noun_left_clean_tw(text, idx) and _bare_noun_right_clean_tw(
-                text, idx + n
-            ):
+            left = (_bare_noun_verb_led_tw(text, idx) if short
+                    else _bare_noun_left_clean_tw(text, idx))
+            if short and text.startswith(_BARE_NOUN_OBJECT_DETERMINERS_TW, idx + n):
+                left = False
+            if left and _bare_noun_right_clean_tw(text, idx + n):
                 return True
             start = idx + 1
 
@@ -7235,9 +7293,9 @@ def _intro_opens_as_introduction_tw(text: str, pos: int, intros_by_term) -> bool
         if before.endswith(q):
             lead = before[: len(before) - len(q)]
             return not lead or lead[-1] not in "進統唯同單第萬"
-    # Ordinal-led possessives stay out, as in R9: `所述X之第一Y` may be a
-    # definite reference to a "first Y" that needs its own introduction.
-    if before.endswith(("的", "之")) and not text.startswith("第", pos):
+    # Ordinal-led possessives count too (Christopher's ruling 2026-10-24): the
+    # possessor must itself be introduced, which keeps the relative clause out.
+    if before.endswith(("的", "之")):
         for det in ("所述", "前述", "該"):
             k = before.rfind(det)
             if k >= 0 and before[k + len(det):-1] in intros_by_term:
@@ -7857,7 +7915,7 @@ def check_antecedent_basis(
             # unambiguous. See has_possessive_introduction_tw for
             # full rationale.
             if resolved_intro is None and has_possessive_introduction_tw(
-                claim.text, chain, normalized_term, m.start()
+                claim.text, chain, normalized_term, m.start(), intros_by_term
             ):
                 continue
 

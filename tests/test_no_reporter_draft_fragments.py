@@ -49,6 +49,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # SHA-256 of NFKC-normalised fragments taken from reporters' unfiled drafts and
 # since scrubbed. Plaintext deliberately absent; see the module docstring.
 BANNED_HASHES: frozenset[str] = frozenset({
+    # 2026-10-24, wave C rulings batch (#945/#953): the ruling shapes as
+    # reported, replaced with synthesized ones.
+    "0036cc7dfc66b05d585349ceace44da4f6c6603e1e4d45919a8a1b5c949bda03",
+    "b696bf9e90f5c3f19f7218c70024c6aedb1ff45394c364db99ea0ad199f1f14b",
     # 2026-10-24, wave C TW spec-support batch: comment examples taken from
     # the reports while fixing them, replaced with synthesized ones before commit.
     "39f80661b9adb7248b52335152e18bde47b826769da76ba43ea6df6a98e25197",
