@@ -2861,6 +2861,10 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         #     guard. Grep: 內部 ×40, 內側 ×76, 內徑 ×3, 內側面 ×2 -
         #     all preserved.
         "內",
+        # 下: the locative of the 在…下 frame (在一待機狀態下), stranded on the
+        #     introduction while the reference is bare. Same residual >= 2 guard
+        #     as 上, so 2-char 地下/以下/上下 are kept.
+        "下",
         # Adverbs that ended up trailing after interior cut
         "分別", "皆",
         # Positional particle (parallel to 時)
@@ -3211,7 +3215,7 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # 內側面 is 3-char with 內 at position 0 (same protection). Listed in
 # _NOUNLIKE_RELAXED_SUFFIXES - see below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
-    {"所", "位", "中", "後", "用", "上", "內",
+    {"所", "位", "中", "後", "用", "上", "內", "下",
      # F3: 擷取 (2-char) - despite the set name, the residual guard
      # mechanism works with any length. 影像擷取 (4 chars, residual 2)
      # protected; 影像擷取裝置擷取 (8 chars, residual 6) strips correctly.
@@ -3299,7 +3303,10 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
 # common over-capture shapes where the locative 中 should strip leaving
 # 2-char head (系統/區段/範圍). 中 standalone or as 2-char compound prefix
 # (中央/中文) is protected by the 0-position check (cut at idx > 1).
-_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "中", "來"})
+# Characters that make 下 part of a word (如下, 以下, 向下, 按下) rather than
+# the 在…下 locative, so the trailing strip leaves it.
+_XIA_WORD_HEADS_TW: frozenset[str] = frozenset("如以之其底地零上天落留剩放按壓向往朝降垂拉取卸拆倒掉寫記接")
+_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "下", "中", "來"})
 
 # R36 (2026-08-08, report #492) - the closed set of TW nouns that genuinely
 # END in the nominalizer 所. Everywhere else a trailing 所 is the stranded
@@ -4525,6 +4532,8 @@ def clean_noun_phrase_tw(text: str) -> str:
                 # R41 (#531) - 小 is noun-final only in 大小.
                 if current.endswith(_XIAO_FINAL_NOUNS_TW) or (len(current) - 1) < 3:
                     continue
+            elif verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_TW:
+                continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
             elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
                 min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES else 3
                 if (len(current) - len(verb)) < min_residual:
@@ -7081,6 +7090,10 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     # a genuine compound (對接部 / 對準標記) has 接 / 準 after 對, not a
     # determiner, so guard (a) still rejects it.
     if text[j] in _YING_VERB_HEADS_TW and _is_relational_preposition_tw(text, j):
+        return True
+    # Wave D: the 在…下 locative ends the noun (在升壓模式下藉由…), matching the
+    # trailing 下 strip in the normalizer; 下方 / 下部 / 下端 are words.
+    if text[j] == "下" and text[j + 1:j + 2] not in "方部端側面層緣游表":
         return True
     return not _bare_noun_compound_char_tw(text[j])
 

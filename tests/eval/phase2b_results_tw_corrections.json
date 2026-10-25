@@ -1559,6 +1559,206 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "降壓模式",
+            "reference_form": "所述降壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "降壓模式",
+            "reference_form": "所述降壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "降壓-升壓模式",
+            "reference_form": "所述降壓-升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "降壓模式",
+            "reference_form": "所述降壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "升壓模式下",
+            "reference_form": "所述升壓模式下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "降壓-升壓模式下",
+            "reference_form": "所述降壓-升壓模式下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

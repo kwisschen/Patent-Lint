@@ -64,3 +64,34 @@ class TestCn:
 
     def test_trailing_quantity_opener_is_stripped(self):
         assert clean_noun_phrase_cn("厚度至少为2") == "厚度"
+
+
+class TestLocativeXia:
+    """The 在…下 locative is stripped on both sides (TW, CN)."""
+
+    def test_trailing_xia_is_stripped(self):
+        assert clean_noun_phrase_tw("待機狀態下") == "待機狀態"
+        assert clean_noun_phrase_cn("待机状态下") == "待机状态"
+        # A 2-char head needs the relaxed residual floor that 上 / 內 use.
+        assert clean_noun_phrase_tw("殼體下") == "殼體"
+        assert clean_noun_phrase_cn("壳体下") == "壳体"
+
+    def test_xia_inside_a_word_is_kept(self):
+        for word in ("結構如下", "殼體向下", "按鍵按下", "地下"):
+            assert clean_noun_phrase_tw(word) == word
+        assert clean_noun_phrase_cn("结构如下") == "结构如下"
+
+    def test_bare_mention_in_the_frame_introduces(self):
+        # 在X下 is a bare locative mention (R8); the stripped reference must
+        # still see it as the introduction.
+        assert _tw(
+            "1. 一種轉換器，其在待機狀態下藉由一開關降低一輸出。",
+            "2. 如請求項1所述的轉換器，其中在所述待機狀態的期間關閉所述開關。",
+        ) == set()
+        # CN does not count bare 在X (TW R8 only); test its boundary directly.
+        from patentlint.analysis.cn_claims import _bare_noun_right_clean_cn
+
+        text = "其基于待机状态下的一信号调节一电压。"
+        assert _bare_noun_right_clean_cn(text, text.index("下"))
+        text = "其位于壳体下方。"
+        assert not _bare_noun_right_clean_cn(text, text.index("下"))

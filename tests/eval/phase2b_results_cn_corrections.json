@@ -1619,6 +1619,166 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: the reference kept the locative of the 在…下 frame; wave D strips a trailing 下, so this key is the artifact and the defect re-fires under '夹紧构造'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 43,
+            "term": "夹紧构造下",
+            "reference_form": "所述夹紧构造下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '夹紧构造下' (same claim, same reference) after wave D stripped the locative 下. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 43,
+            "term": "夹紧构造",
+            "reference_form": "所述夹紧构造"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: the reference kept the locative of the 在…下 frame; wave D strips a trailing 下, so this key is the artifact and the defect re-fires under '连接状态'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 51,
+            "term": "连接状态下",
+            "reference_form": "所述连接状态下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '连接状态下' (same claim, same reference) after wave D stripped the locative 下. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 51,
+            "term": "连接状态",
+            "reference_form": "所述连接状态"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: the reference kept the locative of the 在…下 frame; wave D strips a trailing 下, so this key is the artifact and the defect re-fires under '第一测量模式'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第一测量模式下",
+            "reference_form": "所述第一测量模式下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '第一测量模式下' (same claim, same reference) after wave D stripped the locative 下. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第一测量模式",
+            "reference_form": "所述第一测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: the reference kept the locative of the 在…下 frame; wave D strips a trailing 下, so this key is the artifact and the defect re-fires under '第二测量模式'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第二测量模式下",
+            "reference_form": "所述第二测量模式下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '第二测量模式下' (same claim, same reference) after wave D stripped the locative 下. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第二测量模式",
+            "reference_form": "所述第二测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }

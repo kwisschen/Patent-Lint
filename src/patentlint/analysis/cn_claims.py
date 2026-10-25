@@ -1691,6 +1691,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "用",
         "上",
         "内",
+        "下",  # 在…下 locative (TW mirror); residual >= 2 keeps 地下/以下
         "分别", "皆",
         "处",
         "至",
@@ -1840,7 +1841,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
 # R22 adds 由/沿; R24 adds 作/不/相/均/得 with relaxed-residual subset
 # participation below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿",
+    {"所", "位", "中", "后", "用", "上", "内", "下", "撷取", "对", "由", "沿",
      "作", "不", "相", "均", "得",
      # === R7-port (2026-04-30) - TW R7 parity ===
      # 使 (causative particle / verb fragment): residual ≥ 3 protects
@@ -1876,8 +1877,11 @@ _DIRECTION_STEM_BEFORE_XIANG_CN: frozenset[str] = frozenset(
 # Stage 4 R1 D4a - relaxed residual ≥ 2 guard for 2-char-stem residue strip.
 # R22 adds 由/沿; R24 adds 作/不/相/均/得 (mirrors trailing-verb registration).
 # R68 (2026-05-06) adds 来 (TW parity).
+# Characters that make 下 part of a word (如下, 以下, 向下, 按下) rather than
+# the 在…下 locative, so the trailing strip leaves it.
+_XIA_WORD_HEADS_CN: frozenset[str] = frozenset("如以之其底地零上天落留剩放按压向往朝降垂拉取卸拆倒掉写记接")
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"上", "内", "后", "中", "用", "对", "由", "沿",
+    {"上", "内", "下", "后", "中", "用", "对", "由", "沿",
      "作", "不", "相", "均", "得", "来"}
 )
 
@@ -2558,6 +2562,8 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
             # held back only by a residual-length heuristic.
             if verb == "位" and current.endswith(_WEI_NOUN_COMPOUNDS_CN):
                 continue
+            if verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_CN:
+                continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
                     min_residual = 1
@@ -4541,6 +4547,10 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     # `第二X` wouldn't end a term that starts mid-compound just before
     # `第二` (drafters separate enumeration items with 或 / 、).
     if any(text[j:].startswith(closer) for closer in _BARE_NOUN_MARKUSH_CLOSERS_CN):
+        return True
+    # Wave D: the 在…下 locative ends the noun (在升壓模式下藉由…), matching the
+    # trailing 下 strip in the normalizer; 下方 / 下部 / 下端 are words.
+    if text[j] == "下" and text[j + 1:j + 2] not in "方部端侧面层缘游表":
         return True
     return not _bare_noun_compound_char_cn(text[j])
 
