@@ -4414,7 +4414,10 @@ _BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
         | {"位于", "置于", "设于", "应用于", "作用于", "布置于", "固定于"}
         # Wave D (2026-10-25): bare 有 and 导入 introduce their object (TW
         # mirror); 所有/没有/只有/仅有 quantify or negate.
-        | {"有", "导入"},
+        | {"有", "导入"}
+        # Wave D: bare 在 (TW R8 mirror): 在X下 / 在X中 names X article-less, an
+        # introduction under the 2026-10-23 CN ruling.
+        | {"在"},
         key=len,
         reverse=True,
     )

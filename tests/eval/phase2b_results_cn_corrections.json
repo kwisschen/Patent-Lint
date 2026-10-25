@@ -1779,6 +1779,986 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "固定结构",
+            "reference_form": "所述固定结构"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 43,
+            "term": "夹紧构造",
+            "reference_form": "所述夹紧构造"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 50,
+            "term": "夹紧构造",
+            "reference_form": "所述夹紧构造"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 51,
+            "term": "连接状态",
+            "reference_form": "所述连接状态"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104343968B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "空挡位置",
+            "reference_form": "所述空挡位置"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104343968B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "空挡位置",
+            "reference_form": "所述空挡位置"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105354747B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 32,
+            "term": "真实环境",
+            "reference_form": "该真实环境"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105354747B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 42,
+            "term": "真实环境",
+            "reference_form": "该真实环境"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105846677A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "前端AC-DC电源",
+            "reference_form": "所述前端AC-DC电源"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN106080183B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "第一位置",
+            "reference_form": "所述第一位置"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN108029016B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "用户设备",
+            "reference_form": "所述用户设备"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN108029016B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "用户设备",
+            "reference_form": "所述用户设备"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN111480371B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "信标帧",
+            "reference_form": "所述信标帧"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN111757403B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "配置列表",
+            "reference_form": "所述配置列表"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN111757403B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "配置列表",
+            "reference_form": "所述配置列表"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112215533A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "商家",
+            "reference_form": "所述商家"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112888152B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "预设深度",
+            "reference_form": "所述预设深度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112888152B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "预设深度",
+            "reference_form": "所述预设深度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113812076A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "参考",
+            "reference_form": "所述参考"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113812076A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 37,
+            "term": "参考",
+            "reference_form": "所述参考"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114512083A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "阈值灰度",
+            "reference_form": "所述阈值灰度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114512083A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "阈值灰度",
+            "reference_form": "所述阈值灰度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114667472A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "机械夹具上方",
+            "reference_form": "所述机械夹具上方"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114825911A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "参考电压节点",
+            "reference_form": "所述参考电压节点"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115435069A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 13,
+            "term": "电动马达",
+            "reference_form": "所述电动马达"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115605959A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 78,
+            "term": "对象",
+            "reference_form": "所述对象"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115803287A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "结晶条件",
+            "reference_form": "所述结晶条件"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116094346A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "交流输入电压",
+            "reference_form": "所述交流输入电压"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116416955A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第一刷新率",
+            "reference_form": "所述第一刷新率"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116416955A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "第一刷新率",
+            "reference_form": "所述第一刷新率"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116918215A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "固化过程",
+            "reference_form": "所述固化过程"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116918215A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "固化过程",
+            "reference_form": "所述固化过程"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116918215A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 13,
+            "term": "固化过程",
+            "reference_form": "所述固化过程"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117498707A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第一引线",
+            "reference_form": "所述第一引线"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117498707A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "第一引线",
+            "reference_form": "所述第一引线"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119181993A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "前部",
+            "reference_form": "所述前部"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543641A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "标称值",
+            "reference_form": "所述标称值"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543641A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "标称值",
+            "reference_form": "所述标称值"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第一测量模式",
+            "reference_form": "所述第一测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第二测量模式",
+            "reference_form": "所述第二测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "第一测量模式",
+            "reference_form": "所述第一测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "第二测量模式",
+            "reference_form": "所述第二测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第一测量模式",
+            "reference_form": "所述第一测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第二测量模式",
+            "reference_form": "所述第二测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "第一测量模式",
+            "reference_form": "所述第一测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "第二测量模式",
+            "reference_form": "所述第二测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 19,
+            "term": "第一测量模式",
+            "reference_form": "所述第一测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119543644A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 19,
+            "term": "第二测量模式",
+            "reference_form": "所述第二测量模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120458533A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-zai-intro (2026-10-25)",
+      "_note": "Christopher's CN ruling (2026-10-23): an article-less earlier mention in the chain is an introduction. The first mention is a bare locative 在X (在X和Y之间, 在X下, 在X之前), which TW has counted since R8 and CN R78 now mirrors. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "受试者",
+            "reference_form": "所述受试者"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

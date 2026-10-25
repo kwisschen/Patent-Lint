@@ -98,3 +98,17 @@ class TestNonOrdinalPossessiveTw:
     def test_mention_introduces_only_the_noun_read_there(self):
         # 的條目集合 introduces 條目集合, not 條目.
         assert not self._intro("接收用於所述映射表的條目集合的更新指標。", "條目", {"映射表": (1, 1)})
+
+
+class TestCnBareZai:
+    """CN R78: bare 在X introduces X (TW R8 mirror, CN ruling 2026-10-23)."""
+
+    def test_locative_mention_introduces(self):
+        assert "第一位置" not in _cn(
+            "1. 一种开关，包括一滑块，所述滑块可在第一位置和第二位置之间移动。",
+            "2. 根据权利要求1所述的开关，其中所述第一位置的高度为一预设值。")
+
+    def test_reference_after_zai_is_not_an_introduction(self):
+        assert "第一位置" in _cn(
+            "1. 一种开关，包括一滑块，所述滑块可在所述第一位置和一第二位置之间移动。",
+            "2. 根据权利要求1所述的开关，其中所述第一位置的高度为一预设值。")
