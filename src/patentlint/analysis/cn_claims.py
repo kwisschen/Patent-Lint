@@ -2379,8 +2379,26 @@ def _mentioned_before_cn(term: str, chain, claim, ref_start: int) -> bool:
 _PREDICATE_BEFORE_COMPLEMENT_RE_CN = re.compile(
     r"(?:进入|变化|下降|上升|返回|转变|升高|降低|移动|转动|旋转|滑动|转移|放电|突出|偏置|偏转|入射|插入|摆动|回到|退回|流动|流入|流向|升温|降温|扩散|收缩|膨胀)(?=[至到](?:该|所述|前述|一|第|其|$))"
 )
+
+# Wave E: 耦合 / 耦接 before 至 / 到 is the same predicate, and so is the manner
+# adverb in front of it (電耦合至, 可操作地耦接至), which would otherwise be left
+# on the name. Bare 光 is NOT an adverb here: 照射光 / 顯示光 are nouns.
+_COUPLE_BEFORE_COMPLEMENT_RE_CN = re.compile(
+    r"(?:电性|电容性|电容|电|光学|通信地|通讯地|可通信地|通信|通讯|可操作性地|可操作地|操作性地|操作上|直接|间接|机械地|机械|磁性|流体|可移除地|可拆卸地)?(?:耦合|耦接)(?=[至到](?:该|所述|前述|一|第|其|$|大于|小于|高于|低于|等于|[大小高低等]$))"
+)
 # 至少 / 至多 open a quantity; they never end a name.
 _QUANTITY_OPENERS_CN: tuple[str, ...] = ("至少", "至多")
+
+
+# Wave E (ruling R4, 2026-10-25): mirror of _IO_NOUN_RE_TW. A bare 输出 / 输入,
+# optionally ordinal, is the element; the trailing 出 strip plus the 输 residue
+# repair (or the interior 输出 cut after 第一) emptied it.
+_IO_NOUN_RE_CN: re.Pattern[str] = re.compile(
+    r'(?:一|第[一二三四五六七八九十百0-9]+)?输[出入](?:连接|旋转)?'
+)
+_IO_SET_AS_RE_CN: re.Pattern[str] = re.compile(
+    r'((?:一|第[一二三四五六七八九十百0-9]+)?输[出入])(?:设定|设置)[为成]'
+)
 
 
 def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> str:
@@ -2399,8 +2417,11 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
     collecting, so protecting in place exposes them. The walker uses it only
     in the last-resort exact-match tier (see check_antecedent_basis_cn).
     """
-    if not text:
+    if not text or _IO_NOUN_RE_CN.fullmatch(text):
         return text
+    m_set = _IO_SET_AS_RE_CN.match(text)
+    if m_set:
+        return m_set.group(1)
 
     def _longest_protected_prefix(s: str) -> int:
         for i in range(len(s), 1, -1):
@@ -2475,6 +2496,15 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
             # identical structural bug on the shared normalizer design).
             if text[absolute_idx + len(verb):].startswith("天线"):
                 continue
+            # 输出旋转 / 输入旋转: "output rotation", one name (wave E).
+            if verb == "旋转" and _IO_NOUN_RE_CN.fullmatch(text[:absolute_idx]):
+                continue
+            # 输出连接处 / 输入连接处: the connection point, a noun: cut at the locative instead (wave E).
+            if (verb == "连接" and text[absolute_idx + 2:absolute_idx + 3] == "处"
+                    and text[:absolute_idx].endswith(("输出", "输入"))):
+                if earliest_idx is None or absolute_idx + 2 < earliest_idx:
+                    earliest_idx = absolute_idx + 2
+                continue
             if verb == "建立" and text[absolute_idx + 2:].startswith(_JIANLI_NOUN_HEADS_CN):
                 continue
             # R63 (2026-08-17): 经 position guard - see _jing_cut_is_verbal_cn.
@@ -2522,8 +2552,13 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
     m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_CN.search(text)
     if m_pred and 2 <= m_pred.start() < len(current):
         current = text[:m_pred.start()]
+    m_pred = _COUPLE_BEFORE_COMPLEMENT_RE_CN.search(text)
+    if m_pred and 2 <= m_pred.start() < len(current):
+        current = text[:m_pred.start()]
 
     for _ in range(16):
+        if _IO_NOUN_RE_CN.fullmatch(current):
+            break
         stripped = False
         for verb in _TRAILING_VERB_DENYLIST_CN:
             if not current.endswith(verb):
@@ -4555,6 +4590,11 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     # trailing 下 strip in the normalizer; 下方 / 下部 / 下端 are words.
     if text[j] == "下" and text[j + 1:j + 2] not in "方部端侧面层缘游表":
         return True
+    # Wave E: a coverb taking its own determiner object (輸出旋轉通過所述軸) ends
+    # the noun; 通過 is never noun-internal right before 所述 / 該 / 一.
+    if any(text.startswith(c, j) and text.startswith(("所述", "该", "前述", "一"), j + 2)
+           for c in ("通过", "经由", "经过")):
+        return True
     return not _bare_noun_compound_char_cn(text[j])
 
 
@@ -4629,6 +4669,108 @@ def _predicate_tail_intro_cn(term, intros_by_term, chain, claim, ref_start):
         if hit and _intro_opens_as_introduction_cn(source.text, pos, intros_by_term):
             return intro
     return None
+
+
+# Ruling R7 (2026-10-25): in a method claim a step verb gives basis to a later
+# reference naming that step - 输出所述估测值 ... 所述输出所述估测值包括 - as US R35
+# rules for "outputting X ... the outputting". R4 still governs the output as a
+# THING (处理器输出一指标 ... 接收该输出), so the reference must read as the act:
+# followed by its own object, or, in a method claim, by 包括 / 包含.
+_STEP_GERUND_TERMS_CN: frozenset[str] = frozenset({"输出", "输入"})
+_STEP_DESCRIBED_BY_CN: tuple[str, ...] = (
+    "包括", "包含", "更包括", "更包含", "还包括", "还包含", "进一步包括", "进一步包含",
+)
+_STEP_VERB_NOT_BEFORE_CN: frozenset[str] = frozenset("的之一个该述等")
+_STEP_VERB_NOT_AFTER_CN: frozenset[str] = frozenset(
+    "端值层讯信号电终级埠口介单模元器部侧流位功资数图影出入设连耦轴"
+)
+
+
+def _step_gerund_reference_cn(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    """True if the reference to ``term`` at ``ref_offset`` names a method step
+    whose verb is ``term`` earlier in the chain (ruling R7)."""
+    if term not in _STEP_GERUND_TERMS_CN:
+        return False
+    pos = claim_text.find(term, ref_offset)
+    if pos < 0:
+        return False
+    after = claim_text[pos + len(term):]
+    if not after.startswith(("所述", "该", "前述")):
+        root = getattr(chain[-1], "text", "") if chain else claim_text
+        if "方法" not in (root or "")[:60] or not after.startswith(_STEP_DESCRIBED_BY_CN):
+            return False
+
+    def _has_step_verb(text: str, limit: int | None) -> bool:
+        i = text.find(term)
+        while i >= 0 and (limit is None or i < limit):
+            before = text[i - 1:i]
+            nxt = text[i + len(term):i + len(term) + 1]
+            if (before not in _STEP_VERB_NOT_BEFORE_CN
+                    and not text[:i].endswith(("所述", "前述"))
+                    and nxt and nxt not in _STEP_VERB_NOT_AFTER_CN):
+                return True
+            i = text.find(term, i + 1)
+        return False
+
+    if _has_step_verb(claim_text, ref_offset):
+        return True
+    return any(_has_step_verb(getattr(a, "text", "") or "", None) for a in chain[1:])
+
+
+# Ruling R6 (2026-10-25): in 所述X的所述Y with X introduced, Y has basis only
+# when Y is a GEOMETRY part of X - every body has a surface, sides, ends, an
+# edge, a top and a bottom (MPEP 2173.05(e), "the outer surface of said
+# sphere"). Terminals (控制端 / 输出端) are NOT inherent and still flag.
+_GEOMETRY_PARTS_CN: frozenset[str] = frozenset({"表面", "外表面", "上表面", "下表面", "顶面", "底面", "侧面", "端面", "前端", "后端", "上端", "下端", "顶端", "底端", "末端", "另一端", "两端", "另一侧", "两侧", "外侧", "上侧", "下侧", "边缘", "外缘", "周缘", "顶部", "底部", "外周", "周边"})
+
+
+def _inherent_geometry_part_reference_cn(
+    claim_text: str, term: str, ref_offset: int, intros_by_term,
+) -> bool:
+    """True if the reference at ``ref_offset`` is 所述X的所述Y, Y a geometry part
+    and X itself an introduced element (ruling R6)."""
+    if term not in _GEOMETRY_PARTS_CN or not intros_by_term:
+        return False
+    look = claim_text[max(0, ref_offset - 17):ref_offset]
+    if not look or look[-1] not in ("的", "之"):
+        return False
+    look = look[:-1]
+    for det in ("所述", "前述", "该"):
+        k = look.rfind(det)
+        if k >= 0:
+            owner = look[k + len(det):]
+            return owner in intros_by_term or strip_leading_quantifier_cn(owner) in intros_by_term
+    return False
+
+
+# Wave E: an I/O element first named as the head of an attributive 的 phrase in
+# an introducing clause (具有…的第二輸入和耦合到X的輸出 / 更包括…之中的輸出連接)
+# is introduced there. Scoped to the I/O nouns whose one-character truncation
+# used to hide every such reference; the general relative-clause arm is not
+# shipped (it is surface-identical to a reference-bearing 的 phrase).
+_IO_ATTRIBUTIVE_TERMS_CN: frozenset[str] = frozenset({"输出", "输入", "输出连接", "输入连接"})
+_IO_INTRO_VERBS_CN: tuple[str, ...] = ("包括", "包含", "具有", "含有", "设有")
+
+
+def _io_attributive_intro_cn(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    if term not in _IO_ATTRIBUTIVE_TERMS_CN:
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        i = text.find(term)
+        while i >= 1 and (limit is None or i < limit):
+            nxt = text[i + len(term):i + len(term) + 1]
+            if text[i - 1] in ("的", "之") and (
+                    not nxt or nxt in "，。；：、,;和及與与或"):
+                seg = re.split(r"[，。；：,;]", text[:i])[-1]
+                if any(v in seg for v in _IO_INTRO_VERBS_CN):
+                    return True
+            i = text.find(term, i + 1)
+        return False
+
+    if _scan(claim_text, ref_offset):
+        return True
+    return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
 
 
 def has_possessive_introduction_cn(
@@ -5135,6 +5277,21 @@ def check_antecedent_basis_cn(
 
             if resolved_intro is None and has_possessive_introduction_cn(
                 claim.text, chain, normalized_term, m.start(), intros_by_term
+            ):
+                continue
+
+            if resolved_intro is None and _step_gerund_reference_cn(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            if resolved_intro is None and _io_attributive_intro_cn(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            if resolved_intro is None and _inherent_geometry_part_reference_cn(
+                claim.text, normalized_term, m.start(), intros_by_term
             ):
                 continue
 

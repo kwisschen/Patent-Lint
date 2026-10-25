@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 79,
+    "current_round": 80,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -497,6 +497,19 @@
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-10-25T05:48:17.001636+00:00"
+      },
+      {
+        "round": 80,
+        "name": "r80_io_noun_coupling_geometry",
+        "description": "CN R80 (wave E; mirror of TW R74). 输出/输入 (and 输出连接/输出旋转) survive normalization, 输出设定为 cuts to 输出, 耦合/耦接 (with manner adverb) before 至/到 plus a determiner, comparative or a stranded 至大 is the predicate, R7 step-gerund and R6 geometry-part rescues, the I/O attributive intro, and a coverb taking its own determiner object (通过所述/经由一) ends a bare noun on the right. Gate vs the wave E baseline: 23 FP ended, 0 legit, 12 clean paired shifts, UNPAIRED-NEW 0 plus 4 read FN closures labeled legit (CN118468868A c9/c10 had been masked by a 第一输入 -> 第一输 intro covering a real mismatch by prefix). Spec-support terms identical (221). Fixture labels: 0 silenced.",
+        "user_attested_issues": [
+          949,
+          950,
+          951,
+          952
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-10-25T13:50:12.685601+00:00"
       }
     ],
     "last_updated": "2026-08-01",
