@@ -4251,6 +4251,18 @@ def _strip_predicate_head_tw(text: str) -> str:
     return text
 
 
+# A change or motion verb before its directional complement 至 / 到 and the
+# complement's own noun (該液位下降至一警戒值, 該閥體移動到該關閉位置) is
+# the predicate of the reference, not part of the name. Requiring the
+# determiner after 至 / 到 (or the end of the capture, which the intro side cuts
+# before 一) keeps 至少 / 至多 and noun pairs (第一表面到第二表面).
+_PREDICATE_BEFORE_COMPLEMENT_RE_TW = re.compile(
+    r"(?:進入|變化|下降|上升|返回|轉變|升高|降低|移動|轉動|旋轉|滑動|轉移|放電|突出|偏置|偏轉|入射|插入|擺動|回到|退回|流動|流入|流向|升溫|降溫|擴散|收縮|膨脹)(?=[至到](?:該|所述|前述|一|第|其|$))"
+)
+# 至少 / 至多 open a quantity; they never end a name.
+_QUANTITY_OPENERS_TW: tuple[str, ...] = ("至少", "至多")
+
+
 def clean_noun_phrase_tw(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a TW reference term.
 
@@ -4464,6 +4476,10 @@ def clean_noun_phrase_tw(text: str) -> str:
 
     current = text[:earliest_idx] if earliest_idx is not None else text
 
+    m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_TW.search(text)
+    if m_pred and 2 <= m_pred.start() < len(current):
+        current = text[:m_pred.start()]
+
     # Phase 2: trailing-verb stripping (iterative).
     # Safety bound to prevent pathological iteration.
     for _ in range(16):
@@ -4540,6 +4556,10 @@ def clean_noun_phrase_tw(text: str) -> str:
             current = m.group(1)
         if current == before:
             break
+
+    # After R55, so 迴路集體地至少 still reduces through the adverb rule first.
+    if current.endswith(_QUANTITY_OPENERS_TW) and len(current) >= 4:
+        current = current[:-2]
 
     return current
 

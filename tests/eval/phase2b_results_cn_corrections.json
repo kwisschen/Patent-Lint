@@ -1539,6 +1539,86 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN107253703B",
+      "jurisdiction": "CN",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (扩散到); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '氮填隙式'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "氮填隙式扩散",
+            "reference_form": "所述氮填隙式扩散"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN107253703B",
+      "jurisdiction": "CN",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '氮填隙式扩散' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "氮填隙式",
+            "reference_form": "所述氮填隙式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117913571A",
+      "jurisdiction": "CN",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入到); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '对配端子'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "对配端子插入",
+            "reference_form": "所述对配端子插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117913571A",
+      "jurisdiction": "CN",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '对配端子插入' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "对配端子",
+            "reference_form": "所述对配端子"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }

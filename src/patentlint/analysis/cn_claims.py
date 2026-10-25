@@ -2368,6 +2368,17 @@ def _mentioned_before_cn(term: str, chain, claim, ref_start: int) -> bool:
 
 
 
+# TW mirror: a change or motion verb before its directional complement 至 / 到
+# and the complement's noun (该液位下降至一警戒值) is the predicate; the
+# determiner (or the end of the capture) after 至 / 到 keeps 至少 / 至多 and noun
+# pairs (第一表面到第二表面).
+_PREDICATE_BEFORE_COMPLEMENT_RE_CN = re.compile(
+    r"(?:进入|变化|下降|上升|返回|转变|升高|降低|移动|转动|旋转|滑动|转移|放电|突出|偏置|偏转|入射|插入|摆动|回到|退回|流动|流入|流向|升温|降温|扩散|收缩|膨胀)(?=[至到](?:该|所述|前述|一|第|其|$))"
+)
+# 至少 / 至多 open a quantity; they never end a name.
+_QUANTITY_OPENERS_CN: tuple[str, ...] = ("至少", "至多")
+
+
 def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
@@ -2504,6 +2515,10 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
 
     current = text[:earliest_idx] if earliest_idx is not None else text
 
+    m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_CN.search(text)
+    if m_pred and 2 <= m_pred.start() < len(current):
+        current = text[:m_pred.start()]
+
     for _ in range(16):
         stripped = False
         for verb in _TRAILING_VERB_DENYLIST_CN:
@@ -2599,6 +2614,10 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
             current = m.group(1)
         if current == before:
             break
+
+    # After R54, so an adverb + 地 run still reduces through that rule first.
+    if current.endswith(_QUANTITY_OPENERS_CN) and len(current) >= 4:
+        current = current[:-2]
 
     return current
 

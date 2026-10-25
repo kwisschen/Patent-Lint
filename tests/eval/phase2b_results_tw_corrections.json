@@ -1419,6 +1419,146 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入至); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '組織'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 24,
+            "term": "組織插入",
+            "reference_form": "該組織插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '組織插入' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 24,
+            "term": "組織",
+            "reference_form": "該組織"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入至); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '組織 (already emitted on this claim)'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "組織插入",
+            "reference_form": "該組織插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入到); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '剩餘部分'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "剩餘部分插入",
+            "reference_form": "所述剩餘部分插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '剩餘部分插入' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "剩餘部分",
+            "reference_form": "所述剩餘部分"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (至少為); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '厚度'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "厚度至少",
+            "reference_form": "所述厚度至少"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '厚度至少' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "厚度",
+            "reference_form": "所述厚度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }

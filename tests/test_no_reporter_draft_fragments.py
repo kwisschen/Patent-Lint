@@ -86,6 +86,15 @@ BANNED_HASHES: frozenset[str] = frozenset({
     "35ddc2cf26d656e1c92e233cc7f4dbcc94afe339a259020586dcb505c6377d92",
     "c8e575edda35d41fc9fc4fd2062e93652434b4e7926708845f45a61ebf800b7b",
     "c4c1084384bfefc464f8fdb709666f0336311eeaa0c73592a8a350bb87c580a9",
+    # 2026-10-25, wave D (#853, #963-#966): report shapes that reached test
+    # strings and code comments while fixing them, replaced before push.
+    "9d3e1054e26768ec59abacba40e9223f21abb561f23c8a8c56f8ac9752570bf4",
+    "85e75d00f29ccb847b18e164678a1b18bd2cb09804d0bdb7001b90216ad3e922",
+    "f252a5cb1906f28ffa75a310ef591e758667424b7bfd0f43d521909cb528971b",
+    "b47a68435a25d30bad974167798e7ee60a5b7654b383f5665e5295aab6dd7d3d",
+    "197f37b0d0c8be393a4cc5e02a0c5b8d6cde9d09a0311fe55a26cf109737869e",
+    "86fe21f35aba51ddef0462160fa2d2f2993f5034dc4c81b26db2cddbc120b62c",
+    "e527c4f14d8776d59799bd5221203e4c09635c2788a55c8a66a1a884b1aab510",
 })
 
 # Window sizes to test, derived from the banned fragments' own lengths. Keeping
