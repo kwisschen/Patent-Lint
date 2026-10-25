@@ -100,12 +100,26 @@ def main() -> int:
     reattributed = sorted(k for k in rest if (k[0], k[2], k[3]) in silenced_moves)
     unpaired = sorted(k for k in rest if (k[0], k[2], k[3]) not in silenced_moves)
 
+    # FN CLOSURES (2026-10-25, wave E). A fix that ends a MASK - here a
+    # one-character truncation the walker silently dropped - surfaces real
+    # findings that no silenced key pairs with, and this gate cannot tell them
+    # from a manufacture. The discriminator is a human read of the claim,
+    # recorded as a gold `legit_drafting_error` label with its note in
+    # phase2b_results_*_corrections.json BEFORE the gate is run. Only those
+    # keys move here; an unlabeled or differently-labeled unpaired key still
+    # fails, so the gate cannot be waved through without a read on file.
+    closures = [k for k in unpaired if verdicts.get(k) == "legit_drafting_error"]
+    unpaired = [k for k in unpaired if verdicts.get(k) != "legit_drafting_error"]
+
     print(f"=== UNPAIRED-NEW gate ({args.juris}) ===")
     print(f"  silenced        : {len(silenced)}")
     print(f"  new             : {len(new)}")
     print(f"    ├─ paired shifts (same doc+claim, ADR-111): {len(paired)}")
     print(f"    ├─ re-attributed (same doc+term, new claim): {len(reattributed)}")
+    print(f"    ├─ FN closures (unpaired, gold-legit, read): {len(closures)}")
     print(f"    └─ UNPAIRED (HARD GATE, MUST be 0)        : {len(unpaired)}")
+    for key in closures[: args.show]:
+        print(f"     FN-CLOSURE {key}")
 
     for key in reattributed[: args.show]:
         olds = [s for s in silenced if (s[0], s[2], s[3]) == (key[0], key[2], key[3])]

@@ -2179,6 +2179,318 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202349274A",
+      "jurisdiction": "TW",
+      "source": "wave-e-io-noun (2026-10-25)",
+      "_note": "The parent chain (claim 14 via 16) recites 複數個輸入及一輸出 for each logic gate, so 該等輸出 in claim 17 has basis. The legit label sat on the dirty term 輸出鏈接 (鏈接 is the verb 'link ... to'). Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "輸出鏈接",
+            "reference_form": "該等輸出鏈接"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202529383A",
+      "jurisdiction": "TW",
+      "source": "wave-e-coupling-predicate (2026-10-25)",
+      "_note": "Claim 20 recites 第二場效電晶體，具有第一端子…且第二端子耦接至…, an article-less ordinal introduction (ruling 2026-10-24) before the reference; claim 10 has identical text and is already labeled walker_fp. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "第二端子",
+            "reference_form": "所述第二端子"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202234811A",
+      "jurisdiction": "TW",
+      "source": "wave-e-coupling-predicate (2026-10-25)",
+      "_note": "Claim 1 recites 一或多個變壓器耦合到一或多個輸出模組, so 該變壓器 in claim 9 (via 7) has basis under number-neutral matching; the coupling cut now registers that intro. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "變壓器",
+            "reference_form": "該變壓器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202239868A",
+      "jurisdiction": "TW",
+      "source": "wave-e-list-final-item (2026-10-25)",
+      "_note": "Claim 10 lists the element article-less as the final item (，及<term>。), which introduces it under the TW rulings of 2026-10-24 (a long noun at a list boundary). Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "纖維質基材",
+            "reference_form": "前述纖維質基材"
+          },
+          {
+            "claim_id": 12,
+            "term": "纖維質基材",
+            "reference_form": "前述纖維質基材"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241022A",
+      "jurisdiction": "TW",
+      "source": "wave-e-list-final-item (2026-10-25)",
+      "_note": "Claim 1 lists the signal article-less as the final item (、以及<term>，), an introduction under the TW rulings of 2026-10-24. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "定頻振盪訊號",
+            "reference_form": "所述定頻振盪訊號"
+          },
+          {
+            "claim_id": 5,
+            "term": "定頻振盪訊號",
+            "reference_form": "所述定頻振盪訊號"
+          },
+          {
+            "claim_id": 6,
+            "term": "定頻振盪訊號",
+            "reference_form": "所述定頻振盪訊號"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI906248B",
+      "jurisdiction": "TW",
+      "source": "wave-e-list-final-item (2026-10-25)",
+      "_note": "The claim lists the ordinal element article-less as the final item (；以及<term>，其被構造成…) before referencing it (ordinal ruling 2026-10-24). Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "第二圖像投影儀",
+            "reference_form": "所述第二圖像投影儀"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-e-ruling-6-geometry-part (2026-10-25)",
+      "_note": "Christopher's ruling R6 (2026-10-25): in 所述X的所述Y with X introduced, a geometry part Y (top) has basis. Reference reads 所述側框架的所述頂部. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "頂部",
+            "reference_form": "所述頂部"
+          },
+          {
+            "claim_id": 4,
+            "term": "頂部",
+            "reference_form": "所述頂部"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI896739B",
+      "jurisdiction": "TW",
+      "source": "wave-e-ruling-6-geometry-part (2026-10-25)",
+      "_note": "Ruling R6 (2026-10-25): 該銅箔之該表面 - a surface of the introduced copper foil has basis. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "表面",
+            "reference_form": "該表面"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW201415114A",
+      "jurisdiction": "TW",
+      "source": "wave-e-coupling-predicate - shift correction (2026-10-25)",
+      "_note": "耦合至 is now cut as the predicate. Claim 56 is independent and never introduces 電源 / 電子控制模組 (it writes 該電源 itself), so the defects re-fire under the clean terms in claims 57 and 58. ADR-111 dual label: dirty term walker_fp, clean term legit_drafting_error. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 57,
+            "term": "電源耦合",
+            "reference_form": "該電源耦合"
+          },
+          {
+            "claim_id": 57,
+            "term": "電源",
+            "reference_form": "該電源"
+          },
+          {
+            "claim_id": 58,
+            "term": "電子控制模組耦合",
+            "reference_form": "該電子控制模組耦合"
+          },
+          {
+            "claim_id": 58,
+            "term": "電子控制模組",
+            "reference_form": "該電子控制模組"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI825225B",
+      "jurisdiction": "TW",
+      "source": "wave-e-ruling-4-fn-closure (2026-10-25)",
+      "_note": "Christopher's ruling R4 (2026-10-25): a verb gives no basis to its own noun. Claim 1 only ever uses 輸出 as the verb (輸出一成功指標) before 接收該輸出; claims 2 and 7 inherit it. Hidden until wave E by the one-character truncation 輸出 -> 輸, which the walker dropped. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "輸出",
+            "reference_form": "該輸出"
+          },
+          {
+            "claim_id": 2,
+            "term": "輸出",
+            "reference_form": "該輸出"
+          },
+          {
+            "claim_id": 7,
+            "term": "輸出",
+            "reference_form": "該輸出"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI844228B",
+      "jurisdiction": "TW",
+      "source": "wave-e-ruling-4-fn-closure (2026-10-25)",
+      "_note": "Claim 8 writes 每個神經元的該等輸出 with no earlier noun 輸出 in its chain (claim 1 uses it only as a verb); not a geometry part, so ruling R6 gives no basis. Hidden until wave E by the one-character truncation. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "輸出",
+            "reference_form": "該等輸出"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202545132A",
+      "jurisdiction": "TW",
+      "source": "wave-e-ruling-4-fn-closure (2026-10-25)",
+      "_note": "Claim 31 (via 28) refers to 所述輸出; claim 28 only has a bare 輸出 as the object of 防止, which is not an introducing verb under the TW rulings of 2026-10-24, so the reference lacks basis. Hidden until wave E by the one-character truncation. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 31,
+            "term": "輸出",
+            "reference_form": "所述輸出"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }

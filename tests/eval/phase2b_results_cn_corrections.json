@@ -2759,6 +2759,74 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN104019200A",
+      "jurisdiction": "CN",
+      "source": "wave-e-ruling-4-fn-closure (2026-10-25)",
+      "_note": "Claim 34 depends on independent claim 31, which never names an output; 该输出 has no basis (claim 33, which adds one, is a sibling). Hidden until wave E by the one-character truncation 输出 -> 输. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 34,
+            "term": "输出",
+            "reference_form": "该输出"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119765918A",
+      "jurisdiction": "CN",
+      "source": "wave-e-ruling-6-fn-closure (2026-10-25)",
+      "_note": "Claim 1 writes 来自所述转换器的所述输出的反馈信号 with no earlier output; under ruling R6 an output is not a geometry part, so 所述X的所述输出 still needs its own introduction. Hidden until wave E by the one-character truncation. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "输出",
+            "reference_form": "所述输出"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN118468868A",
+      "jurisdiction": "CN",
+      "source": "wave-e-io-noun-fn-closure (2026-10-25)",
+      "_note": "Claim 1 introduces 第一输出词元集, while claim 9 refers to 所述第一输出文本词元集 and claim 10 to a garbled 所述第一输出词元集输出文本词元集 - neither matches. Masked until wave E because the intro 第一输入 was truncated to 第一输 and covered both references by prefix. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第一输出文本词元集",
+            "reference_form": "所述第一输出文本词元集"
+          },
+          {
+            "claim_id": 10,
+            "term": "第一输出词元集输出文本词",
+            "reference_form": "所述第一输出词元集输出文本词"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }

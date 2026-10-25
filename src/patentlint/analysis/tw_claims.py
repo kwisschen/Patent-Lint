@@ -3367,6 +3367,14 @@ _SHU_FINAL_NOUNS_TW: tuple[str, ...] = ("金屬", "菌屬", "附屬", "專屬", 
 # floor, so 大小 is the entry a length rule cannot reach.
 _XIAO_FINAL_NOUNS_TW: tuple[str, ...] = ("大小",)
 
+# Wave E - 包-final NOUN lexemes, mined from the drafter's own references
+# (所述電池包 16, 所述資料包 3); the trailing 包 strip exists for the stranded
+# head of 包括 / 包含, and cut these to 電池 / 資料. 封包 (所述封包 32) is
+# WITHHELD: guarding it surfaced 10 references whose introductions are relative
+# clauses or abbreviations TW does not read (傳輸包括數據資料的封包 ... 該封包).
+_BAO_FINAL_NOUNS_TW: tuple[str, ...] = ("電池包", "資料包", "數據包")
+_ORDINAL_BAO_RE_TW: re.Pattern[str] = re.compile(r"第[一二三四五六七八九十0-9]+包")
+
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
@@ -4266,8 +4274,30 @@ def _strip_predicate_head_tw(text: str) -> str:
 _PREDICATE_BEFORE_COMPLEMENT_RE_TW = re.compile(
     r"(?:進入|變化|下降|上升|返回|轉變|升高|降低|移動|轉動|旋轉|滑動|轉移|放電|突出|偏置|偏轉|入射|插入|擺動|回到|退回|流動|流入|流向|升溫|降溫|擴散|收縮|膨脹)(?=[至到](?:該|所述|前述|一|第|其|$))"
 )
+
+# Wave E: 耦合 / 耦接 before 至 / 到 is the same predicate, and so is the manner
+# adverb in front of it (電耦合至, 可操作地耦接至), which would otherwise be left
+# on the name. Bare 光 is NOT an adverb here: 照射光 / 顯示光 are nouns.
+_COUPLE_BEFORE_COMPLEMENT_RE_TW = re.compile(
+    r"(?:電性|電容性|電容|電|光學|通信地|通訊地|可通信地|通信|通訊|可操作性地|可操作地|操作性地|操作上|直接|間接|機械地|機械|磁性|流體|可移除地|可拆卸地)?(?:耦合|耦接)(?=[至到](?:該|所述|前述|一|第|其|$|大於|小於|高於|低於|等於|[大小高低等]$))"
+)
 # 至少 / 至多 open a quantity; they never end a name.
 _QUANTITY_OPENERS_TW: tuple[str, ...] = ("至少", "至多")
+
+
+# Wave E (ruling R4, 2026-10-25): a bare 輸出 / 輸入, optionally ordinal, is the
+# element "output" / "input", and the trailing 出 / 入 strip was cutting it to
+# 輸 - a one-character term the walker then drops, so `該輸出` with only the
+# VERB 輸出 before it (a verb gives no basis to its own noun) never fired.
+_IO_NOUN_RE_TW: re.Pattern[str] = re.compile(
+    r'(?:一|第[一二三四五六七八九十百0-9]+)?輸[出入](?:連接|旋轉)?'
+)
+# 將一輸出設定為X: 設定為 / 設定成 is the predicate "set as", so the element is the
+# 輸出 before it. Scoped to 輸出 / 輸入 because 設定 is noun-gray elsewhere
+# (該溫度設定為 reads either way).
+_IO_SET_AS_RE_TW: re.Pattern[str] = re.compile(
+    r'((?:一|第[一二三四五六七八九十百0-9]+)?輸[出入])(?:設定|設置)[為成]'
+)
 
 
 def clean_noun_phrase_tw(text: str) -> str:
@@ -4299,8 +4329,11 @@ def clean_noun_phrase_tw(text: str) -> str:
     the did-you-mean hint if similarity is high enough.
     """
     text = _strip_predicate_head_tw(text)
-    if not text:
+    if not text or _IO_NOUN_RE_TW.fullmatch(text):
         return text
+    m_set = _IO_SET_AS_RE_TW.match(text)
+    if m_set:
+        return m_set.group(1)
 
     # Phase 1: interior-verb truncation, with prefix-aware exception
     # protection.
@@ -4401,6 +4434,15 @@ def clean_noun_phrase_tw(text: str) -> str:
             # are therefore DECLARED individually in _INTERIOR_CUT_EXCEPTIONS.
             if text[absolute_idx + len(verb):].startswith("天線"):
                 break
+            # 輸出旋轉 / 輸入旋轉: "output rotation", one name (wave E).
+            if verb == "旋轉" and _IO_NOUN_RE_TW.fullmatch(text[:absolute_idx]):
+                break
+            # 輸出連接處 / 輸入連接處: the connection point, a noun: cut at the locative instead (wave E).
+            if (verb == "連接" and text[absolute_idx + 2:absolute_idx + 3] == "處"
+                    and text[:absolute_idx].endswith(("輸出", "輸入"))):
+                if earliest_idx is None or absolute_idx + 2 < earliest_idx:
+                    earliest_idx = absolute_idx + 2
+                break
             if verb == "建立" and text[absolute_idx + 2:].startswith(_JIANLI_NOUN_HEADS_TW):
                 break
             # A trailing collocation ending in 建立 (輔助建立, #466/#469) must be
@@ -4486,10 +4528,15 @@ def clean_noun_phrase_tw(text: str) -> str:
     m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_TW.search(text)
     if m_pred and 2 <= m_pred.start() < len(current):
         current = text[:m_pred.start()]
+    m_pred = _COUPLE_BEFORE_COMPLEMENT_RE_TW.search(text)
+    if m_pred and 2 <= m_pred.start() < len(current):
+        current = text[:m_pred.start()]
 
     # Phase 2: trailing-verb stripping (iterative).
     # Safety bound to prevent pathological iteration.
     for _ in range(16):
+        if _IO_NOUN_RE_TW.fullmatch(current):
+            break
         stripped = False
         for verb in _TRAILING_VERB_DENYLIST:
             if not current.endswith(verb):
@@ -4532,6 +4579,11 @@ def clean_noun_phrase_tw(text: str) -> str:
                 # R41 (#531) - 小 is noun-final only in 大小.
                 if current.endswith(_XIAO_FINAL_NOUNS_TW) or (len(current) - 1) < 3:
                     continue
+            elif verb == "包" and (current.endswith(_BAO_FINAL_NOUNS_TW)
+                                  or _ORDINAL_BAO_RE_TW.fullmatch(current)):
+                continue  # wave E: 封包 / 電池包 / 第二包 are elements
+            elif verb == "較" and current.endswith("比較"):
+                continue  # wave E: 比較 ("comparison") is a word
             elif verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_TW:
                 continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
             elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
@@ -7037,6 +7089,14 @@ def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
     c = text[i - 1]
     if c.isspace() or unicodedata.category(c)[0] == "P":
         return True  # clause boundary / enumeration item
+    # Wave E: the last item of an element list (；以及X / ，及X) is a fresh
+    # mention. The full CN R36 coordinator set (A或B, A與B) was measured on TW
+    # and silenced 60 gold-legit findings, so only the list-final form ships.
+    for conj in ("以及", "及"):
+        if text[:i].endswith(conj) and i > len(conj):
+            p = text[i - len(conj) - 1]
+            if p.isspace() or unicodedata.category(p)[0] == "P":
+                return True
     # A CJK ideograph not preceded by a verb -- compound tail (guard a),
     # 的 / 之 possessive marker (guard b), or a conjunction / modal not
     # verb-led. All rejected conservatively.
@@ -7095,6 +7155,11 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     # trailing 下 strip in the normalizer; 下方 / 下部 / 下端 are words.
     if text[j] == "下" and text[j + 1:j + 2] not in "方部端側面層緣游表":
         return True
+    # Wave E: a coverb taking its own determiner object (輸出旋轉通過所述軸) ends
+    # the noun; 通過 is never noun-internal right before 所述 / 該 / 一.
+    if any(text.startswith(c, j) and text.startswith(("所述", "該", "前述", "一"), j + 2)
+           for c in ("通過", "經由", "經過")):
+        return True
     return not _bare_noun_compound_char_tw(text[j])
 
 
@@ -7108,6 +7173,129 @@ def _noun_read_at_tw(text: str, i: int) -> str:
     """The cleaned noun the walker captures starting at ``text[i]``."""
     m = _NOUN_RUN_TW.match(text, i)
     return clean_noun_phrase_tw(m.group()) if m else ""
+
+
+# Ruling R7 (2026-10-25): in a method claim a step verb gives basis to a later
+# reference naming that step - 輸出所述估測值 ... 所述輸出所述估測值包括 - as US R35
+# rules for "outputting X ... the outputting". R4 still governs the output as a
+# THING (處理器輸出一指標 ... 接收該輸出), so the reference must read as the act:
+# followed by its own object, or, in a method claim, by 包括 / 包含.
+_STEP_GERUND_TERMS_TW: frozenset[str] = frozenset({"輸出", "輸入", "比較"})
+# A verb with no THING reading: 該比較 can only name the act, so it needs no
+# object or 包括 after it (將X與Y進行比較；基於該比較).
+_ACT_ONLY_TERMS_TW: frozenset[str] = frozenset({"比較"})
+_STEP_DESCRIBED_BY_TW: tuple[str, ...] = (
+    "包括", "包含", "更包括", "更包含", "還包括", "還包含", "進一步包括", "進一步包含",
+)
+_STEP_VERB_NOT_BEFORE_TW: frozenset[str] = frozenset("的之一個該述等")
+_STEP_VERB_NOT_AFTER_TW: frozenset[str] = frozenset(
+    "端值層訊信號電終級埠口介單模元器部側流位功資數圖影出入設連耦軸"
+)
+
+
+def _step_gerund_reference_tw(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    """True if the reference to ``term`` at ``ref_offset`` names a method step
+    whose verb is ``term`` earlier in the chain (ruling R7)."""
+    if term not in _STEP_GERUND_TERMS_TW:
+        return False
+    pos = claim_text.find(term, ref_offset)
+    if pos < 0:
+        return False
+    after = claim_text[pos + len(term):]
+    if term not in _ACT_ONLY_TERMS_TW and not after.startswith(("所述", "該", "前述")):
+        root = getattr(chain[-1], "text", "") if chain else claim_text
+        if "方法" not in (root or "")[:60] or not after.startswith(_STEP_DESCRIBED_BY_TW):
+            return False
+
+    def _has_step_verb(text: str, limit: int | None) -> bool:
+        i = text.find(term)
+        while i >= 0 and (limit is None or i < limit):
+            before = text[i - 1:i]
+            nxt = text[i + len(term):i + len(term) + 1]
+            if (before not in _STEP_VERB_NOT_BEFORE_TW
+                    and not text[:i].endswith(("所述", "前述"))
+                    and nxt and nxt not in _STEP_VERB_NOT_AFTER_TW):
+                return True
+            i = text.find(term, i + 1)
+        return False
+
+    if _has_step_verb(claim_text, ref_offset):
+        return True
+    return any(_has_step_verb(getattr(a, "text", "") or "", None) for a in chain[1:])
+
+
+# Ruling R6 (2026-10-25): in 所述X的所述Y with X introduced, Y has basis only
+# when Y is a GEOMETRY part of X - every body has a surface, sides, ends, an
+# edge, a top and a bottom (MPEP 2173.05(e), "the outer surface of said
+# sphere"). Terminals (控制端 / 輸出端) are NOT inherent and still flag.
+_GEOMETRY_PARTS_TW: frozenset[str] = frozenset({"表面", "外表面", "上表面", "下表面", "頂面", "底面", "側面", "端面", "前端", "後端", "上端", "下端", "頂端", "底端", "末端", "另一端", "兩端", "另一側", "兩側", "外側", "上側", "下側", "邊緣", "外緣", "周緣", "頂部", "底部", "外周", "周邊"})
+
+
+def _inherent_geometry_part_reference_tw(
+    claim_text: str, term: str, ref_offset: int, intros_by_term,
+) -> bool:
+    """True if the reference at ``ref_offset`` is 所述X的所述Y, Y a geometry part
+    and X itself an introduced element (ruling R6)."""
+    if term not in _GEOMETRY_PARTS_TW or not intros_by_term:
+        return False
+    look = claim_text[max(0, ref_offset - 17):ref_offset]
+    if not look or look[-1] not in ("的", "之"):
+        return False
+    look = look[:-1]
+    for det in ("所述", "前述", "該"):
+        k = look.rfind(det)
+        if k >= 0:
+            owner = look[k + len(det):]
+            return owner in intros_by_term or strip_leading_quantifier(owner) in intros_by_term
+    return False
+
+
+# Wave E: an I/O element first named as the head of an attributive 的 phrase in
+# an introducing clause (具有…的第二輸入和耦合到X的輸出 / 更包括…之中的輸出連接)
+# is introduced there. Scoped to the I/O nouns whose one-character truncation
+# used to hide every such reference; the general relative-clause arm is not
+# shipped (it is surface-identical to a reference-bearing 的 phrase).
+_IO_ATTRIBUTIVE_TERMS_TW: frozenset[str] = frozenset({"輸出", "輸入", "輸出連接", "輸入連接"})
+_IO_INTRO_VERBS_TW: tuple[str, ...] = ("包括", "包含", "具有", "含有", "設有")
+
+
+def _io_attributive_intro_tw(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    if term not in _IO_ATTRIBUTIVE_TERMS_TW:
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        i = text.find(term)
+        while i >= 1 and (limit is None or i < limit):
+            nxt = text[i + len(term):i + len(term) + 1]
+            if text[i - 1] in ("的", "之") and (
+                    not nxt or nxt in "，。；：、,;和及與与或"):
+                seg = re.split(r"[，。；：,;]", text[:i])[-1]
+                if any(v in seg for v in _IO_INTRO_VERBS_TW):
+                    return True
+            i = text.find(term, i + 1)
+        return False
+
+    if _scan(claim_text, ref_offset):
+        return True
+    return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
+
+
+# Wave E: an owner the drafter introduced with its abbreviation inside the name
+# (高動態範圍(HDR)單元 ... 所述高動態範圍單元的輸出) is an introduced element for
+# the possessive arm. Checked here rather than registered as an intro, because
+# the intro extractor also feeds spec-support, where the joined name never
+# appears literally in the specification.
+def _owner_named_with_abbreviation_tw(owner: str, claim_text: str, chain: list) -> bool:
+    if len(owner) < 4:
+        return False
+    texts = [claim_text or ""] + [getattr(a, "text", "") or "" for a in chain[1:]]
+    for k in range(2, len(owner) - 1):
+        pat = re.compile(
+            re.escape(owner[:k]) + r"[(（]\s*[A-Z][A-Za-z0-9\-]{1,15}\s*[)）]" + re.escape(owner[k:])
+        )
+        if any(pat.search(t) for t in texts):
+            return True
+    return False
 
 
 def has_possessive_introduction_tw(
@@ -7203,7 +7391,9 @@ def has_possessive_introduction_tw(
             k = look_back.rfind(det)
             if k >= 0:
                 owner = look_back[k + len(det):].strip()
-                return owner in intros_by_term or strip_leading_quantifier(owner) in intros_by_term
+                return (owner in intros_by_term
+                        or strip_leading_quantifier(owner) in intros_by_term
+                        or _owner_named_with_abbreviation_tw(owner, claim_text, chain))
         return False
 
     def _scan(text: str, limit: int | None) -> bool:
@@ -7241,7 +7431,11 @@ def has_possessive_introduction_tw(
                 elif text[idx - 1] == "的":
                     # The mention introduces exactly the noun the walker reads
                     # there: 的位置資訊 introduces 位置資訊, never 位置.
-                    if _possessor_is_element(look_back) and _noun_read_at_tw(text, idx) == t:
+                    # A coordinator right after the term ends it (的次序或調度).
+                    if _possessor_is_element(look_back) and (
+                        _noun_read_at_tw(text, idx) == t
+                        or text[idx + len(t):idx + len(t) + 1] in ("及", "與", "或", "、")
+                    ):
                         return True
                 elif any(marker in look_back for marker in ("所述", "前述", "該")):
                     return True
@@ -8000,6 +8194,21 @@ def check_antecedent_basis(
             # full rationale.
             if resolved_intro is None and has_possessive_introduction_tw(
                 claim.text, chain, normalized_term, m.start(), intros_by_term
+            ):
+                continue
+
+            if resolved_intro is None and _step_gerund_reference_tw(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            if resolved_intro is None and _io_attributive_intro_tw(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            if resolved_intro is None and _inherent_geometry_part_reference_tw(
+                claim.text, normalized_term, m.start(), intros_by_term
             ):
                 continue
 
