@@ -4561,6 +4561,76 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
 _NEW_ARGUMENT_COVERBS_CN: tuple[str, ...] = ("用于", "以", "对", "为", "将", "被", "使")
 
 
+# CN R79 (wave D) - PREDICATE-TAIL INTRO TIER, the mirror of TW R66.
+# The introduction capture ran past its head into a predicate (a coverb, a
+# locative postposition, or a short verb taking an object), so the drafter's
+# clean 所述<head> matched nothing. Same positional signals as TW, no verb
+# list, and the intro must itself be a real introduction (a quantifier right
+# before it, or a possessive whose possessor is introduced). Additive: runs
+# only after the exact, prefix and R46 tiers fail, so it can only silence.
+_PREDICATE_OBJECT_OPENERS_CN: tuple[str, ...] = (
+    "所述", "前述", "至少一", "多个", "每一", "该", "其", "一",
+)
+_LOCATIVE_POSTPOSITIONS_CN: frozenset[str] = frozenset("下中内上")
+_COVERBS_CN: frozenset[str] = frozenset("自至向往给对")
+_DUI_LEXEME_CHARS_CN: frozenset[str] = frozenset("应位称接齐准象话")
+_INTRO_QUANTIFIER_OPENERS_CN: tuple[str, ...] = (
+    "至少一", "多个", "两个", "数个", "每一", "若干", "一",
+)
+_TAIL_STOP_CHARS_CN = frozenset("或与及和、，。；：的之")
+
+
+def _intro_opens_as_introduction_cn(text: str, pos: int, intros_by_term) -> bool:
+    """True when the mention of an intro at ``pos`` is a real introduction."""
+    before = text[max(0, pos - 16):pos]
+    for q in _INTRO_QUANTIFIER_OPENERS_CN:
+        if before.endswith(q):
+            lead = before[: len(before) - len(q)]
+            return not lead or lead[-1] not in "进统唯同单第万"
+    if before.endswith(("的", "之")):
+        for det in ("所述", "前述", "该"):
+            k = before.rfind(det)
+            if k >= 0 and before[k + len(det):-1] in intros_by_term:
+                return True
+    return False
+
+
+def _predicate_tail_intro_cn(term, intros_by_term, chain, claim, ref_start):
+    """The introduction that is ``term`` plus a predicate tail, if any."""
+    if len(term) < 2:
+        return None
+    by_id = {c.id: c for c in chain}
+    for intro, (ancestor_id, _depth) in intros_by_term.items():
+        if len(intro) <= len(term) or not intro.startswith(term):
+            continue
+        source = by_id.get(ancestor_id)
+        if source is None:
+            continue
+        pos = source.text.find(intro)
+        if pos < 0:
+            continue
+        if ancestor_id == claim.id and pos >= ref_start:
+            continue
+        rem = intro[len(term):]
+        if rem[0] in _TAIL_STOP_CHARS_CN:
+            continue
+        tail = rem + source.text[pos + len(intro): pos + len(intro) + 4]
+        hit = rem in _LOCATIVE_POSTPOSITIONS_CN or (
+            rem[0] in _COVERBS_CN
+            and not (rem[0] == "对" and rem[1:2] in _DUI_LEXEME_CHARS_CN)
+        )
+        if not hit:
+            for k in (1, 2):
+                if any(ch in _TAIL_STOP_CHARS_CN for ch in tail[:k]):
+                    break
+                if tail[k:].startswith(_PREDICATE_OBJECT_OPENERS_CN) or tail[k:k + 1] == "于":
+                    hit = True
+                    break
+        if hit and _intro_opens_as_introduction_cn(source.text, pos, intros_by_term):
+            return intro
+    return None
+
+
 def has_possessive_introduction_cn(
     claim_text: str, chain: list, term: str, ref_offset: int,
     intros_by_term=None,
@@ -5057,6 +5127,12 @@ def check_antecedent_basis_cn(
             # implication (审查指南 第二部分 第二章 §3.2 清楚 / 明确).
             # The intro extractors miss article-less data / attribute
             # nouns; this closes the gap. See has_bare_noun_introduction_cn.
+            # CN R79: an intro that is the term plus a predicate tail.
+            if resolved_intro is None:
+                resolved_intro = _predicate_tail_intro_cn(
+                    normalized_term, intros_by_term, chain, claim, m.start()
+                )
+
             if resolved_intro is None and has_possessive_introduction_cn(
                 claim.text, chain, normalized_term, m.start(), intros_by_term
             ):
