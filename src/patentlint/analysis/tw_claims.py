@@ -6957,7 +6957,11 @@ _BARE_NOUN_INTRO_VERBS_TW: tuple[str, ...] = tuple(
         # introduced element. 在 alone (single-char locative preposition)
         # is sufficient for the `在X` case because TW drafters typically
         # write `在前述X` for references - bare `在X` denotes intro.
-        | {"在", "位於", "置於", "設於", "應用於", "作用於", "布置於", "固定於"},
+        | {"在", "位於", "置於", "設於", "應用於", "作用於", "布置於", "固定於"}
+        # Wave D (2026-10-25): bare 有 (成型有X, 開設有X) and 導入 introduce
+        # their object under ruling 2 (2026-10-24); 所有/沒有/只有/僅有 are
+        # quantifiers or negations, see _BARE_NOUN_NON_INTRO_YOU_TW.
+        | {"有", "導入"},
         key=len,
         reverse=True,
     )
@@ -6983,6 +6987,8 @@ def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
     if text[i - 1] in ("該", "一"):
         return False  # reference / quantifier -- not a fresh mention
     if i >= 2 and text[i - 2:i] in ("所述", "前述", "該等", "該些"):
+        return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_TW) or _bare_noun_after_you_word_tw(text, i):
         return False
     # Verb-object / coverb-object: the run before the term ends with a
     # verb. Checked first -- coverbs (基於) end in a boundary char (於).
@@ -7018,10 +7024,26 @@ def _bare_noun_verb_led_tw(text: str, i: int) -> bool:
     # 經 a participle (經擴增的樣本); neither names an element.
     if text[:i].endswith(_BARE_NOUN_ACTION_LEADS_TW) or text.startswith("經", i):
         return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_TW) or _bare_noun_after_you_word_tw(text, i):
+        return False
     return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW)
 
 
 _BARE_NOUN_ACTION_LEADS_TW: tuple[str, ...] = ("進行", "執行", "運行", "實行", "實施", "經")
+# Bare 有 introduces only as a verb; after these it quantifies or negates.
+_BARE_NOUN_NON_INTRO_YOU_TW: tuple[str, ...] = ("所有", "沒有", "只有", "僅有", "未有", "唯有")
+# 有 also opens words (有機, 有源, 有損); a term starting right after such a
+# 有 is a fragment of that word, not the object of the verb.
+_BARE_NOUN_YOU_WORD_TAILS_TW: frozenset[str] = frozenset("機源損效限線色益關利害毒序形聲理名向功界")
+
+
+def _bare_noun_after_you_word_tw(text: str, i: int) -> bool:
+    """True if a bare 有 before i is the head of a word, not the verb."""
+    return (
+        text[:i].endswith("有")
+        and not text[:i].endswith(('具有', '設有', '含有'))
+        and text[i:i + 1] in _BARE_NOUN_YOU_WORD_TAILS_TW
+    )
 # A word followed straight by a determiner is a verb taking its object
 # (識別該產品, 啟動該程序), not a noun.
 _BARE_NOUN_OBJECT_DETERMINERS_TW: tuple[str, ...] = ("該", "所述", "前述", "一")

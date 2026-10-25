@@ -1319,6 +1319,106 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TWI766542B",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '該腔體的內表面設置有多孔碳材料層，該多孔碳材料層'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "多孔碳材料層",
+            "reference_form": "所述多孔碳材料層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI766542B",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '該腔體的內表面設置有多孔碳材料層，該多孔碳材料層'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "多孔碳材料層",
+            "reference_form": "所述多孔碳材料層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI766542B",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '該腔體的內表面設置有多孔碳材料層，該多孔碳材料層'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "多孔碳材料層",
+            "reference_form": "所述多孔碳材料層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202521156A",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '一種診斷和治療患有癌症之受試體的方法'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "癌症",
+            "reference_form": "該癌症"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202308371A",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '其更包含其中包括有影像內容之顯示緩衝器'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "影像內容",
+            "reference_form": "所述影像內容"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

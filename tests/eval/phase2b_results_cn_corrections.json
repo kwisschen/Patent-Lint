@@ -1459,6 +1459,86 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN105190783A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '涂覆有复合热塑性涂层的所述线'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "复合热塑性涂层",
+            "reference_form": "所述复合热塑性涂层"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105190783A",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '涂覆有复合热塑性涂层的所述线'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 32,
+            "term": "复合热塑性涂层",
+            "reference_form": "所述复合热塑性涂层"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN107852655B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '当所述终端设备确定有待发送数据时'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "待发送数据",
+            "reference_form": "所述待发送数据"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN107852655B",
+      "jurisdiction": "CN",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '用于当所述处理单元确定有待发送数据时'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "待发送数据",
+            "reference_form": "所述待发送数据"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

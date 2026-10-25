@@ -4386,7 +4386,10 @@ _BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
         # bare-noun verb set. Already known to other arms (F11 at line
         # 2194). MPEP-equivalent: 审查指南 第二部分第二章 §3.2.5
         # (clear/明确 standard).
-        | {"位于", "置于", "设于", "应用于", "作用于", "布置于", "固定于"},
+        | {"位于", "置于", "设于", "应用于", "作用于", "布置于", "固定于"}
+        # Wave D (2026-10-25): bare 有 and 导入 introduce their object (TW
+        # mirror); 所有/没有/只有/仅有 quantify or negate.
+        | {"有", "导入"},
         key=len,
         reverse=True,
     )
@@ -4431,6 +4434,8 @@ def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
         return False  # reference / quantifier
     if i >= 2 and text[i - 2:i] in ("所述", "前述"):
         return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_CN) or _bare_noun_after_you_word_cn(text, i):
+        return False
     # Verb-object / coverb-object: the run before the term ends with a
     # verb. Checked first -- coverbs (基于) end in a boundary char (于).
     if any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_CN):
@@ -4470,10 +4475,26 @@ def _bare_noun_verb_led_cn(text: str, i: int) -> bool:
     # After 进行 / 执行 / 运行 the word is an action, after 经 a participle.
     if text[:i].endswith(_BARE_NOUN_ACTION_LEADS_CN) or text.startswith("经", i):
         return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_CN) or _bare_noun_after_you_word_cn(text, i):
+        return False
     return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_CN)
 
 
 _BARE_NOUN_ACTION_LEADS_CN: tuple[str, ...] = ("进行", "执行", "运行", "实行", "实施", "经")
+# Bare 有 introduces only as a verb; after these it quantifies or negates.
+_BARE_NOUN_NON_INTRO_YOU_CN: tuple[str, ...] = ("所有", "没有", "只有", "仅有", "未有", "唯有")
+# 有 also opens words (有機, 有源, 有損); a term starting right after such a
+# 有 is a fragment of that word, not the object of the verb.
+_BARE_NOUN_YOU_WORD_TAILS_CN: frozenset[str] = frozenset("机源损效限线色益关利害毒序形声理名向功界")
+
+
+def _bare_noun_after_you_word_cn(text: str, i: int) -> bool:
+    """True if a bare 有 before i is the head of a word, not the verb."""
+    return (
+        text[:i].endswith("有")
+        and not text[:i].endswith(('具有', '设有', '含有'))
+        and text[i:i + 1] in _BARE_NOUN_YOU_WORD_TAILS_CN
+    )
 # A word followed straight by a determiner is a verb taking its object.
 _BARE_NOUN_OBJECT_DETERMINERS_CN: tuple[str, ...] = ("该", "所述", "前述", "一")
 
