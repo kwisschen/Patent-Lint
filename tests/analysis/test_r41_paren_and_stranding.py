@@ -86,7 +86,6 @@ def test_tw_jing_cuts_the_verb_reading(dirty: str, clean: str) -> None:
     "所述經量化權重資訊",          # participle at the head of the term
     "該經壓縮輸入資料",
     "第一經加擾資料",              # ordinal is head, not noun
-    "多個經摺疊",                  # quantifier is head
     "所述神經網路模型",            # 神經
     "所述第一神經網路模型",
     "第二換能器之間之經增強撓性區域",      # genitive resets the segment
@@ -94,6 +93,15 @@ def test_tw_jing_cuts_the_verb_reading(dirty: str, clean: str) -> None:
 ])
 def test_tw_jing_guard_protects_the_participle_reading(term: str) -> None:
     assert clean_noun_phrase_tw(term) == term
+
+
+def test_tw_jing_quantified_pair_stays_matched() -> None:
+    # Wave F: the cleaner strips the quantifier first; the participle survives
+    # and the intro / reference pair (多個經摺疊 / 該等經摺疊) still keys alike.
+    from patentlint.analysis.tw_claims import normalize_candidate_intro, normalize_reference_term
+
+    assert clean_noun_phrase_tw("多個經摺疊") == "經摺疊"
+    assert normalize_candidate_intro("多個經摺疊") == normalize_reference_term("該等經摺疊")
 
 
 def test_cn_jing_guard_protects_manager_compound() -> None:
