@@ -130,8 +130,8 @@ _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 52, "CN": 33, "US": 0}
 # RATCHETED 2026-10-25 after wave D (TW R70-R73, CN R75-R79): TW 1149 -> 1125,
 # CN 995 -> 951.
 # RATCHETED 2026-10-25 after wave E (TW R74, CN R80): TW 1125 -> 1118,
-# CN 951 -> 945; TW structurally bad 54 -> 52.
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1118, "CN": 945}
+# CN 951 -> 945; TW structurally bad 54 -> 52. Then CN 945 -> 940 (CN R81).
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1118, "CN": 940}
 
 
 def _load_segmenter():

@@ -3367,6 +3367,14 @@ _SHU_FINAL_NOUNS_TW: tuple[str, ...] = ("金屬", "菌屬", "附屬", "專屬", 
 # floor, so 大小 is the entry a length rule cannot reach.
 _XIAO_FINAL_NOUNS_TW: tuple[str, ...] = ("大小",)
 
+# Wave E - 包-final NOUN lexemes, mined from the drafter's own references
+# (所述電池包 16, 所述資料包 3); the trailing 包 strip exists for the stranded
+# head of 包括 / 包含, and cut these to 電池 / 資料. 封包 (所述封包 32) is
+# WITHHELD: guarding it surfaced 10 references whose introductions are relative
+# clauses or abbreviations TW does not read (傳輸包括數據資料的封包 ... 該封包).
+_BAO_FINAL_NOUNS_TW: tuple[str, ...] = ("電池包", "資料包", "數據包")
+_ORDINAL_BAO_RE_TW: re.Pattern[str] = re.compile(r"第[一二三四五六七八九十0-9]+包")
+
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
@@ -4571,6 +4579,11 @@ def clean_noun_phrase_tw(text: str) -> str:
                 # R41 (#531) - 小 is noun-final only in 大小.
                 if current.endswith(_XIAO_FINAL_NOUNS_TW) or (len(current) - 1) < 3:
                     continue
+            elif verb == "包" and (current.endswith(_BAO_FINAL_NOUNS_TW)
+                                  or _ORDINAL_BAO_RE_TW.fullmatch(current)):
+                continue  # wave E: 封包 / 電池包 / 第二包 are elements
+            elif verb == "較" and current.endswith("比較"):
+                continue  # wave E: 比較 ("comparison") is a word
             elif verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_TW:
                 continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
             elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
@@ -7167,7 +7180,10 @@ def _noun_read_at_tw(text: str, i: int) -> str:
 # rules for "outputting X ... the outputting". R4 still governs the output as a
 # THING (處理器輸出一指標 ... 接收該輸出), so the reference must read as the act:
 # followed by its own object, or, in a method claim, by 包括 / 包含.
-_STEP_GERUND_TERMS_TW: frozenset[str] = frozenset({"輸出", "輸入"})
+_STEP_GERUND_TERMS_TW: frozenset[str] = frozenset({"輸出", "輸入", "比較"})
+# A verb with no THING reading: 該比較 can only name the act, so it needs no
+# object or 包括 after it (將X與Y進行比較；基於該比較).
+_ACT_ONLY_TERMS_TW: frozenset[str] = frozenset({"比較"})
 _STEP_DESCRIBED_BY_TW: tuple[str, ...] = (
     "包括", "包含", "更包括", "更包含", "還包括", "還包含", "進一步包括", "進一步包含",
 )
@@ -7186,7 +7202,7 @@ def _step_gerund_reference_tw(claim_text: str, chain: list, term: str, ref_offse
     if pos < 0:
         return False
     after = claim_text[pos + len(term):]
-    if not after.startswith(("所述", "該", "前述")):
+    if term not in _ACT_ONLY_TERMS_TW and not after.startswith(("所述", "該", "前述")):
         root = getattr(chain[-1], "text", "") if chain else claim_text
         if "方法" not in (root or "")[:60] or not after.startswith(_STEP_DESCRIBED_BY_TW):
             return False

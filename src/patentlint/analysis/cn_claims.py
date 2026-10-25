@@ -2393,6 +2393,12 @@ _QUANTITY_OPENERS_CN: tuple[str, ...] = ("至少", "至多")
 # Wave E (ruling R4, 2026-10-25): mirror of _IO_NOUN_RE_TW. A bare 输出 / 输入,
 # optionally ordinal, is the element; the trailing 出 strip plus the 输 residue
 # repair (or the interior 输出 cut after 第一) emptied it.
+# Wave E - 包-final NOUN lexemes mined from CN references (所述碳质包 10,
+# 所述封包 9, 所述电池包, 所述中空包, 所述第二包).
+_BAO_FINAL_NOUNS_CN: tuple[str, ...] = ("封包", "电池包", "数据包", "资料包", "碳质包", "中空包")
+_ORDINAL_BAO_RE_CN: re.Pattern[str] = re.compile(r"第[一二三四五六七八九十0-9]+包")
+
+
 _IO_NOUN_RE_CN: re.Pattern[str] = re.compile(
     r'(?:一|第[一二三四五六七八九十百0-9]+)?输[出入](?:连接|旋转)?'
 )
@@ -2596,6 +2602,12 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
             # See _WEI_NOUN_COMPOUNDS_CN: the bare strip was a latent FN
             # held back only by a residual-length heuristic.
             if verb == "位" and current.endswith(_WEI_NOUN_COMPOUNDS_CN):
+                continue
+            # Wave E (TW mirror): 包-final element names and 比较.
+            if verb == "包" and (current.endswith(_BAO_FINAL_NOUNS_CN)
+                                or _ORDINAL_BAO_RE_CN.fullmatch(current)):
+                continue
+            if verb == "较" and current.endswith("比较"):
                 continue
             if verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_CN:
                 continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
@@ -4676,7 +4688,8 @@ def _predicate_tail_intro_cn(term, intros_by_term, chain, claim, ref_start):
 # rules for "outputting X ... the outputting". R4 still governs the output as a
 # THING (处理器输出一指标 ... 接收该输出), so the reference must read as the act:
 # followed by its own object, or, in a method claim, by 包括 / 包含.
-_STEP_GERUND_TERMS_CN: frozenset[str] = frozenset({"输出", "输入"})
+_STEP_GERUND_TERMS_CN: frozenset[str] = frozenset({"输出", "输入", "比较"})
+_ACT_ONLY_TERMS_CN: frozenset[str] = frozenset({"比较"})
 _STEP_DESCRIBED_BY_CN: tuple[str, ...] = (
     "包括", "包含", "更包括", "更包含", "还包括", "还包含", "进一步包括", "进一步包含",
 )
@@ -4695,7 +4708,7 @@ def _step_gerund_reference_cn(claim_text: str, chain: list, term: str, ref_offse
     if pos < 0:
         return False
     after = claim_text[pos + len(term):]
-    if not after.startswith(("所述", "该", "前述")):
+    if term not in _ACT_ONLY_TERMS_CN and not after.startswith(("所述", "该", "前述")):
         root = getattr(chain[-1], "text", "") if chain else claim_text
         if "方法" not in (root or "")[:60] or not after.startswith(_STEP_DESCRIBED_BY_CN):
             return False

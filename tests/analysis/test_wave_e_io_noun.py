@@ -200,3 +200,28 @@ class TestListFinalItemTw:
         assert "定頻振盪訊號" not in _tw(
             "1. 一種電路，基於一電流訊號、一誤差訊號、以及定頻振盪訊號，產生一驅動訊號。",
             "2. 如請求項1所述的電路，其中所述定頻振盪訊號的頻率為一預設值。")
+
+
+class TestOneCharacterDrops:
+    """Wave E item 6: references the normalizer cut to one character, which the
+    walker drops without checking (TW R75 / CN R81)."""
+
+    def test_bao_and_bijiao_are_words(self):
+        assert clean_noun_phrase_tw("電池包") == "電池包"
+        assert clean_noun_phrase_tw("第二包") == "第二包"
+        assert clean_noun_phrase_tw("比較") == "比較"
+        assert clean_noun_phrase_cn("数据包") == "数据包"
+        assert clean_noun_phrase_cn("比较") == "比较"
+        # The stranded head of 包括 still strips.
+        assert clean_noun_phrase_tw("驅動模組還包") == "驅動模組"
+
+    def test_battery_pack_reference_is_checked(self):
+        assert "電池包" in _tw(
+            "1. 一種車輛，包括一車架，所述車架承載一馬達。",
+            "2. 如請求項1所述的車輛，其中所述電池包具有一外殼。")
+
+    def test_comparison_names_the_step(self):
+        assert "比較" not in _tw(
+            "1. 一種校正方法，包括：將一量測值與一閾值進行比較；及基於該比較，調整一增益。")
+        assert "比较" not in _cn(
+            "1. 一种校正方法，包括：将测量值与阈值进行比较；以及基于该比较，调整增益。")
