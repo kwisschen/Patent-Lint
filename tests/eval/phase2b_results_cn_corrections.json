@@ -2827,6 +2827,126 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN115698790A",
+      "jurisdiction": "CN",
+      "source": "wave-f-quantifier-family (2026-10-26)",
+      "_note": "Claim 7 (in c53's chain) introduces 一个或多个偏振分束器. The old walker keyed that intro as the garbage 或多个偏振分束器 (only 一个 was stripped), so the reference looked unresolved and the ensemble labeled it legit. Mislabel; verified by claim read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 53,
+            "term": "偏振分束器",
+            "reference_form": "所述偏振分束器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104335216B",
+      "jurisdiction": "CN",
+      "source": "wave-f-quantifier-family (2026-10-26)",
+      "_note": "Claim 1 introduces 选择一个或多个节点用于比较; c4 depends on c1 via c3. Same garbage-key mislabel (或多个节点). Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "节点",
+            "reference_form": "所述节点"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN106922125A",
+      "jurisdiction": "CN",
+      "source": "wave-f-quantifier-family (2026-10-26)",
+      "_note": "Claim 87 (parent) introduces 控制睡眠的大脑的一个或多个部分; the later 所述部分 refers to those parts. Garbage-key mislabel (或多个部分). Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 112,
+            "term": "部分",
+            "reference_form": "所述部分"
+          },
+          {
+            "claim_id": 113,
+            "term": "部分",
+            "reference_form": "所述部分"
+          },
+          {
+            "claim_id": 114,
+            "term": "部分",
+            "reference_form": "所述部分"
+          },
+          {
+            "claim_id": 115,
+            "term": "部分",
+            "reference_form": "所述部分"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN102346880B",
+      "jurisdiction": "CN",
+      "source": "wave-f-quantifier-family (2026-10-26)",
+      "_note": "Claim 1 mentions 接收方要求 article-less twice before the reference (用于验证接收方要求; 获得与以下相关联的接收方要求). Under Christopher's CN ruling of 2026-10-23 an article-less earlier mention in the chain is an introduction. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "接收方要求",
+            "reference_form": "所述接收方要求"
+          },
+          {
+            "claim_id": 10,
+            "term": "接收方要求",
+            "reference_form": "所述接收方要求"
+          },
+          {
+            "claim_id": 19,
+            "term": "接收方要求",
+            "reference_form": "所述接收方要求"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

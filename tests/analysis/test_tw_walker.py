@@ -2338,7 +2338,8 @@ class TestR59TigongDeterminerGate:
 
         assert C("一服務提供者") == "一服務提供者"
         assert C("所述服務提供者的識別碼") == "所述服務提供者的識別碼"
-        assert C("一種提供方法") == "一種提供方法"
+        # Wave F: the leading quantifier comes off first; 提供 is still not cut.
+        assert C("一種提供方法") == "提供方法"
         assert C("該伺服器提供商") == "該伺服器提供商"
 
     def test_提供該_is_withheld_with_its_number(self):

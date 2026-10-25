@@ -1460,6 +1460,16 @@ def _restore_original_ordinals_cn(normalized: str, raw: str) -> str:
 
 # Introduction multi-char quantifiers (TC→SC glyph swap).
 _INTRO_MULTI_QUANTIFIERS_CN = (
+    # Wave F (2026-10-26): the rest of the "one or more" family. Without it only
+    # the leading 一个 was stripped, so both sides keyed a garbage 或多个X that
+    # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
+    # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+    "一个或多于一个",
+    "一个或更多个",
+    "一个或者多个",
+    "一个或多个",
+    "一或多种",
+    "一个或更多",
     "一或多个",
     r"至少[一二三四五六七八九十百千\d]+个?",
     "两个",
@@ -1964,6 +1974,16 @@ _CHEMISTRY_BEFORE_JI_CN: frozenset[str] = frozenset(
 # Leading quantifier denylist (TC→SC).
 _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # Wave F (2026-10-26): the rest of the "one or more" family. Without it only
+        # the leading 一个 was stripped, so both sides keyed a garbage 或多个X that
+        # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
+        # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+        "一个或多于一个",
+        "一个或更多个",
+        "一个或者多个",
+        "一个或多个",
+        "一或多种",
+        "一个或更多",
         "一或多个",
         "至少一个", "至少一",
         "一个", "一种", "一对",
@@ -1997,6 +2017,26 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     key=len,
     reverse=True,
 ))
+
+
+# Wave F (2026-10-26): strip a leading multi-character quantifier BEFORE the
+# cleaner, not after it. The interior cuts used to see 所述至少一個處理器 whole and
+# could stop inside the noun, leaving only the quantifier (至少一個 -> 個, 一个或多个
+# 接收方 -> 或多个). Stripped first, the cuts see only the noun. When this fires,
+# the later strip_leading_quantifier is skipped: that strip is deliberately single
+# (至少一個一次性容器 keeps 一次性). 一对 stays with the later strip, where the
+# drafter-anchored disambiguation lives; a residue under two characters is left.
+_PRE_CLEAN_QUANTIFIERS_CN: tuple[str, ...] = tuple(
+    q for q in _LEADING_QUANTIFIER_DENYLIST_CN if len(q) >= 2 and q != "一对"
+)
+
+
+def _pre_clean_quantifier_strip_cn(text: str) -> tuple[str, int]:
+    """Return the text without its leading quantifier, and the quantifier length."""
+    for q in _PRE_CLEAN_QUANTIFIERS_CN:
+        if text.startswith(q) and len(text) - len(q) >= 2:
+            return text[len(q):], len(q)
+    return text, 0
 
 # Reference-form prefixes stripped from reference terms only (Q1: 该等/
 # 该些 excluded per Step 1 exception 4 of the port prompt).
@@ -2407,7 +2447,9 @@ _IO_SET_AS_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
-def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> str:
+def clean_noun_phrase_cn(
+    text: str, *, protect_tail_compounds: bool = False, quantifier_lead: int = 0
+) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
     Two-phase cleanup mirroring ``clean_noun_phrase_tw``:
@@ -2423,6 +2465,12 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
     collecting, so protecting in place exposes them. The walker uses it only
     in the last-resort exact-match tier (see check_antecedent_basis_cn).
     """
+    # Wave F: callers outside the normalizers (Markush / supplementary intro
+    # arms) reach the cleaner with the quantifier still on.
+    # The stripped quantifier still counts toward the interior-cut position floor
+    # (see the TW twin).
+    text, lead = _pre_clean_quantifier_strip_cn(text)
+    lead = lead or quantifier_lead
     if not text or _IO_NOUN_RE_CN.fullmatch(text):
         return text
     m_set = _IO_SET_AS_RE_CN.match(text)
@@ -2448,7 +2496,7 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
         and text[0] in _ONE_CHAR_NOUN_PREFIXES_CN
         and protected_prefix_len == 0
     )
-    min_absolute_idx = 1 if is_one_char_noun_prefix else 2
+    min_absolute_idx = max(1, (1 if is_one_char_noun_prefix else 2) - lead)
 
     # R31 (2026-05-03) tight noun-suffix guard for compound nouns where
     # the verb is part of a real noun compound (verb + noun-suffix). Mirror
@@ -2855,9 +2903,14 @@ def normalize_reference_term_cn(
     """
     t = normalize_arabic_ordinal_to_cjk(text)
     t = strip_reference_form_prefix_cn(t)
+    t, pre_stripped = _pre_clean_quantifier_strip_cn(t)
     t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
-    t = clean_noun_phrase_cn(t, protect_tail_compounds=protect_tail_compounds)
-    t = strip_leading_quantifier_cn(t)
+    pre_stripped = pre_stripped or _pre_clean_quantifier_strip_cn(t)[1]
+    t = clean_noun_phrase_cn(
+        t, protect_tail_compounds=protect_tail_compounds, quantifier_lead=pre_stripped
+    )
+    if not pre_stripped:
+        t = strip_leading_quantifier_cn(t)
     t = strip_leading_verb_cn(t)
     # R31 (2026-05-03): re-run reference-prefix strip after verb strip,
     # because the new 有 prefix entry can expose a hidden 所述/该/前述
@@ -2882,9 +2935,12 @@ def normalize_candidate_intro_cn(
     of the bare noun group.
     """
     t = normalize_arabic_ordinal_to_cjk(text)
+    t, pre_stripped = _pre_clean_quantifier_strip_cn(t)
     t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
-    t = clean_noun_phrase_cn(t)
-    t = strip_leading_quantifier_cn(t)
+    pre_stripped = pre_stripped or _pre_clean_quantifier_strip_cn(t)[1]
+    t = clean_noun_phrase_cn(t, quantifier_lead=pre_stripped)
+    if not pre_stripped:
+        t = strip_leading_quantifier_cn(t)
     t = strip_reference_form_prefix_cn(t)
     t = strip_leading_verb_cn(t)
     # #245 mirror (TW R14 → CN): strip an inline English-word parenthetical gloss
@@ -4163,6 +4219,12 @@ def extract_introductions_cn(
     for m in _INTRO_PATTERN_CN.finditer(claim.text):
         original = m.group(0)
         bare_noun = m.group(1)
+        # Wave F (2026-10-26): the 能 follow-gate the reference capture already
+        # has. 能 is not a noun character, so 一个或多个身体功能 was captured as
+        # 身体功 and normalized to a phantom 身体 that resolved a real 所述身体.
+        # The 时 / 应 gates were measured here too and NOT mirrored: they
+        # manufactured 68 TW findings (服務時段, 主持續時間期間).
+        bare_noun, _ = _extend_neng_compound_cn(bare_noun, m.end(), claim.text)
         # R62 (2026-08-13) - TW R39 parity: 一对 measure-word disambiguation.
         # The split happens HERE, in the match, not in the normalizer.
         # `original == 一对 + bare_noun` is load-bearing - see the TW twin.
@@ -5150,6 +5212,15 @@ def check_antecedent_basis_cn(
             raw_noun, raw_noun_end = _extend_ying_compound_cn(
                 raw_noun, raw_noun_end, claim.text
             )
+
+            # Wave F (2026-10-26): 于 is not a noun character, so 所述一个或多于一个X
+            # stopped inside its own quantifier (一个或多). Step over it.
+            if raw_noun == "一个或多" and claim.text.startswith("于一个", raw_noun_end):
+                ext_m = _NOUN_EXT_RE_CN.match(claim.text, raw_noun_end + 3)
+                if ext_m:
+                    added = ext_m.group()[:12]
+                    raw_noun = "一个或多于一个" + added
+                    raw_noun_end += 3 + len(added)
 
             # R49 (2026-06-27): leading-quantifier cap-truncation. Restore the
             # {2,12} budget a leading quantifier consumed so a long compound

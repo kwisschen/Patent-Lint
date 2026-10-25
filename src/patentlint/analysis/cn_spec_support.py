@@ -954,6 +954,10 @@ def _build_inventory_cn(
                     continue
                 if final in _CN_GENERIC_TERMS or _is_boilerplate_cn(final):
                     continue
+                # Wave F: a hyphen-led span is a formula fragment (一个或多个-L4-嵌段),
+                # never an element name the description would spell the same way.
+                if final[0] in "-－":
+                    continue
                 # A name never ends in the preposition 于 or a determiner
                 # (以固定该): that is a verb phrase cut off before its object.
                 # Comparison verbs were already stripped by the normalizer.

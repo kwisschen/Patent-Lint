@@ -2306,6 +2306,17 @@ def _restore_original_ordinals(normalized: str, raw: str) -> str:
 # 一端透過樞軸...) require lazy regex matching and are deferred to
 # Phase 9.
 _INTRO_MULTI_QUANTIFIERS = (
+    # Wave F (2026-10-26): the rest of the "one or more" family. Without it only
+    # the leading 一個 was stripped, so both sides keyed a garbage 或多個X that
+    # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
+    # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+    "一個或更多個",
+    "一個或者多個",
+    "一個或多個",
+    "一或更多個",
+    "一或更多種",
+    "一或多種",
+    "一或更多",
     # Round 5 addition: multi-char quantifier "one or more X" - common
     # in JP-origin TW translations. Grep confirms 一或多個 ×59 in
     # 110P000368 + 110P000868 (variants 一或更多 / 一或一個以上 /
@@ -3381,6 +3392,17 @@ _ORDINAL_BAO_RE_TW: re.Pattern[str] = re.compile(r"第[一二三四五六七八�
 # 至少一 is stripped.
 _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # Wave F (2026-10-26): the rest of the "one or more" family. Without it only
+        # the leading 一個 was stripped, so both sides keyed a garbage 或多個X that
+        # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
+        # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+        "一個或更多個",
+        "一個或者多個",
+        "一個或多個",
+        "一或更多個",
+        "一或更多種",
+        "一或多種",
+        "一或更多",
         # Round 5 addition: 一或多個 multi-char quantifier (parallel to
         # _INTRO_MULTI_QUANTIFIERS). Stripped from both reference and
         # intro sides so 該前一或多個主題標籤 ↔ 該主題標籤 normalize to
@@ -3428,6 +3450,26 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
     key=len,
     reverse=True,
 ))
+
+
+# Wave F (2026-10-26): strip a leading multi-character quantifier BEFORE the
+# cleaner, not after it. The interior cuts used to see 所述至少一個處理器 whole and
+# could stop inside the noun, leaving only the quantifier (至少一個 -> 個, 一个或多个
+# 接收方 -> 或多个). Stripped first, the cuts see only the noun. When this fires,
+# the later strip_leading_quantifier is skipped: that strip is deliberately single
+# (至少一個一次性容器 keeps 一次性). 一對 stays with the later strip, where the
+# drafter-anchored disambiguation lives; a residue under two characters is left.
+_PRE_CLEAN_QUANTIFIERS_TW: tuple[str, ...] = tuple(
+    q for q in _LEADING_QUANTIFIER_DENYLIST if len(q) >= 2 and q != "一對"
+)
+
+
+def _pre_clean_quantifier_strip_tw(text: str) -> tuple[str, int]:
+    """Return the text without its leading quantifier, and the quantifier length."""
+    for q in _PRE_CLEAN_QUANTIFIERS_TW:
+        if text.startswith(q) and len(text) - len(q) >= 2:
+            return text[len(q):], len(q)
+    return text, 0
 
 # Reference-form prefixes: stripped from reference terms only. The walker
 # strips these before applying the leading-quantifier pass, so 該第一電極
@@ -4300,7 +4342,7 @@ _IO_SET_AS_RE_TW: re.Pattern[str] = re.compile(
 )
 
 
-def clean_noun_phrase_tw(text: str) -> str:
+def clean_noun_phrase_tw(text: str, *, quantifier_lead: int = 0) -> str:
     """Strip trailing verbs and conjunction fragments from a TW reference term.
 
     Two-phase cleanup:
@@ -4328,6 +4370,12 @@ def clean_noun_phrase_tw(text: str) -> str:
     fragments produce mismatches at comparison time and are surfaced via
     the did-you-mean hint if similarity is high enough.
     """
+    # Wave F: callers outside the normalizers (Markush / supplementary intro
+    # arms) reach the cleaner with the quantifier still on.
+    # The stripped quantifier still counts toward the interior-cut position floor,
+    # so 多個段包括… cuts at 包括 exactly as it did with the quantifier attached.
+    text, lead = _pre_clean_quantifier_strip_tw(text)
+    lead = lead or quantifier_lead
     text = _strip_predicate_head_tw(text)
     if not text or _IO_NOUN_RE_TW.fullmatch(text):
         return text
@@ -4409,7 +4457,7 @@ def clean_noun_phrase_tw(text: str) -> str:
         while idx >= 0:
             absolute_idx = idx + search_offset
             # Require >= 2 chars before the verb in the absolute original text.
-            if absolute_idx <= 1:
+            if absolute_idx < 1 or absolute_idx + lead <= 1:
                 break
             # #349 (2026-07-06): an interior verb immediately followed by the
             # device-noun 天線 is a noun-modifier of an antenna compound
@@ -4953,14 +5001,17 @@ def normalize_reference_term(
     """
     t = normalize_arabic_ordinal_to_cjk(text)
     t = strip_reference_form_prefix(t)
+    t, pre_stripped = _pre_clean_quantifier_strip_tw(t)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
-    t = clean_noun_phrase_tw(t)
+    pre_stripped = pre_stripped or _pre_clean_quantifier_strip_tw(t)[1]
+    t = clean_noun_phrase_tw(t, quantifier_lead=pre_stripped)
     # source_text (R39, #527) is empty on the reference side proper - a
     # reference opens with 所述/該/前述, which is stripped above, so a leading
     # 一對 never survives to here. It is threaded for the SPEC-SUPPORT caller,
     # which routes raw intro spans through this same chain and must apply the
     # identical 一對 disambiguation or the two engines key one intro two ways.
-    t = strip_leading_quantifier(t, source_text=source_text)
+    if not pre_stripped:
+        t = strip_leading_quantifier(t, source_text=source_text)
     _pre_verb = t
     t = strip_leading_verb_tw(t)
     if t != _pre_verb:
@@ -5003,13 +5054,16 @@ def normalize_candidate_intro(
     string when they refer to the same entity.
     """
     t = normalize_arabic_ordinal_to_cjk(text)
+    t, pre_stripped = _pre_clean_quantifier_strip_tw(t)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
-    t = clean_noun_phrase_tw(t)
+    pre_stripped = pre_stripped or _pre_clean_quantifier_strip_tw(t)[1]
+    t = clean_noun_phrase_tw(t, quantifier_lead=pre_stripped)
     # source_text carries the claim body so the 一對 strip can consult the
     # drafter's own reference form (R39, #527). Empty at call sites with no
     # claim context (e.g. symbol-table names), which reproduces the old
     # behaviour exactly.
-    t = strip_leading_quantifier(t, source_text=source_text)
+    if not pre_stripped:
+        t = strip_leading_quantifier(t, source_text=source_text)
     t = strip_reference_form_prefix(t)
     t = strip_leading_verb_tw(t)
     # #245: strip an inline English-word parenthetical gloss that bled into the
@@ -6745,6 +6799,12 @@ def extract_introductions_tw(
             continue
         original = m.group(0)
         bare_noun = m.group(1)
+        # Wave F (2026-10-26): the 能 follow-gate the reference capture already
+        # has. 能 is not a noun character, so 一個或多個身體功能 was captured as
+        # 身體功 and normalized to a phantom 身體 that resolved a real 所述身體.
+        # The 时 / 应 gates were measured here too and NOT mirrored: they
+        # manufactured 68 TW findings (服務時段, 主持續時間期間).
+        bare_noun, _ = _extend_neng_compound_tw(bare_noun, m.end(), claim.text)
 
         # R39 (2026-08-13, report #527) - 一對 measure-word disambiguation.
         # `_INTRO_MULTI_QUANTIFIERS` carries 一對 ("a pair of"), so the pattern
@@ -7231,6 +7291,50 @@ def _step_gerund_reference_tw(claim_text: str, chain: list, term: str, ref_offse
 _GEOMETRY_PARTS_TW: frozenset[str] = frozenset({"表面", "外表面", "上表面", "下表面", "頂面", "底面", "側面", "端面", "前端", "後端", "上端", "下端", "頂端", "底端", "末端", "另一端", "兩端", "另一側", "兩側", "外側", "上側", "下側", "邊緣", "外緣", "周緣", "頂部", "底部", "外周", "周邊"})
 
 
+# Wave F (ruling R8, Christopher 2026-10-26): the process of X does not inherit
+# basis from X (所述高爐過程 after 一個或多個高爐), as R6 keeps only geometry parts.
+# Scoped to the evidenced head on a two-character stem; the wider class (TW
+# resolves 1,960 references by a 2-char stem plus a 2+ char tail) is carried.
+# NOT mirrored to CN: its one hit was 还包括烧结… 所述烧结过程, a method STEP, which
+# has basis under R7.
+_ABSTRACT_NOUN_TAILS_TW: tuple[str, ...] = ("過程",)
+
+
+def _abstract_noun_of_stem_tw(stem: str, reference: str) -> bool:
+    return len(stem) == 2 and reference[2:].startswith(_ABSTRACT_NOUN_TAILS_TW)
+
+
+# Dev-time hook (CN parity): called with (intro, reference, claim id) whenever
+# the longest-prefix fallback resolves a reference. Used by eval probes only.
+_PREFIX_FALLBACK_OBSERVER = None
+
+
+# Wave F (2026-10-26): a PLURAL reference (該等接腳 / 該些模組) over two or more ordinal
+# siblings (第一接腳 and 第二接腳) names them together and has basis. The R32 ordinal
+# bridge rightly refuses a SINGULAR bare reference there (which one?), and that
+# refusal was the only thing deciding the plural too. A trailing annotation is
+# ignored on both sides (該等換能器(34) over 第一換能器 / 第二換能器(34)).
+# Not mirrored to CN: there the bare plural already resolves through the ordinal
+# bridge, and the rule's only CN corpus hits came through a 时-truncation quirk.
+_PLURAL_REFERENCE_RE_TW = re.compile(r"(?:該等|該些)")
+_ORDINAL_HEAD_RE_TW = re.compile(r"^第[一二三四五六七八九十百0-9]+")
+_TRAILING_ANNOTATION_RE_TW = re.compile(r"[(（][^()（）]*[)）]$")
+
+
+def _plural_over_ordinal_siblings_tw(
+    claim_text: str, term: str, ref_offset: int, intros_by_term
+) -> bool:
+    if not intros_by_term or not _PLURAL_REFERENCE_RE_TW.match(claim_text, ref_offset):
+        return False
+    base = _TRAILING_ANNOTATION_RE_TW.sub("", term)
+    siblings = 0
+    for intro in intros_by_term:
+        head = _ORDINAL_HEAD_RE_TW.match(intro)
+        if head and _TRAILING_ANNOTATION_RE_TW.sub("", intro[head.end():]) == base:
+            siblings += 1
+    return siblings >= 2
+
+
 def _inherent_geometry_part_reference_tw(
     claim_text: str, term: str, ref_offset: int, intros_by_term,
 ) -> bool:
@@ -7295,6 +7399,18 @@ def _owner_named_with_abbreviation_tw(owner: str, claim_text: str, chain: list) 
         )
         if any(pat.search(t) for t in texts):
             return True
+    return False
+
+
+def _quantified_owner_introduced_tw(owner: str, claim_text: str, chain: list) -> bool:
+    """True when ``owner`` (複數個孔) occurs in the chain without a determiner."""
+    texts = [c.text for c in chain] + [claim_text]
+    for text in texts:
+        i = text.find(owner)
+        while i >= 0:
+            if not text[:i].endswith(("所述", "前述", "該")):
+                return True
+            i = text.find(owner, i + 1)
     return False
 
 
@@ -7381,6 +7497,11 @@ def has_possessive_introduction_tw(
                             return not any(
                                 c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_TW
                             )
+                # Wave F: a one-character element (孔) is never an intro key, so
+                # 該複數個孔之第二數目 needs its quantified introduction found in
+                # the text (具有複數個孔), not in the table.
+                if len(stripped) == 1 and stripped != owner:
+                    return _quantified_owner_introduced_tw(owner, claim_text, chain)
                 return False
         return False
 
@@ -7956,6 +8077,21 @@ def check_antecedent_basis(
                 raw_noun, raw_noun_end, claim.text
             )
 
+            # Wave F (2026-10-26): TW mirror of CN R49. A leading quantifier spends
+            # the {2,12} budget, so 所述一或多個顯示品質增強演算法 was cut at 演算 while
+            # its introduction (whose quantifier the intro pattern consumes) kept 法.
+            if len(raw_noun) >= 12 and raw_noun_end < len(claim.text):
+                lead_q = next(
+                    (q for q in _PRE_CLEAN_QUANTIFIERS_TW if raw_noun.startswith(q)), ""
+                )
+                ext_m = _NOUN_EXT_RE_TW.match(claim.text, raw_noun_end) if lead_q else None
+                if ext_m:
+                    # 所/述 are noun characters: never run on into the next reference.
+                    added = re.split("所述|前述", ext_m.group())[0]
+                    added = added[: 12 + len(lead_q) - len(raw_noun)]
+                    raw_noun += added
+                    raw_noun_end += len(added)
+
             # R19 (2026-06-27): mid-時 timer/clock + mid-應 effector/reactor
             # compound extensions (CN R47 mirror; 定時器→定 / 末端效應器→末端效).
             raw_noun, raw_noun_end = _extend_shi_compound_tw(
@@ -8134,9 +8270,15 @@ def check_antecedent_basis(
                         len(intro) >= 2
                         and len(intro) > best_len
                         and normalized_term.startswith(intro)
+                        and not _abstract_noun_of_stem_tw(intro, normalized_term)
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+                if (
+                    resolved_intro is not None
+                    and _PREFIX_FALLBACK_OBSERVER is not None
+                ):
+                    _PREFIX_FALLBACK_OBSERVER(resolved_intro, normalized_term, claim.id)
 
             # R46 (2026-05-04): ordinal-prefix-to-Latin-abbrev bridge.
             # When reference is `第N<X>` where X is a short uppercase
@@ -8208,6 +8350,11 @@ def check_antecedent_basis(
                 continue
 
             if resolved_intro is None and _inherent_geometry_part_reference_tw(
+                claim.text, normalized_term, m.start(), intros_by_term
+            ):
+                continue
+
+            if resolved_intro is None and _plural_over_ordinal_siblings_tw(
                 claim.text, normalized_term, m.start(), intros_by_term
             ):
                 continue

@@ -1407,8 +1407,10 @@ class TestR69TigongDeterminerGate:
     def test_the_noun_readings_are_untouched(self):
         from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
 
-        assert C("一种服务提供商") == "一种服务提供商"
-        assert C("一种提供方法") == "一种提供方法"
+        # Wave F: the cleaner strips a leading multi-char quantifier itself; the
+        # point here is that 提供 inside the noun is not cut.
+        assert C("一种服务提供商") == "服务提供商"
+        assert C("一种提供方法") == "提供方法"
 
     def test_de_is_excluded_because_the_head_is_on_the_RIGHT(self):
         """`X提供的Y` is a relative clause whose head noun is Y, so cutting at

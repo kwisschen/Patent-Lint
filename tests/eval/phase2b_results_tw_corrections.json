@@ -2491,6 +2491,54 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-f-quantifier-family (2026-10-26)",
+      "_note": "c80: 一或多種試劑之容器 introduces 試劑 (garbage key 或多種試劑 before wave F; mislabel). c102: 結構蛋白質指示冠狀 is a cap-truncation artifact of 該至少一結構蛋白質指示冠狀病毒; the defect still fires under the clean term 結構蛋白質 on the same claim (ADR-111 shift). Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 80,
+            "term": "試劑",
+            "reference_form": "該試劑"
+          },
+          {
+            "claim_id": 102,
+            "term": "結構蛋白質指示冠狀",
+            "reference_form": "該結構蛋白質指示冠狀"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW201942022A",
+      "jurisdiction": "TW",
+      "source": "wave-f-quantifier-family (2026-10-26)",
+      "_note": "FN closure: claim 48 introduces 一添加能源機構 and then writes 該添加能機構 (drops 源), never introduced. Surfaced when the intro arm learned the 能 follow-gate. Displayed term is truncated to 添加 because 能 is not a noun character. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 48,
+            "term": "添加",
+            "reference_form": "該添加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }
