@@ -69,3 +69,32 @@ class TestCn:
         assert not _bare_noun_verb_led_cn(text, text.index("机溶剂"))
         text = "一种载体，所述载体负载有溶剂。"
         assert _bare_noun_verb_led_cn(text, text.index("溶剂"))
+
+
+class TestNonOrdinalPossessiveTw:
+    """Ruling R5 (2026-10-25): 所述X的Y introduces Y when X is introduced.
+
+    Tested on the helper: the end-to-end shapes are often also reached by the
+    F10b 的 + component-noun pattern or a supplementary arm.
+    """
+
+    @staticmethod
+    def _intro(text, term, intros):
+        from patentlint.analysis.tw_claims import has_possessive_introduction_tw
+
+        claim = Claim(id=1, text=text, independent=True)
+        return has_possessive_introduction_tw(text, [claim], term, len(text), intros)
+
+    def test_possessive_of_an_introduced_element_introduces(self):
+        assert self._intro("接收用於所述映射表的條目的更新指標。", "條目", {"映射表": (1, 1)})
+
+    def test_owner_must_be_introduced(self):
+        assert not self._intro("接收用於所述映射表的條目的更新指標。", "條目", {"主機": (1, 1)})
+
+    def test_owner_must_be_the_element_itself(self):
+        # A relative clause (所述映射表儲存的條目) is not a plain possessive.
+        assert not self._intro("接收所述映射表儲存的條目。", "條目", {"映射表": (1, 1)})
+
+    def test_mention_introduces_only_the_noun_read_there(self):
+        # 的條目集合 introduces 條目集合, not 條目.
+        assert not self._intro("接收用於所述映射表的條目集合的更新指標。", "條目", {"映射表": (1, 1)})

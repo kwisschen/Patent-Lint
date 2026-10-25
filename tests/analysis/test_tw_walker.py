@@ -1971,11 +1971,20 @@ class TestBareNounIntroduction:
         issues = check_antecedent_basis(doc)
         assert any(i["term"] == "使用者介面" for i in issues), issues
 
-    def test_possessive_de_still_flagged(self):
-        """隨身碟的識別資料 is a possessive, not an introduction -
-        guard (b), the bug-2 case (110P000868)."""
+    def test_possessive_de_introduces_when_owner_is_introduced(self):
+        """Ruling R5 (2026-10-25) reverses the bug-2 reading (110P000868):
+        所述隨身碟的識別資料 introduces 識別資料 because 隨身碟 is introduced."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一隨身碟，所述隨身碟的識別資料被儲存，"
+                      "並讀取所述識別資料。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_possessive_de_still_flagged_without_owner(self):
+        """The bare-noun guard (b) still holds when the owner is not
+        introduced: the possessive is then a reference, not an intro."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含一讀取器，所述隨身碟的識別資料被儲存，"
                       "並讀取所述識別資料。"),
         ])
         issues = check_antecedent_basis(doc)

@@ -7101,6 +7101,15 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
 _NEW_ARGUMENT_COVERBS_TW: tuple[str, ...] = ("用於", "以", "對", "為", "將", "被", "使")
 
 
+_NOUN_RUN_TW = re.compile(_NOUN_CHARS)
+
+
+def _noun_read_at_tw(text: str, i: int) -> str:
+    """The cleaned noun the walker captures starting at ``text[i]``."""
+    m = _NOUN_RUN_TW.match(text, i)
+    return clean_noun_phrase_tw(m.group()) if m else ""
+
+
 def has_possessive_introduction_tw(
     claim_text: str, chain: list, term: str, ref_offset: int,
     intros_by_term=None,
@@ -7163,7 +7172,10 @@ def has_possessive_introduction_tw(
     ordinal = t.startswith("第")
     if ordinal and not intros_by_term:
         return False
-    markers = ("之", "的") if ordinal else ("之",)
+    # Wave D (Christopher's ruling 2026-10-25): a non-ordinal possessive with 的
+    # on an introduced element introduces too (所述殼體的側板), behind the same
+    # introduced-owner gate as the ordinal; 之 keeps its R9 behaviour.
+    markers = ("之", "的") if ordinal or intros_by_term else ("之",)
 
     def _possessor_introduced(look_back: str) -> bool:
         for det in ("所述", "前述", "該"):
@@ -7182,6 +7194,16 @@ def has_possessive_introduction_tw(
                                 c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_TW
                             )
                 return False
+        return False
+
+    def _possessor_is_element(look_back: str) -> bool:
+        # A plain possessive: what follows the determiner IS an introduced
+        # element, nothing more (所述殼體的側板, 該複數個殼體的側板).
+        for det in ("所述", "前述", "該"):
+            k = look_back.rfind(det)
+            if k >= 0:
+                owner = look_back[k + len(det):].strip()
+                return owner in intros_by_term or strip_leading_quantifier(owner) in intros_by_term
         return False
 
     def _scan(text: str, limit: int | None) -> bool:
@@ -7215,6 +7237,11 @@ def has_possessive_introduction_tw(
                 look_back = text[max(0, idx - 16):idx - 1]
                 if ordinal:
                     if _possessor_introduced(look_back):
+                        return True
+                elif text[idx - 1] == "的":
+                    # The mention introduces exactly the noun the walker reads
+                    # there: 的位置資訊 introduces 位置資訊, never 位置.
+                    if _possessor_is_element(look_back) and _noun_read_at_tw(text, idx) == t:
                         return True
                 elif any(marker in look_back for marker in ("所述", "前述", "該")):
                     return True
