@@ -1,0 +1,84 @@
+diff --git a/src/patentlint/analysis/cn_claims.py b/src/patentlint/analysis/cn_claims.py
+index a07dd79a..ef44cb5c 100644
+--- a/src/patentlint/analysis/cn_claims.py
++++ b/src/patentlint/analysis/cn_claims.py
+@@ -1513,6 +1513,28 @@ _REF_PATTERN_CAPTURE_CN = re.compile(
+     + f"(?P<noun>{_NOUN_CHARS_CN})"
+ )
+ 
++
++# Wave F (2026-10-26): 所/述 are noun characters, so in 所述X<verb>所述Y the
++# noun run swallows the second reference and a plain finditer resumes after
++# the whole run - 所述Y was never looked up (FN mask, item 11). Resume the scan
++# at the first determiner embedded in the noun run instead. The first match is
++# unchanged; only the swallowed references are added.
++_EMBEDDED_DETERMINER_RE_CN = re.compile(r"所述|前述")
++
++
++def _iter_reference_matches_cn(text: str):
++    pos = 0
++    while True:
++        m = _REF_PATTERN_CAPTURE_CN.search(text, pos)
++        if m is None:
++            return
++        yield m
++        # The window runs one character past the match: the {2,12} cap can
++        # split a determiner (...发送所|述Y), and resuming at m.end() would then
++        # skip the reference a plain finditer used to reach.
++        inner = _EMBEDDED_DETERMINER_RE_CN.search(text, m.start("noun"), m.end() + 1)
++        pos = inner.start() if inner else m.end()
++
+ # Trailing-verb denylist (mechanical TC→SC swap; historical rationale in
+ # tw_claims.py lines 869-990).
+ # Noun compounds ending in 匹配 that must survive the trailing-verb strip (see
+@@ -5116,7 +5138,7 @@ def check_antecedent_basis_cn(
+         # (normalized_term, normalized_reference_form). See the
+         # module-header ADR-107 comment for the parity rationale.
+         seen_terms: set[tuple[str, str]] = set()
+-        for m in _REF_PATTERN_CAPTURE_CN.finditer(claim.text):
++        for m in _iter_reference_matches_cn(claim.text):
+             prefix = m.group("prefix")
+             raw_noun = m.group("noun")
+             if not raw_noun:
+diff --git a/src/patentlint/analysis/tw_claims.py b/src/patentlint/analysis/tw_claims.py
+index a4b92290..ca3e79b2 100644
+--- a/src/patentlint/analysis/tw_claims.py
++++ b/src/patentlint/analysis/tw_claims.py
+@@ -2379,6 +2379,28 @@ _REF_PATTERN_CAPTURE = re.compile(
+ )
+ 
+ 
++# Wave F (2026-10-26): 所/述 are noun characters, so in 所述X<verb>所述Y the
++# noun run swallows the second reference and a plain finditer resumes after
++# the whole run - 所述Y was never looked up (FN mask, item 11). Resume the scan
++# at the first determiner embedded in the noun run instead. The first match is
++# unchanged; only the swallowed references are added.
++_EMBEDDED_DETERMINER_RE_TW = re.compile(r"所述|前述")
++
++
++def _iter_reference_matches_tw(text: str):
++    pos = 0
++    while True:
++        m = _REF_PATTERN_CAPTURE.search(text, pos)
++        if m is None:
++            return
++        yield m
++        # The window runs one character past the match: the {2,12} cap can
++        # split a determiner (...发送所|述Y), and resuming at m.end() would then
++        # skip the reference a plain finditer used to reach.
++        inner = _EMBEDDED_DETERMINER_RE_TW.search(text, m.start("noun"), m.end() + 1)
++        pos = inner.start() if inner else m.end()
++
++
+ # ── Phase 8b TW walker - reference-term normalization (ADR-095) ──────────
+ #
+ # Three sequential transformations applied before computing antecedent
+@@ -7926,7 +7948,7 @@ def check_antecedent_basis(
+         # baseline delta. See docs/architectural-decisions.md ADR-095
+         # and the 2026-04-09 follow-up writeup for the decision trail.
+         seen_terms: set[str] = set()
+-        for m in _REF_PATTERN_CAPTURE.finditer(claim.text):
++        for m in _iter_reference_matches_tw(claim.text):
+             prefix = m.group("prefix")
+             raw_noun = m.group("noun")
+             if not raw_noun:

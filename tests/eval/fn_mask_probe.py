@@ -11,6 +11,14 @@
 #   embedded  determiners inside an earlier reference's noun run: 所/述 are noun
 #             characters, so 所述记录器接收所述警报 is ONE capture and 所述警报 is
 #             never looked up (carried item 11). Wave E: TW 2,639 / CN 7,116.
+#             YIELD MEASURED wave F (2026-10-26), WITHHELD: the rescan in
+#             tests/eval/withheld/item11_embedded_rescan.patch adds TW 427 / CN
+#             937 findings, 246 / 507 of them on a term the draft already flags.
+#             Read: mostly article-less introductions (FPs under the CN ruling)
+#             and predicates glued to the noun, because the capture ends at the
+#             NEXT determiner, not at a verb. Gating on "no prefix of 3+ chars
+#             mentioned earlier in the chain" leaves TW 26 / CN 91, about half
+#             real. The lever is predicate stripping on these spans first.
 #   selfintro introduction spans that start right after a determiner, so a
 #             quantified reference (所述至少一個X) introduces itself (carried
 #             item 13). Wave E: TW 11,691 / CN 5,341. Exposure, not FNs: many
