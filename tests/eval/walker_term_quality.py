@@ -127,7 +127,9 @@ _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 33, "US": 0}
 # RATCHETED 2026-09-10 after TW R57/R59 and CN R68/R69: TW 1209 -> 1155,
 # CN 1070 -> 995. Lowering the pin after an improvement is what makes it a
 # ratchet - left at the old value, a later regression back to 1209 would pass.
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1149, "CN": 995}
+# RATCHETED 2026-10-25 after wave D (TW R70-R73, CN R75-R79): TW 1149 -> 1125,
+# CN 995 -> 951.
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1125, "CN": 951}
 
 
 def _load_segmenter():
