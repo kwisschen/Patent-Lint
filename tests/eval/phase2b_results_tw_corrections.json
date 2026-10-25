@@ -1319,6 +1319,866 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TWI766542B",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '該腔體的內表面設置有多孔碳材料層，該多孔碳材料層'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "多孔碳材料層",
+            "reference_form": "所述多孔碳材料層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI766542B",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '該腔體的內表面設置有多孔碳材料層，該多孔碳材料層'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "多孔碳材料層",
+            "reference_form": "所述多孔碳材料層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI766542B",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '該腔體的內表面設置有多孔碳材料層，該多孔碳材料層'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "多孔碳材料層",
+            "reference_form": "所述多孔碳材料層"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202521156A",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '一種診斷和治療患有癌症之受試體的方法'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "癌症",
+            "reference_form": "該癌症"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202308371A",
+      "jurisdiction": "TW",
+      "source": "wave-d-bare-you-intro (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24): an article-less noun that is the object of an introducing verb introduces it; bare 有 / 導入 (设置有, 患有, 包括有, 涂覆有, 确定有) added in wave D. First mention: '其更包含其中包括有影像內容之顯示緩衝器'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "影像內容",
+            "reference_form": "所述影像內容"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入至); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '組織'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 24,
+            "term": "組織插入",
+            "reference_form": "該組織插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '組織插入' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 24,
+            "term": "組織",
+            "reference_form": "該組織"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入至); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '組織 (already emitted on this claim)'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "組織插入",
+            "reference_form": "該組織插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (插入到); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '剩餘部分'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "剩餘部分插入",
+            "reference_form": "所述剩餘部分插入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '剩餘部分插入' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "剩餘部分",
+            "reference_form": "所述剩餘部分"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: the reference captured its predicate (至少為); wave D cuts the change/motion verb before 至/到 (or a trailing 至少), so this dirty key is the artifact and the defect re-fires under '厚度'. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "厚度至少",
+            "reference_form": "所述厚度至少"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202547052A",
+      "jurisdiction": "TW",
+      "source": "wave-d-predicate-before-complement (2026-10-25)",
+      "_note": "ADR-111 shift: carries the gold legit label of '厚度至少' (same claim, same reference) after wave D cleaned the predicate off. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "厚度",
+            "reference_form": "所述厚度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "降壓模式",
+            "reference_form": "所述降壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "降壓模式",
+            "reference_form": "所述降壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "升壓模式",
+            "reference_form": "所述升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "降壓-升壓模式",
+            "reference_form": "所述降壓-升壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "降壓模式",
+            "reference_form": "所述降壓模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "升壓模式下",
+            "reference_form": "所述升壓模式下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-locative-xia (2026-10-25)",
+      "_note": "Christopher's ruling 2 (2026-10-24) with the R8 locative rule: the drafter introduces the modes bare in the 在…下 frame ('在升壓模式下藉由…', '在降壓模式下', '在降壓-升壓模式下' in independent claims 1, 11 and 18), so the reference has basis. Wave D strips the locative 下 on both sides. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "降壓-升壓模式下",
+            "reference_form": "所述降壓-升壓模式下"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 39,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 40,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 58,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 59,
+            "term": "附加",
+            "reference_form": "該附加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202247133A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "驅動功率",
+            "reference_form": "所述驅動功率"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202247133A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "驅動功率",
+            "reference_form": "所述驅動功率"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202311968A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "表項",
+            "reference_form": "所述表項"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202311968A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "表項",
+            "reference_form": "所述表項"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202318205A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "資料",
+            "reference_form": "所述資料"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202328983A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "參數",
+            "reference_form": "所述參數"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "絕對值增大",
+            "reference_form": "所述絕對值增大"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341767A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "受支援",
+            "reference_form": "該受支援"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202423085A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "當前輸出流",
+            "reference_form": "所述當前輸出流"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202515049A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 89,
+            "term": "緊鄰",
+            "reference_form": "所述緊鄰"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202515049A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 90,
+            "term": "緊鄰",
+            "reference_form": "所述緊鄰"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202515049A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 118,
+            "term": "緊鄰",
+            "reference_form": "所述緊鄰"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202515049A",
+      "jurisdiction": "TW",
+      "source": "wave-d-ruling-5-possessive (2026-10-25)",
+      "_note": "Christopher's ruling R5 (2026-10-25): a non-ordinal possessive on an introduced element introduces (所述X的Y introduces Y when X is introduced); wave D TW R73 adds it behind an exact-owner gate and the walker's own noun read at the mention. The first mention of this term is such a possessive. Read 2026-10-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 119,
+            "term": "緊鄰",
+            "reference_form": "所述緊鄰"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

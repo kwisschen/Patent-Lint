@@ -1691,6 +1691,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "用",
         "上",
         "内",
+        "下",  # 在…下 locative (TW mirror); residual >= 2 keeps 地下/以下
         "分别", "皆",
         "处",
         "至",
@@ -1840,7 +1841,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
 # R22 adds 由/沿; R24 adds 作/不/相/均/得 with relaxed-residual subset
 # participation below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿",
+    {"所", "位", "中", "后", "用", "上", "内", "下", "撷取", "对", "由", "沿",
      "作", "不", "相", "均", "得",
      # === R7-port (2026-04-30) - TW R7 parity ===
      # 使 (causative particle / verb fragment): residual ≥ 3 protects
@@ -1876,8 +1877,11 @@ _DIRECTION_STEM_BEFORE_XIANG_CN: frozenset[str] = frozenset(
 # Stage 4 R1 D4a - relaxed residual ≥ 2 guard for 2-char-stem residue strip.
 # R22 adds 由/沿; R24 adds 作/不/相/均/得 (mirrors trailing-verb registration).
 # R68 (2026-05-06) adds 来 (TW parity).
+# Characters that make 下 part of a word (如下, 以下, 向下, 按下) rather than
+# the 在…下 locative, so the trailing strip leaves it.
+_XIA_WORD_HEADS_CN: frozenset[str] = frozenset("如以之其底地零上天落留剩放按压向往朝降垂拉取卸拆倒掉写记接")
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"上", "内", "后", "中", "用", "对", "由", "沿",
+    {"上", "内", "下", "后", "中", "用", "对", "由", "沿",
      "作", "不", "相", "均", "得", "来"}
 )
 
@@ -2368,6 +2372,17 @@ def _mentioned_before_cn(term: str, chain, claim, ref_start: int) -> bool:
 
 
 
+# TW mirror: a change or motion verb before its directional complement 至 / 到
+# and the complement's noun (该液位下降至一警戒值) is the predicate; the
+# determiner (or the end of the capture) after 至 / 到 keeps 至少 / 至多 and noun
+# pairs (第一表面到第二表面).
+_PREDICATE_BEFORE_COMPLEMENT_RE_CN = re.compile(
+    r"(?:进入|变化|下降|上升|返回|转变|升高|降低|移动|转动|旋转|滑动|转移|放电|突出|偏置|偏转|入射|插入|摆动|回到|退回|流动|流入|流向|升温|降温|扩散|收缩|膨胀)(?=[至到](?:该|所述|前述|一|第|其|$))"
+)
+# 至少 / 至多 open a quantity; they never end a name.
+_QUANTITY_OPENERS_CN: tuple[str, ...] = ("至少", "至多")
+
+
 def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
@@ -2504,6 +2519,10 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
 
     current = text[:earliest_idx] if earliest_idx is not None else text
 
+    m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_CN.search(text)
+    if m_pred and 2 <= m_pred.start() < len(current):
+        current = text[:m_pred.start()]
+
     for _ in range(16):
         stripped = False
         for verb in _TRAILING_VERB_DENYLIST_CN:
@@ -2543,6 +2562,8 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
             # held back only by a residual-length heuristic.
             if verb == "位" and current.endswith(_WEI_NOUN_COMPOUNDS_CN):
                 continue
+            if verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_CN:
+                continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
                     min_residual = 1
@@ -2599,6 +2620,10 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
             current = m.group(1)
         if current == before:
             break
+
+    # After R54, so an adverb + 地 run still reduces through that rule first.
+    if current.endswith(_QUANTITY_OPENERS_CN) and len(current) >= 4:
+        current = current[:-2]
 
     return current
 
@@ -4386,7 +4411,13 @@ _BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
         # bare-noun verb set. Already known to other arms (F11 at line
         # 2194). MPEP-equivalent: 审查指南 第二部分第二章 §3.2.5
         # (clear/明确 standard).
-        | {"位于", "置于", "设于", "应用于", "作用于", "布置于", "固定于"},
+        | {"位于", "置于", "设于", "应用于", "作用于", "布置于", "固定于"}
+        # Wave D (2026-10-25): bare 有 and 导入 introduce their object (TW
+        # mirror); 所有/没有/只有/仅有 quantify or negate.
+        | {"有", "导入"}
+        # Wave D: bare 在 (TW R8 mirror): 在X下 / 在X中 names X article-less, an
+        # introduction under the 2026-10-23 CN ruling.
+        | {"在"},
         key=len,
         reverse=True,
     )
@@ -4431,6 +4462,8 @@ def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
         return False  # reference / quantifier
     if i >= 2 and text[i - 2:i] in ("所述", "前述"):
         return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_CN) or _bare_noun_after_you_word_cn(text, i):
+        return False
     # Verb-object / coverb-object: the run before the term ends with a
     # verb. Checked first -- coverbs (基于) end in a boundary char (于).
     if any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_CN):
@@ -4470,10 +4503,26 @@ def _bare_noun_verb_led_cn(text: str, i: int) -> bool:
     # After 进行 / 执行 / 运行 the word is an action, after 经 a participle.
     if text[:i].endswith(_BARE_NOUN_ACTION_LEADS_CN) or text.startswith("经", i):
         return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_CN) or _bare_noun_after_you_word_cn(text, i):
+        return False
     return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_CN)
 
 
 _BARE_NOUN_ACTION_LEADS_CN: tuple[str, ...] = ("进行", "执行", "运行", "实行", "实施", "经")
+# Bare 有 introduces only as a verb; after these it quantifies or negates.
+_BARE_NOUN_NON_INTRO_YOU_CN: tuple[str, ...] = ("所有", "没有", "只有", "仅有", "未有", "唯有")
+# 有 also opens words (有機, 有源, 有損); a term starting right after such a
+# 有 is a fragment of that word, not the object of the verb.
+_BARE_NOUN_YOU_WORD_TAILS_CN: frozenset[str] = frozenset("机源损效限线色益关利害毒序形声理名向功界")
+
+
+def _bare_noun_after_you_word_cn(text: str, i: int) -> bool:
+    """True if a bare 有 before i is the head of a word, not the verb."""
+    return (
+        text[:i].endswith("有")
+        and not text[:i].endswith(('具有', '设有', '含有'))
+        and text[i:i + 1] in _BARE_NOUN_YOU_WORD_TAILS_CN
+    )
 # A word followed straight by a determiner is a verb taking its object.
 _BARE_NOUN_OBJECT_DETERMINERS_CN: tuple[str, ...] = ("该", "所述", "前述", "一")
 
@@ -4502,10 +4551,84 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     # `第二` (drafters separate enumeration items with 或 / 、).
     if any(text[j:].startswith(closer) for closer in _BARE_NOUN_MARKUSH_CLOSERS_CN):
         return True
+    # Wave D: the 在…下 locative ends the noun (在升壓模式下藉由…), matching the
+    # trailing 下 strip in the normalizer; 下方 / 下部 / 下端 are words.
+    if text[j] == "下" and text[j + 1:j + 2] not in "方部端侧面层缘游表":
+        return True
     return not _bare_noun_compound_char_cn(text[j])
 
 
 _NEW_ARGUMENT_COVERBS_CN: tuple[str, ...] = ("用于", "以", "对", "为", "将", "被", "使")
+
+
+# CN R79 (wave D) - PREDICATE-TAIL INTRO TIER, the mirror of TW R66.
+# The introduction capture ran past its head into a predicate (a coverb, a
+# locative postposition, or a short verb taking an object), so the drafter's
+# clean 所述<head> matched nothing. Same positional signals as TW, no verb
+# list, and the intro must itself be a real introduction (a quantifier right
+# before it, or a possessive whose possessor is introduced). Additive: runs
+# only after the exact, prefix and R46 tiers fail, so it can only silence.
+_PREDICATE_OBJECT_OPENERS_CN: tuple[str, ...] = (
+    "所述", "前述", "至少一", "多个", "每一", "该", "其", "一",
+)
+_LOCATIVE_POSTPOSITIONS_CN: frozenset[str] = frozenset("下中内上")
+_COVERBS_CN: frozenset[str] = frozenset("自至向往给对")
+_DUI_LEXEME_CHARS_CN: frozenset[str] = frozenset("应位称接齐准象话")
+_INTRO_QUANTIFIER_OPENERS_CN: tuple[str, ...] = (
+    "至少一", "多个", "两个", "数个", "每一", "若干", "一",
+)
+_TAIL_STOP_CHARS_CN = frozenset("或与及和、，。；：的之")
+
+
+def _intro_opens_as_introduction_cn(text: str, pos: int, intros_by_term) -> bool:
+    """True when the mention of an intro at ``pos`` is a real introduction."""
+    before = text[max(0, pos - 16):pos]
+    for q in _INTRO_QUANTIFIER_OPENERS_CN:
+        if before.endswith(q):
+            lead = before[: len(before) - len(q)]
+            return not lead or lead[-1] not in "进统唯同单第万"
+    if before.endswith(("的", "之")):
+        for det in ("所述", "前述", "该"):
+            k = before.rfind(det)
+            if k >= 0 and before[k + len(det):-1] in intros_by_term:
+                return True
+    return False
+
+
+def _predicate_tail_intro_cn(term, intros_by_term, chain, claim, ref_start):
+    """The introduction that is ``term`` plus a predicate tail, if any."""
+    if len(term) < 2:
+        return None
+    by_id = {c.id: c for c in chain}
+    for intro, (ancestor_id, _depth) in intros_by_term.items():
+        if len(intro) <= len(term) or not intro.startswith(term):
+            continue
+        source = by_id.get(ancestor_id)
+        if source is None:
+            continue
+        pos = source.text.find(intro)
+        if pos < 0:
+            continue
+        if ancestor_id == claim.id and pos >= ref_start:
+            continue
+        rem = intro[len(term):]
+        if rem[0] in _TAIL_STOP_CHARS_CN:
+            continue
+        tail = rem + source.text[pos + len(intro): pos + len(intro) + 4]
+        hit = rem in _LOCATIVE_POSTPOSITIONS_CN or (
+            rem[0] in _COVERBS_CN
+            and not (rem[0] == "对" and rem[1:2] in _DUI_LEXEME_CHARS_CN)
+        )
+        if not hit:
+            for k in (1, 2):
+                if any(ch in _TAIL_STOP_CHARS_CN for ch in tail[:k]):
+                    break
+                if tail[k:].startswith(_PREDICATE_OBJECT_OPENERS_CN) or tail[k:k + 1] == "于":
+                    hit = True
+                    break
+        if hit and _intro_opens_as_introduction_cn(source.text, pos, intros_by_term):
+            return intro
+    return None
 
 
 def has_possessive_introduction_cn(
@@ -5004,6 +5127,12 @@ def check_antecedent_basis_cn(
             # implication (审查指南 第二部分 第二章 §3.2 清楚 / 明确).
             # The intro extractors miss article-less data / attribute
             # nouns; this closes the gap. See has_bare_noun_introduction_cn.
+            # CN R79: an intro that is the term plus a predicate tail.
+            if resolved_intro is None:
+                resolved_intro = _predicate_tail_intro_cn(
+                    normalized_term, intros_by_term, chain, claim, m.start()
+                )
+
             if resolved_intro is None and has_possessive_introduction_cn(
                 claim.text, chain, normalized_term, m.start(), intros_by_term
             ):

@@ -2861,6 +2861,10 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         #     guard. Grep: 內部 ×40, 內側 ×76, 內徑 ×3, 內側面 ×2 -
         #     all preserved.
         "內",
+        # 下: the locative of the 在…下 frame (在一待機狀態下), stranded on the
+        #     introduction while the reference is bare. Same residual >= 2 guard
+        #     as 上, so 2-char 地下/以下/上下 are kept.
+        "下",
         # Adverbs that ended up trailing after interior cut
         "分別", "皆",
         # Positional particle (parallel to 時)
@@ -3211,7 +3215,7 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # 內側面 is 3-char with 內 at position 0 (same protection). Listed in
 # _NOUNLIKE_RELAXED_SUFFIXES - see below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
-    {"所", "位", "中", "後", "用", "上", "內",
+    {"所", "位", "中", "後", "用", "上", "內", "下",
      # F3: 擷取 (2-char) - despite the set name, the residual guard
      # mechanism works with any length. 影像擷取 (4 chars, residual 2)
      # protected; 影像擷取裝置擷取 (8 chars, residual 6) strips correctly.
@@ -3299,7 +3303,10 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
 # common over-capture shapes where the locative 中 should strip leaving
 # 2-char head (系統/區段/範圍). 中 standalone or as 2-char compound prefix
 # (中央/中文) is protected by the 0-position check (cut at idx > 1).
-_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "中", "來"})
+# Characters that make 下 part of a word (如下, 以下, 向下, 按下) rather than
+# the 在…下 locative, so the trailing strip leaves it.
+_XIA_WORD_HEADS_TW: frozenset[str] = frozenset("如以之其底地零上天落留剩放按壓向往朝降垂拉取卸拆倒掉寫記接")
+_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "下", "中", "來"})
 
 # R36 (2026-08-08, report #492) - the closed set of TW nouns that genuinely
 # END in the nominalizer 所. Everywhere else a trailing 所 is the stranded
@@ -4251,6 +4258,18 @@ def _strip_predicate_head_tw(text: str) -> str:
     return text
 
 
+# A change or motion verb before its directional complement 至 / 到 and the
+# complement's own noun (該液位下降至一警戒值, 該閥體移動到該關閉位置) is
+# the predicate of the reference, not part of the name. Requiring the
+# determiner after 至 / 到 (or the end of the capture, which the intro side cuts
+# before 一) keeps 至少 / 至多 and noun pairs (第一表面到第二表面).
+_PREDICATE_BEFORE_COMPLEMENT_RE_TW = re.compile(
+    r"(?:進入|變化|下降|上升|返回|轉變|升高|降低|移動|轉動|旋轉|滑動|轉移|放電|突出|偏置|偏轉|入射|插入|擺動|回到|退回|流動|流入|流向|升溫|降溫|擴散|收縮|膨脹)(?=[至到](?:該|所述|前述|一|第|其|$))"
+)
+# 至少 / 至多 open a quantity; they never end a name.
+_QUANTITY_OPENERS_TW: tuple[str, ...] = ("至少", "至多")
+
+
 def clean_noun_phrase_tw(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a TW reference term.
 
@@ -4464,6 +4483,10 @@ def clean_noun_phrase_tw(text: str) -> str:
 
     current = text[:earliest_idx] if earliest_idx is not None else text
 
+    m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_TW.search(text)
+    if m_pred and 2 <= m_pred.start() < len(current):
+        current = text[:m_pred.start()]
+
     # Phase 2: trailing-verb stripping (iterative).
     # Safety bound to prevent pathological iteration.
     for _ in range(16):
@@ -4509,6 +4532,8 @@ def clean_noun_phrase_tw(text: str) -> str:
                 # R41 (#531) - 小 is noun-final only in 大小.
                 if current.endswith(_XIAO_FINAL_NOUNS_TW) or (len(current) - 1) < 3:
                     continue
+            elif verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_TW:
+                continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
             elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
                 min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES else 3
                 if (len(current) - len(verb)) < min_residual:
@@ -4540,6 +4565,10 @@ def clean_noun_phrase_tw(text: str) -> str:
             current = m.group(1)
         if current == before:
             break
+
+    # After R55, so 迴路集體地至少 still reduces through the adverb rule first.
+    if current.endswith(_QUANTITY_OPENERS_TW) and len(current) >= 4:
+        current = current[:-2]
 
     return current
 
@@ -6957,7 +6986,11 @@ _BARE_NOUN_INTRO_VERBS_TW: tuple[str, ...] = tuple(
         # introduced element. 在 alone (single-char locative preposition)
         # is sufficient for the `在X` case because TW drafters typically
         # write `在前述X` for references - bare `在X` denotes intro.
-        | {"在", "位於", "置於", "設於", "應用於", "作用於", "布置於", "固定於"},
+        | {"在", "位於", "置於", "設於", "應用於", "作用於", "布置於", "固定於"}
+        # Wave D (2026-10-25): bare 有 (成型有X, 開設有X) and 導入 introduce
+        # their object under ruling 2 (2026-10-24); 所有/沒有/只有/僅有 are
+        # quantifiers or negations, see _BARE_NOUN_NON_INTRO_YOU_TW.
+        | {"有", "導入"},
         key=len,
         reverse=True,
     )
@@ -6983,6 +7016,8 @@ def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
     if text[i - 1] in ("該", "一"):
         return False  # reference / quantifier -- not a fresh mention
     if i >= 2 and text[i - 2:i] in ("所述", "前述", "該等", "該些"):
+        return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_TW) or _bare_noun_after_you_word_tw(text, i):
         return False
     # Verb-object / coverb-object: the run before the term ends with a
     # verb. Checked first -- coverbs (基於) end in a boundary char (於).
@@ -7018,10 +7053,26 @@ def _bare_noun_verb_led_tw(text: str, i: int) -> bool:
     # 經 a participle (經擴增的樣本); neither names an element.
     if text[:i].endswith(_BARE_NOUN_ACTION_LEADS_TW) or text.startswith("經", i):
         return False
+    if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_TW) or _bare_noun_after_you_word_tw(text, i):
+        return False
     return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW)
 
 
 _BARE_NOUN_ACTION_LEADS_TW: tuple[str, ...] = ("進行", "執行", "運行", "實行", "實施", "經")
+# Bare 有 introduces only as a verb; after these it quantifies or negates.
+_BARE_NOUN_NON_INTRO_YOU_TW: tuple[str, ...] = ("所有", "沒有", "只有", "僅有", "未有", "唯有")
+# 有 also opens words (有機, 有源, 有損); a term starting right after such a
+# 有 is a fragment of that word, not the object of the verb.
+_BARE_NOUN_YOU_WORD_TAILS_TW: frozenset[str] = frozenset("機源損效限線色益關利害毒序形聲理名向功界")
+
+
+def _bare_noun_after_you_word_tw(text: str, i: int) -> bool:
+    """True if a bare 有 before i is the head of a word, not the verb."""
+    return (
+        text[:i].endswith("有")
+        and not text[:i].endswith(('具有', '設有', '含有'))
+        and text[i:i + 1] in _BARE_NOUN_YOU_WORD_TAILS_TW
+    )
 # A word followed straight by a determiner is a verb taking its object
 # (識別該產品, 啟動該程序), not a noun.
 _BARE_NOUN_OBJECT_DETERMINERS_TW: tuple[str, ...] = ("該", "所述", "前述", "一")
@@ -7040,10 +7091,23 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     # determiner, so guard (a) still rejects it.
     if text[j] in _YING_VERB_HEADS_TW and _is_relational_preposition_tw(text, j):
         return True
+    # Wave D: the 在…下 locative ends the noun (在升壓模式下藉由…), matching the
+    # trailing 下 strip in the normalizer; 下方 / 下部 / 下端 are words.
+    if text[j] == "下" and text[j + 1:j + 2] not in "方部端側面層緣游表":
+        return True
     return not _bare_noun_compound_char_tw(text[j])
 
 
 _NEW_ARGUMENT_COVERBS_TW: tuple[str, ...] = ("用於", "以", "對", "為", "將", "被", "使")
+
+
+_NOUN_RUN_TW = re.compile(_NOUN_CHARS)
+
+
+def _noun_read_at_tw(text: str, i: int) -> str:
+    """The cleaned noun the walker captures starting at ``text[i]``."""
+    m = _NOUN_RUN_TW.match(text, i)
+    return clean_noun_phrase_tw(m.group()) if m else ""
 
 
 def has_possessive_introduction_tw(
@@ -7108,7 +7172,10 @@ def has_possessive_introduction_tw(
     ordinal = t.startswith("第")
     if ordinal and not intros_by_term:
         return False
-    markers = ("之", "的") if ordinal else ("之",)
+    # Wave D (Christopher's ruling 2026-10-25): a non-ordinal possessive with 的
+    # on an introduced element introduces too (所述殼體的側板), behind the same
+    # introduced-owner gate as the ordinal; 之 keeps its R9 behaviour.
+    markers = ("之", "的") if ordinal or intros_by_term else ("之",)
 
     def _possessor_introduced(look_back: str) -> bool:
         for det in ("所述", "前述", "該"):
@@ -7127,6 +7194,16 @@ def has_possessive_introduction_tw(
                                 c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_TW
                             )
                 return False
+        return False
+
+    def _possessor_is_element(look_back: str) -> bool:
+        # A plain possessive: what follows the determiner IS an introduced
+        # element, nothing more (所述殼體的側板, 該複數個殼體的側板).
+        for det in ("所述", "前述", "該"):
+            k = look_back.rfind(det)
+            if k >= 0:
+                owner = look_back[k + len(det):].strip()
+                return owner in intros_by_term or strip_leading_quantifier(owner) in intros_by_term
         return False
 
     def _scan(text: str, limit: int | None) -> bool:
@@ -7160,6 +7237,11 @@ def has_possessive_introduction_tw(
                 look_back = text[max(0, idx - 16):idx - 1]
                 if ordinal:
                     if _possessor_introduced(look_back):
+                        return True
+                elif text[idx - 1] == "的":
+                    # The mention introduces exactly the noun the walker reads
+                    # there: 的位置資訊 introduces 位置資訊, never 位置.
+                    if _possessor_is_element(look_back) and _noun_read_at_tw(text, idx) == t:
                         return True
                 elif any(marker in look_back for marker in ("所述", "前述", "該")):
                     return True
