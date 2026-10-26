@@ -2539,6 +2539,34 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW201728933A",
+      "jurisdiction": "TW",
+      "source": "wave-g-or-family (2026-10-26)",
+      "_note": "Claims 12 and 13 each introduce 一或多個光學波導 before referring to 該等光學波導. The intro span swallowed the next 一或多個 quantifier; the rescan registers it. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 12,
+            "term": "光學波導",
+            "reference_form": "該等光學波導"
+          },
+          {
+            "claim_id": 13,
+            "term": "光學波導",
+            "reference_form": "該等光學波導"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

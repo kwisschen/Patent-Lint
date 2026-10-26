@@ -2947,6 +2947,74 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN116094346A",
+      "jurisdiction": "CN",
+      "source": "wave-g-or-family (2026-10-26)",
+      "_note": "Claim 1 introduces the working modes with 一种或更多种 and refers back with the same quantifier; the garbage key 或更多种工作模式 was a normalization artifact. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "或更多种工作模式",
+            "reference_form": "所述或更多种工作模式"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN118546366A",
+      "jurisdiction": "CN",
+      "source": "wave-g-or-family (2026-10-26)",
+      "_note": "Claim 1 introduces 一种或多种附加成分 before 所述附加成分; the term is over-captured but the element is introduced. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "附加成分选自着色剂",
+            "reference_form": "所述附加成分选自着色剂"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120188042A",
+      "jurisdiction": "CN",
+      "source": "wave-g-or-family (2026-10-26)",
+      "_note": "Claims 1 and 20 introduce 一种或多种超复合物 before 所述超复合物. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "超复合物",
+            "reference_form": "所述超复合物"
+          },
+          {
+            "claim_id": 20,
+            "term": "超复合物",
+            "reference_form": "所述超复合物"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

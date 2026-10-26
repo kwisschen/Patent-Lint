@@ -72,14 +72,29 @@ def _claims(juris: str):
 
 
 def onechar(juris: str, show: int) -> None:
-    pat, norm, _, _ = _JURIS[juris]
+    # Counted at the walker's own drop site (the observer hook), not by
+    # re-running the capture regex: the walker extends 能/應/時 compounds
+    # after capture, which a regex-only count misses (wave G: the regex-only
+    # count was TW 850 / CN 526).
+    mod = tw if juris == "TW" else cn
+    check = tw.check_antecedent_basis if juris == "TW" else cn.check_antecedent_basis_cn
     members: Counter = Counter()
-    for _, claims in _claims(juris):
-        for c in claims:
-            for m in pat.finditer(c.text):
-                t = norm(m.group("prefix") + m.group("noun"))
-                if t and len(t) == 1:
-                    members[(m.group("noun")[:6], t)] += 1
+
+    def observe(raw: str, term: str, _cid: int) -> None:
+        members[(raw[:6], term)] += 1
+
+    mod._ONE_CHAR_DROP_OBSERVER = observe
+    try:
+        for rec in h.load_corpus(juris):
+            doc = h._build_doc(rec, juris)
+            if doc is None:
+                continue
+            try:
+                check(doc)
+            except Exception:  # noqa: BLE001 - a probe counts what it can
+                continue
+    finally:
+        mod._ONE_CHAR_DROP_OBSERVER = None
     print(f"{juris} one-character references dropped: {sum(members.values())}")
     for (raw, t), n in members.most_common(show):
         print(f"    {n:5d}  {raw} -> {t}")
