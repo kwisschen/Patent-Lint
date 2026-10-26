@@ -3543,8 +3543,17 @@ def _is_guarded_zu_tw(text: str, pos: int) -> bool:
 
 def _pre_clean_quantifier_strip_tw(text: str) -> tuple[str, int]:
     """Return the text without its leading quantifier, and the quantifier length."""
-    for q in _PRE_CLEAN_QUANTIFIERS_TW:
-        if text.startswith(q) and len(text) - len(q) >= 2:
+    # Wave I (2026-10-26): longest quantifier first, and a ONE-character noun
+    # after a measure-word or or-family quantifier (複數個塊, 一个或多个柱) is
+    # stripped too: it kept a garbage key (個塊 / 或多个柱) before. One-character
+    # keys are inert in lookup; garbage ones are not.
+    for q in sorted(_PRE_CLEAN_QUANTIFIERS_TW, key=len, reverse=True):
+        if not text.startswith(q):
+            continue
+        rest = len(text) - len(q)
+        if rest >= 2 or (
+            rest == 1 and (q[-1] in "個種條根支片塊層組對件套" or "或" in q) and "\u4e00" <= text[-1] <= "\u9fff"
+        ):
             return text[len(q):], len(q)
     if _is_guarded_zu_tw(text, 0) and len(text) >= 4:
         return text[2:], 2
@@ -7698,6 +7707,15 @@ def has_possessive_introduction_tw(
                             return not any(
                                 c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_TW
                             )
+                # Wave I (2026-10-26): a quantified one-character element (所述
+                # 多个匝中的第一匝) now keys its single character, not the garbage
+                # 个匝 it used to match by accident.
+                if (
+                    stripped != owner
+                    and stripped[:1] in intros_by_term
+                    and stripped[1:] in ("", "中", "之中", "內", "内", "上")
+                ):
+                    return True
                 # Wave F: a one-character element (孔) is never an intro key, so
                 # 該複數個孔之第二數目 needs its quantified introduction found in
                 # the text (具有複數個孔), not in the table.

@@ -3235,6 +3235,34 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN120729045A",
+      "jurisdiction": "CN",
+      "source": "wave-i-one-char-noun (2026-10-26)",
+      "_note": "所述两个 is a cut of 所述两个相 (the two phases); the term is the bare quantifier, never an element. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "两个",
+            "reference_form": "所述两个"
+          },
+          {
+            "claim_id": 20,
+            "term": "两个",
+            "reference_form": "所述两个"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }
