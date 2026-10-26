@@ -3015,6 +3015,150 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN101680294B",
+      "jurisdiction": "CN",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 14 introduces 至少一种惰性气体; the inert-gas content of an introduced gas stream is an inherent property, consistent with the existing walker_fp label on claim 29 for the same construction. Flagged for Christopher's confirmation. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 27,
+            "term": "惰性气体含量",
+            "reference_form": "所述惰性气体含量"
+          },
+          {
+            "claim_id": 28,
+            "term": "惰性气体含量",
+            "reference_form": "所述惰性气体含量"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116759181A",
+      "jurisdiction": "CN",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 1 introduces 至少一种第1元素X. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "第一元素X",
+            "reference_form": "所述第1元素X"
+          },
+          {
+            "claim_id": 4,
+            "term": "第一元素X",
+            "reference_form": "所述第1元素X"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116825465A",
+      "jurisdiction": "CN",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 1 introduces 至少一种第2元素. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第二元素",
+            "reference_form": "所述第2元素"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN118318325A",
+      "jurisdiction": "CN",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "The heterocyclic molecules are introduced with 至少两种; the captures are over- or under-cut. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 48,
+            "term": "C3-10杂环分子",
+            "reference_form": "所述C3-10杂环分子"
+          },
+          {
+            "claim_id": 53,
+            "term": "质子惰性C3-10杂环分",
+            "reference_form": "所述质子惰性C3-10杂环分"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119452252A",
+      "jurisdiction": "CN",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 28 introduces 至少一种肿瘤相关免疫细胞(TAIC); the capture is garbage. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 28,
+            "term": "种TAIC或TAI",
+            "reference_form": "所述种TAIC或TAI"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121219582A",
+      "jurisdiction": "CN",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "所述特定 is a cut of 至少一种特定的分析物, which is introduced. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "特定",
+            "reference_form": "所述特定"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

@@ -1465,6 +1465,15 @@ _INTRO_MULTI_QUANTIFIERS_CN = (
     # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
     # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
     # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+    # Wave H (2026-10-26): the 種 measure word after at least / plural (至少一種 x360 TW, 至少一种 x316 CN).
+    "至少一种",
+    "至少两种",
+    "至少二种",
+    "至少三种",
+    "复数种",
+    "若干种",
+    "数种",
+    r"(?<!第)[二三四]种",
     # Wave G (2026-10-26): the two/three-or-more family (兩個或更多個 x96 TW, 两个或更多个 x98 CN).
     "两个或者更多个",
     "两个或更多个",
@@ -1998,6 +2007,17 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
         # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
         # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+        # Wave H (2026-10-26): the 種 measure word after at least / plural (至少一種 x360 TW, 至少一种 x316 CN).
+        "至少一种",
+        "至少两种",
+        "至少二种",
+        "至少三种",
+        "复数种",
+        "若干种",
+        "数种",
+        "二种",
+        "三种",
+        "四种",
         # Wave G (2026-10-26): the two/three-or-more family (兩個或更多個 x96 TW, 两个或更多个 x98 CN).
         "两个或者更多个",
         "两个或更多个",
@@ -4258,20 +4278,73 @@ _OR_FAMILY_QUANTIFIERS_CN = tuple(sorted(
 ))
 
 
+# Wave H (2026-10-26): the 種 quantifiers added to the intro alternation. A
+# span right after a determiner (該至少一種X) is a REFERENCE; before wave H its
+# self-registration keyed a garbage 種X that resolved nothing, and letting it key
+# a clean X would silence real defects (the item-13 mask). Skip only these.
+_ZHONG_QUANTIFIERS_CN = ('至少一种', '至少两种', '至少二种', '至少三种', '复数种', '若干种', '数种', '二种', '三种', '四种')
+_ZHONG_SELF_INTRO_DETERMINERS_CN = ("该", "所述", "前述")
+
+
+_INTRO_VERB_YI_CN = ("产生一", "包括一", "包含一", "具有一", "形成一", "提供一", "生成一")
+# The rescan also covers the 種 quantifiers (至少一種適體或至少一種寡核苷酸).
+_RESCAN_QUANTIFIERS_CN = _OR_FAMILY_QUANTIFIERS_CN + tuple(
+    q for q in _ZHONG_QUANTIFIERS_CN if len(q) >= 3
+)
+
+
+def _shared_zhong_mention_cn(term: str, chain, ref_start: int) -> bool:
+    """A reference written with a 種 quantifier (該至少一種X) has basis in an
+    earlier mention written with one, outside a determiner, in the same clause:
+    至少一種X接觸… (a predicate the cleaner cannot strip safely: 接觸 / 結合 /
+    功能化 are noun-gray), 至少一種下述X, 至少一種具有以下通式之X. The shared
+    quantifier is the evidence; a bare 該X gets no such reading."""
+    if len(term) < 2:
+        return False
+    quant = re.compile("|".join(_ZHONG_QUANTIFIERS_CN[:7]) + "|(?<!第)[二三四]种")
+    pat = re.compile("[^，。；：、,;:]{0,20}?" + re.escape(term))
+    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
+    for text in texts:
+        for q in quant.finditer(text):
+            # match from EVERY quantifier: an earlier rejected one must not
+            # consume a later one (該至少一種A…的至少一種X).
+            mm = pat.match(text, q.end())
+            if not mm:
+                continue
+            noun_at = mm.end() - len(term)
+            if not text[: q.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_CN) and not text[:noun_at].endswith(_ZHONG_SELF_INTRO_DETERMINERS_CN):
+                return True
+    return False
+
+
+def _is_zhong_self_intro_cn(m, text: str) -> bool:
+    q = next((q for q in _ZHONG_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
+    if not q:
+        return False
+    # 該至少一種X, and 複數種前述X (the determiner after the quantifier)
+    return text[: m.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_CN) or m.group(0)[
+        len(q):
+    ].startswith(_ZHONG_SELF_INTRO_DETERMINERS_CN)
+
+
 def _iter_intro_matches_cn(text: str):
     """finditer over the intro pattern, plus a rescan wherever a match's noun
     span swallowed a later "or more" quantifier. The longer quantifiers spend
     more of the 12-character budget, so 两个或多个副本分别传送至两个或多个输出接口 kept only the
     first intro."""
     for m in _INTRO_PATTERN_CN.finditer(text):
-        yield m
+        if not _is_zhong_self_intro_cn(m, text):
+            yield m
         start = m.start(1) + 1
         while True:
-            hits = [i for i in (text.find(q, start, m.end()) for q in _OR_FAMILY_QUANTIFIERS_CN) if i >= 0]
+            hits = [i for i in (text.find(q, start, m.end()) for q in _RESCAN_QUANTIFIERS_CN) if i >= 0]
+            if m.group(0).startswith(_ZHONG_QUANTIFIERS_CN):
+                # A 種 span can swallow a following 產生一X intro.
+                hits += [i + 2 for i in (text.find(v, start, m.end()) for v in _INTRO_VERB_YI_CN) if i >= 0]
             if not hits:
                 break
             mm = _INTRO_PATTERN_CN.match(text, min(hits))
-            if mm and mm.end() > m.end():
+            if mm and mm.end() >= m.end() and not _is_zhong_self_intro_cn(mm, text):
                 yield mm
             start = min(hits) + 1
 
@@ -5126,7 +5199,7 @@ def check_antecedent_basis_cn(
 
         intros_by_term: dict[str, tuple[int, int]] = {}
         for depth, ancestor in enumerate(chain):
-            for _, normalized in extract_introductions_cn(
+            for original, normalized in extract_introductions_cn(
                 ancestor,
                 strict_qualifier_matching=strict_qualifier_matching,
             ):
@@ -5401,6 +5474,9 @@ def check_antecedent_basis_cn(
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+                if resolved_intro is None and raw_noun.startswith(_ZHONG_QUANTIFIERS_CN):
+                    if _shared_zhong_mention_cn(normalized_term, chain, m.start()):
+                        resolved_intro = normalized_term
                 if (
                     resolved_intro is not None
                     and _PREFIX_FALLBACK_OBSERVER is not None
