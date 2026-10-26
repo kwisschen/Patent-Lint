@@ -23,6 +23,13 @@
 #             quantified reference (所述至少一個X) introduces itself (carried
 #             item 13). Wave E: TW 11,691 / CN 5,341. Exposure, not FNs: many
 #             of those terms are also introduced properly elsewhere.
+#             Wave J (2026-10-26) SHIPPED the TW "one or more" family (該一或多個X)
+#             with its bases. The BROAD rule (every multi-character quantifier,
+#             tests/eval/withheld/item13_broad_selfskip.patch) is WITHHELD: TW +205
+#             net with 1 gold-legit lost, CN +58; the new findings are mostly
+#             residue on both sides of a quantified pair and intros the span
+#             hid. CN "one or more" mirror, bare: +50 / -0, unmeasured with the
+#             TW bases.
 #   stemfallback  references the longest-prefix fallback resolves through a
 #             TWO-character stem with a 2+ character tail (carried item 15).
 #             Wave G (2026-10-26): TW 1,959 / CN 1,294 (CN tails are verbs:

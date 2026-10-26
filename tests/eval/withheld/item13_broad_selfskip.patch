@@ -1,0 +1,186 @@
+diff --git a/src/patentlint/analysis/cn_claims.py b/src/patentlint/analysis/cn_claims.py
+index d50def46..2d3da357 100644
+--- a/src/patentlint/analysis/cn_claims.py
++++ b/src/patentlint/analysis/cn_claims.py
+@@ -4322,6 +4322,13 @@ _OR_FAMILY_QUANTIFIERS_CN = tuple(sorted(
+ # self-registration keyed a garbage 種X that resolved nothing, and letting it key
+ # a clean X would silence real defects (the item-13 mask). Skip only these.
+ _ZHONG_QUANTIFIERS_CN = ('至少一种', '至少两种', '至少二种', '至少三种', '复数种', '若干种', '数种', '二种', '三种', '四种', '一组')
++# Wave J (2026-10-26): item 13. The self-skip and the shared-mention basis
++# cover EVERY multi-character quantifier, not only the 種 family: 該至少一個X /
++# 所述一或多個X right after a determiner is a reference and no longer
++# introduces itself. 一些 / 某些 stay out (they also read as determiners).
++_SELF_INTRO_QUANTIFIERS_CN: tuple[str, ...] = tuple(
++    q for q in _PRE_CLEAN_QUANTIFIERS_CN if q not in ("一些", "某些")
++) + ("一组",)
+ _ZHONG_SELF_INTRO_DETERMINERS_CN = ("该", "所述", "前述")
+ 
+ 
+@@ -4344,7 +4351,7 @@ def _shared_zhong_mention_cn(term: str, chain, ref_start: int) -> bool:
+     quant = re.compile(
+         "|".join(
+             ("(?<!第)" if q.startswith("一") else "") + re.escape(q)
+-            for q in _ZHONG_QUANTIFIERS_CN
++            for q in _SELF_INTRO_QUANTIFIERS_CN
+             if q not in ordinal_gray
+         )
+         + "|(?<!第)[二三四]种"
+@@ -4364,6 +4371,24 @@ def _shared_zhong_mention_cn(term: str, chain, ref_start: int) -> bool:
+     return False
+ 
+ 
++def _one_char_quantified_stem_cn(term: str, raw_noun: str, chain, ref_start: int) -> str | None:
++    """A quantified reference to a ONE-character element with predicate residue
++    (所述一个或多个柱间隔开, 該至少一個層上遠離) has basis when the chain has the
++    same quantifier and character outside a determiner (一个或多个柱). Prefix
++    fallback needs a stem of two characters, so these used to resolve only
++    through their own self-registration."""
++    lead = next((q for q in _SELF_INTRO_QUANTIFIERS_CN if raw_noun.startswith(q)), "")
++    if not lead or len(term) < 2 or not raw_noun[len(lead):].startswith(term):
++        return None
++    pat = re.compile(("(?<!第)" if lead.startswith("一") else "") + re.escape(lead + term[0]))
++    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
++    for text in texts:
++        for mm in pat.finditer(text):
++            if not text[: mm.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_CN):
++                return term[0]
++    return None
++
++
+ def _zu_set_reference_intro_cn(rest: str, intros_by_term, chain, ref_start: int) -> str | None:
+     """The intro a 該组X reference names once 一组X keys X: exact, then the
+     longest introduced prefix (the reference may carry residue), then an
+@@ -4377,7 +4402,7 @@ def _zu_set_reference_intro_cn(rest: str, intros_by_term, chain, ref_start: int)
+ 
+ 
+ def _is_zhong_self_intro_cn(m, text: str) -> bool:
+-    q = next((q for q in _ZHONG_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
++    q = next((q for q in _SELF_INTRO_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
+     if not q or q == "一组":
+         # 所述一组 is also "the set" itself (所述一组是第一組): left as before.
+         return False
+@@ -4453,7 +4478,15 @@ def extract_introductions_cn(
+         if (original == "一对" + bare_noun
+                 and _yidui_is_noun_initial_dui_cn(original, claim.text)):
+             bare_noun = "对" + bare_noun
+-        candidates = _postprocess_intro_capture_cn(bare_noun, m, claim.text)
++        # Wave J: a span that is only a quantifier and ONE noun character
++        # (至少一個層, 一個或多個柱, 複數條肋). The pattern backtracks to a shorter
++        # quantifier to keep two noun characters and keyed 個層 / 或多個柱; the
++        # reference side keys the character since wave I.
++        one, lead = _pre_clean_quantifier_strip_cn(original)
++        if lead and len(one) == 1 and lead + 1 == len(original):
++            candidates = [original]
++        else:
++            candidates = _postprocess_intro_capture_cn(bare_noun, m, claim.text)
+         for candidate in candidates:
+             normalized = normalize_candidate_intro_cn(
+                 candidate,
+@@ -5555,9 +5588,13 @@ def check_antecedent_basis_cn(
+                     resolved_intro = _zu_set_reference_intro_cn(
+                         normalized_term[1:], intros_by_term, chain, m.start()
+                     )
+-                if resolved_intro is None and raw_noun.startswith(_ZHONG_QUANTIFIERS_CN):
++                if resolved_intro is None and raw_noun.startswith(_SELF_INTRO_QUANTIFIERS_CN):
+                     if _shared_zhong_mention_cn(normalized_term, chain, m.start()):
+                         resolved_intro = normalized_term
++                    else:
++                        resolved_intro = _one_char_quantified_stem_cn(
++                            normalized_term, raw_noun, chain, m.start()
++                        )
+                 if (
+                     resolved_intro is not None
+                     and _PREFIX_FALLBACK_OBSERVER is not None
+diff --git a/src/patentlint/analysis/tw_claims.py b/src/patentlint/analysis/tw_claims.py
+index 1fb4c371..bcde6094 100644
+--- a/src/patentlint/analysis/tw_claims.py
++++ b/src/patentlint/analysis/tw_claims.py
+@@ -6854,6 +6854,13 @@ _OR_FAMILY_QUANTIFIERS_TW = tuple(sorted(
+ # self-registration keyed a garbage 種X that resolved nothing, and letting it key
+ # a clean X would silence real defects (the item-13 mask). Skip only these.
+ _ZHONG_QUANTIFIERS_TW = ('至少一種', '至少兩種', '至少二種', '至少三種', '複數種', '若干種', '數種', '二種', '三種', '四種', '一組')
++# Wave J (2026-10-26): item 13. The self-skip and the shared-mention basis
++# cover EVERY multi-character quantifier, not only the 種 family: 該至少一個X /
++# 所述一或多個X right after a determiner is a reference and no longer
++# introduces itself. 一些 / 某些 stay out (they also read as determiners).
++_SELF_INTRO_QUANTIFIERS_TW: tuple[str, ...] = tuple(
++    q for q in _PRE_CLEAN_QUANTIFIERS_TW if q not in ("一些", "某些")
++) + ("一組",)
+ _ZHONG_SELF_INTRO_DETERMINERS_TW = ("該", "所述", "前述", "該等", "該些")
+ 
+ 
+@@ -6876,7 +6883,7 @@ def _shared_zhong_mention_tw(term: str, chain, ref_start: int) -> bool:
+     quant = re.compile(
+         "|".join(
+             ("(?<!第)" if q.startswith("一") else "") + re.escape(q)
+-            for q in _ZHONG_QUANTIFIERS_TW
++            for q in _SELF_INTRO_QUANTIFIERS_TW
+             if q not in ordinal_gray
+         )
+         + "|(?<!第)[二三四]種"
+@@ -6896,6 +6903,24 @@ def _shared_zhong_mention_tw(term: str, chain, ref_start: int) -> bool:
+     return False
+ 
+ 
++def _one_char_quantified_stem_tw(term: str, raw_noun: str, chain, ref_start: int) -> str | None:
++    """A quantified reference to a ONE-character element with predicate residue
++    (所述一个或多个柱间隔开, 該至少一個層上遠離) has basis when the chain has the
++    same quantifier and character outside a determiner (一个或多个柱). Prefix
++    fallback needs a stem of two characters, so these used to resolve only
++    through their own self-registration."""
++    lead = next((q for q in _SELF_INTRO_QUANTIFIERS_TW if raw_noun.startswith(q)), "")
++    if not lead or len(term) < 2 or not raw_noun[len(lead):].startswith(term):
++        return None
++    pat = re.compile(("(?<!第)" if lead.startswith("一") else "") + re.escape(lead + term[0]))
++    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
++    for text in texts:
++        for mm in pat.finditer(text):
++            if not text[: mm.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_TW):
++                return term[0]
++    return None
++
++
+ def _zu_set_reference_intro_tw(rest: str, intros_by_term, chain, ref_start: int) -> str | None:
+     """The intro a 該組X reference names once 一組X keys X: exact, then the
+     longest introduced prefix (the reference may carry residue), then an
+@@ -6909,7 +6934,7 @@ def _zu_set_reference_intro_tw(rest: str, intros_by_term, chain, ref_start: int)
+ 
+ 
+ def _is_zhong_self_intro_tw(m, text: str) -> bool:
+-    q = next((q for q in _ZHONG_QUANTIFIERS_TW if m.group(0).startswith(q)), "")
++    q = next((q for q in _SELF_INTRO_QUANTIFIERS_TW if m.group(0).startswith(q)), "")
+     if not q or q == "一組":
+         # 所述一組 is also "the set" itself (所述一組是第一組): left as before.
+         return False
+@@ -7026,7 +7051,15 @@ def extract_introductions_tw(
+         )
+ 
+         # F3 post-processing: may produce multiple candidates from one match
+-        candidates = _postprocess_intro_capture(bare_noun, m, claim.text)
++        # Wave J: a span that is only a quantifier and ONE noun character
++        # (至少一個層, 一個或多個柱, 複數條肋). The pattern backtracks to a shorter
++        # quantifier to keep two noun characters and keyed 個層 / 或多個柱; the
++        # reference side keys the character since wave I.
++        one, lead = _pre_clean_quantifier_strip_tw(original)
++        if lead and len(one) == 1 and lead + 1 == len(original):
++            candidates = [original]
++        else:
++            candidates = _postprocess_intro_capture(bare_noun, m, claim.text)
+ 
+         for candidate in candidates:
+             normalized = normalize_candidate_intro(
+@@ -8507,9 +8540,13 @@ def check_antecedent_basis(
+                     resolved_intro = _zu_set_reference_intro_tw(
+                         normalized_term[1:], intros_by_term, chain, m.start()
+                     )
+-                if resolved_intro is None and raw_noun.startswith(_ZHONG_QUANTIFIERS_TW):
++                if resolved_intro is None and raw_noun.startswith(_SELF_INTRO_QUANTIFIERS_TW):
+                     if _shared_zhong_mention_tw(normalized_term, chain, m.start()):
+                         resolved_intro = normalized_term
++                    else:
++                        resolved_intro = _one_char_quantified_stem_tw(
++                            normalized_term, raw_noun, chain, m.start()
++                        )
+                 if (
+                     resolved_intro is not None
+                     and _PREFIX_FALLBACK_OBSERVER is not None
