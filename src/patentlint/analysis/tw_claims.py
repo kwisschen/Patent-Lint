@@ -6947,7 +6947,8 @@ def _same_quantifier_stem_tw(term: str, raw_noun: str, chain, ref_start: int) ->
             before = text[: mm.start()]
             det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_TW if before.endswith(d)), "")
             if not det:
-                if text[mm.end(): mm.end() + 1] in ("", *"，。；：、,;:及和與或"):
+                nxt = text[mm.end(): mm.end() + 1]
+                if not nxt or nxt in "，。；：、,;:" or nxt in _BARE_NOUN_BOUNDARY_TW:
                     return True
             elif before[: -len(det)].endswith(("的", "之")):
                 return True
@@ -7045,6 +7046,31 @@ def _iter_intro_matches_tw(text: str):
                 yield mm
             start = min(hits) + 1
 
+
+_ABBREV_INTRO_LEADS_TW = tuple(q for q in _PRE_CLEAN_QUANTIFIERS_TW if q not in ("一些", "某些")) + ("一",)
+_ABBREV_INTRO_RE_TW = re.compile(
+    r"(?<![第統统同唯單单])(?P<lead>"
+    + "|".join(re.escape(q) for q in sorted(_ABBREV_INTRO_LEADS_TW, key=len, reverse=True))
+    + r")(?P<exp>[\u4e00-\u9fff/]{2,12}?)[(（](?P<abbr>(?=[0-9]*[A-Za-z])[A-Za-z0-9][A-Za-z0-9/\-]{0,9})[)）]"
+    r"(?P<tail>[\u4e00-\u9fff]{1,8})"
+)
+
+
+def _abbreviation_intros_tw(claim) -> list[tuple[str, str]]:
+    """Wave K (2026-10-27): an introduction that spells out an abbreviation,
+    一个或多个人工智能/机器学习(AI/ML)模型 or 一二維(2D)影像, also introduces the
+    abbreviated name (AI/ML模型, 2D影像) the later references use. Walker only:
+    in the shared extractor it reached spec-support (TW 59 -> 66, CN +5)."""
+    pairs: list[tuple[str, str]] = []
+    for am in _ABBREV_INTRO_RE_TW.finditer(claim.text):
+        if len(am.group("exp")) > 2 * len(am.group("abbr").replace("/", "")) + 1:
+            # the expansion must be the spelled-out name, not a clause
+            # running into it (多個第二垂直互連形成三維(3D)電感器)
+            continue
+        abbr_norm = normalize_candidate_intro(am.group("abbr") + am.group("tail"))
+        if len(abbr_norm) >= 3:
+            pairs.append((am.group(0), abbr_norm))
+    return pairs
 
 def extract_introductions_tw(
     claim: Claim,
@@ -7318,6 +7344,7 @@ def extract_introductions_tw(
         (orig, norm) for (orig, norm) in pairs
         if not _has_stranded_determiner_tail_tw(norm)
     ]
+
 
     return pairs
 
@@ -8239,6 +8266,8 @@ def check_antecedent_basis(
                 ancestor,
                 strict_qualifier_matching=strict_qualifier_matching,
             ):
+                intros_by_term.setdefault(normalized, (ancestor.id, depth))
+            for original, normalized in _abbreviation_intros_tw(ancestor):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
         # R32 (2026-05-04): Path A equivalent for TW - chain-level

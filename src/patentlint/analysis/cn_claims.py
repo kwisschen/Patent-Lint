@@ -4323,6 +4323,14 @@ _OR_FAMILY_QUANTIFIERS_CN = tuple(sorted(
 # a clean X would silence real defects (the item-13 mask). Skip only these.
 _ZHONG_QUANTIFIERS_CN = ('至少一种', '至少两种', '至少二种', '至少三种', '复数种', '若干种', '数种', '二种', '三种', '四种', '一组')
 _ZHONG_SELF_INTRO_DETERMINERS_CN = ("该", "所述", "前述")
+# Wave K (2026-10-27): CN mirror of TW R82. The "one or more" family joins the
+# 种 family in the self-skip and the shared-quantifier basis: 所述一个或多个X
+# right after a determiner is a reference and no longer introduces itself.
+_SELF_INTRO_QUANTIFIERS_CN = tuple(sorted(
+    _ZHONG_QUANTIFIERS_CN + _OR_FAMILY_QUANTIFIERS_CN, key=len, reverse=True,
+))
+# The TW 所-relative guard and plain-一 rescan were measured here and carry
+# nothing on the CN corpus, so they are not mirrored.
 
 
 _INTRO_VERB_YI_CN = ("产生一", "包括一", "包含一", "具有一", "形成一", "提供一", "生成一")
@@ -4344,7 +4352,7 @@ def _shared_zhong_mention_cn(term: str, chain, ref_start: int) -> bool:
     quant = re.compile(
         "|".join(
             ("(?<!第)" if q.startswith("一") else "") + re.escape(q)
-            for q in _ZHONG_QUANTIFIERS_CN
+            for q in _SELF_INTRO_QUANTIFIERS_CN
             if q not in ordinal_gray
         )
         + "|(?<!第)[二三四]种"
@@ -4364,6 +4372,65 @@ def _shared_zhong_mention_cn(term: str, chain, ref_start: int) -> bool:
     return False
 
 
+def _same_quantifier_stem_cn(term: str, raw_noun: str, chain, ref_start: int) -> bool:
+    """An "or more" quantified reference whose noun carries predicate residue
+    (所述一个或多个附加轴内操作) has basis in an earlier mention with the SAME
+    quantifier, outside a determiner, sharing a stem of three or more
+    characters, or a one-character element whose mention ends at the
+    character or is a possessive part of an owner (ruling R6)."""
+    lead = next((q for q in _OR_FAMILY_QUANTIFIERS_CN if raw_noun.startswith(q)), "")
+    if not lead or len(term) < 2 or not raw_noun[len(lead):].startswith(term[:2]):
+        return False
+    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
+    for text in texts:
+        if len(term) >= 3:
+            # a line break can leave a space inside the run (一个或多个 处理器)
+            for mm in re.finditer(r"\s*".join(map(re.escape, lead + term[:3])), text):
+                if not text[: mm.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_CN):
+                    return True
+        for mm in re.finditer(re.escape(lead + term[0]), text):
+            before = text[: mm.start()]
+            det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_CN if before.endswith(d)), "")
+            if not det:
+                nxt = text[mm.end(): mm.end() + 1]
+                if not nxt or nxt in "，。；：、,;:" or nxt in _BARE_NOUN_BOUNDARY_CN:
+                    return True
+            elif before[: -len(det)].endswith(("的", "之")):
+                return True
+    return False
+
+
+_INSIDE_REFERENCE_RUN_CN = re.compile(r"(?:所述|前述|该)[^，。；：、,;:\s]{0,10}$")
+
+
+def _skipped_self_intro_keys_cn(chain) -> set[str]:
+    """The keys the determiner + "or more" spans (所述一个或多个X) registered
+    before wave K stopped them introducing themselves."""
+    keys: set[str] = set()
+    for a in chain:
+        for m in _INTRO_PATTERN_CN.finditer(a.text):
+            q = next((q for q in _OR_FAMILY_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
+            if q and _is_zhong_self_intro_cn(m, a.text):
+                for cand in _postprocess_intro_capture_cn(m.group(1), m, a.text):
+                    keys.add(normalize_candidate_intro_cn(cand))
+    return keys
+
+
+def _bare_earlier_mention_cn(term: str, chain, ref_start: int) -> bool:
+    """A term the draft also named article-less keeps the basis that a
+    determiner + "or more" span, which wave K no longer registers, used to
+    give it. Only references that are the element's sole mentions are
+    unmasked; nothing else changes."""
+    if term not in _skipped_self_intro_keys_cn(chain):
+        return False
+    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
+    for text in texts:
+        for mm in re.finditer(re.escape(term), text):
+            if not _INSIDE_REFERENCE_RUN_CN.search(text[: mm.start()]):
+                return True
+    return False
+
+
 def _zu_set_reference_intro_cn(rest: str, intros_by_term, chain, ref_start: int) -> str | None:
     """The intro a 該组X reference names once 一组X keys X: exact, then the
     longest introduced prefix (the reference may carry residue), then an
@@ -4377,11 +4444,16 @@ def _zu_set_reference_intro_cn(rest: str, intros_by_term, chain, ref_start: int)
 
 
 def _is_zhong_self_intro_cn(m, text: str) -> bool:
-    q = next((q for q in _ZHONG_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
+    q = next((q for q in _SELF_INTRO_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
     if not q or q == "一组":
         # 所述一组 is also "the set" itself (所述一组是第一組): left as before.
         return False
     # 該至少一種X, and 複數種前述X (the determiner after the quantifier)
+    if q in _OR_FAMILY_QUANTIFIERS_CN:
+        det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_CN if text[: m.start()].endswith(d)), "")
+        if det and text[: m.start() - len(det)].endswith(("的", "之")):
+            # 所述光子堆叠的所述一个或多个腔: a part of an introduced owner (ruling R6).
+            return False
     return text[: m.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_CN) or m.group(0)[
         len(q):
     ].startswith(_ZHONG_SELF_INTRO_DETERMINERS_CN)
@@ -4398,7 +4470,7 @@ def _iter_intro_matches_cn(text: str):
         start = m.start(1) + 1
         while True:
             hits = [i for i in (text.find(q, start, m.end()) for q in _RESCAN_QUANTIFIERS_CN) if i >= 0]
-            if m.group(0).startswith(_ZHONG_QUANTIFIERS_CN):
+            if m.group(0).startswith(_SELF_INTRO_QUANTIFIERS_CN):
                 # A 種 span can swallow a following 產生一X intro.
                 hits += [i + 2 for i in (text.find(v, start, m.end()) for v in _INTRO_VERB_YI_CN) if i >= 0]
             if not hits:
@@ -4423,6 +4495,31 @@ def _or_family_shi_intro_cn(m, text: str) -> tuple[str, str] | None:
     bare = "时" + (ext_m.group()[:11] if ext_m else "")
     return original + bare, bare
 
+
+_ABBREV_INTRO_LEADS_CN = tuple(q for q in _PRE_CLEAN_QUANTIFIERS_CN if q not in ("一些", "某些")) + ("一",)
+_ABBREV_INTRO_RE_CN = re.compile(
+    r"(?<![第統统同唯單单])(?P<lead>"
+    + "|".join(re.escape(q) for q in sorted(_ABBREV_INTRO_LEADS_CN, key=len, reverse=True))
+    + r")(?P<exp>[\u4e00-\u9fff/]{2,12}?)[(（](?P<abbr>(?=[0-9]*[A-Za-z])[A-Za-z0-9][A-Za-z0-9/\-]{0,9})[)）]"
+    r"(?P<tail>[\u4e00-\u9fff]{1,8})"
+)
+
+
+def _abbreviation_intros_cn(claim) -> list[tuple[str, str]]:
+    """Wave K (2026-10-27): an introduction that spells out an abbreviation,
+    一个或多个人工智能/机器学习(AI/ML)模型 or 一二維(2D)影像, also introduces the
+    abbreviated name (AI/ML模型, 2D影像) the later references use. Walker only:
+    in the shared extractor it reached spec-support (TW 59 -> 66, CN +5)."""
+    pairs: list[tuple[str, str]] = []
+    for am in _ABBREV_INTRO_RE_CN.finditer(claim.text):
+        if len(am.group("exp")) > 2 * len(am.group("abbr").replace("/", "")) + 1:
+            # the expansion must be the spelled-out name, not a clause
+            # running into it (多個第二垂直互連形成三維(3D)電感器)
+            continue
+        abbr_norm = normalize_candidate_intro_cn(am.group("abbr") + am.group("tail"))
+        if len(abbr_norm) >= 3:
+            pairs.append((am.group(0), abbr_norm))
+    return pairs
 
 def extract_introductions_cn(
     claim: Claim,
@@ -4564,6 +4661,7 @@ def extract_introductions_cn(
             if candidate and candidate not in seen:
                 seen.add(candidate)
                 pairs.append((m.group(0), candidate))
+
 
     return pairs
 
@@ -5273,6 +5371,8 @@ def check_antecedent_basis_cn(
                 strict_qualifier_matching=strict_qualifier_matching,
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
+            for original, normalized in _abbreviation_intros_cn(ancestor):
+                intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
         # R32 (2026-05-04): Path A equivalent for CN - chain-level
         # ordinal-prefix bridging. Mirror of TW R32. Two guards:
@@ -5555,9 +5655,15 @@ def check_antecedent_basis_cn(
                     resolved_intro = _zu_set_reference_intro_cn(
                         normalized_term[1:], intros_by_term, chain, m.start()
                     )
-                if resolved_intro is None and raw_noun.startswith(_ZHONG_QUANTIFIERS_CN):
+                if resolved_intro is None and raw_noun.startswith(_SELF_INTRO_QUANTIFIERS_CN):
                     if _shared_zhong_mention_cn(normalized_term, chain, m.start()):
                         resolved_intro = normalized_term
+                    elif _same_quantifier_stem_cn(normalized_term, raw_noun, chain, m.start()):
+                        resolved_intro = normalized_term
+                if resolved_intro is None and _bare_earlier_mention_cn(
+                    normalized_term, chain, m.start()
+                ):
+                    resolved_intro = normalized_term
                 if (
                     resolved_intro is not None
                     and _PREFIX_FALLBACK_OBSERVER is not None
