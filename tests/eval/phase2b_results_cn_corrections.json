@@ -3479,6 +3479,26 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN120826552A",
+      "jurisdiction": "CN",
+      "source": "wave-l-interior-boundaries (2026-10-27)",
+      "_note": "Over-capture: the reference ran through 仅沿一个方向 past the element. Claim 10 introduces 轴 article-less in its list (还包括：轴，), so 所述轴 has basis. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "轴仅沿一个方向",
+            "reference_form": "所述轴仅沿一个方向"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

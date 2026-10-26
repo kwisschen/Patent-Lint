@@ -7,7 +7,9 @@
 #
 #   onechar   references the normalizer cuts to ONE character, which the walker
 #             drops without a lookup (carried item 6). Wave E: TW 1,227 / CN 683,
-#             led by 所述至少一個處理器 -> 個.
+#             led by 所述至少一個處理器 -> 個. Wave L (2026-10-27): TW 507 / CN 241,
+#             led by 至少一個所選 -> 所 (36) and 封包 -> 封 (32, guard re-measured
+#             and still withheld, see _BAO_FINAL_NOUNS_TW).
 #   embedded  determiners inside an earlier reference's noun run: 所/述 are noun
 #             characters, so 所述记录器接收所述警报 is ONE capture and 所述警报 is
 #             never looked up (carried item 11). Wave E: TW 2,639 / CN 7,116.
@@ -26,7 +28,9 @@
 #             Wave J (2026-10-26) SHIPPED the TW "one or more" family (該一或多個X)
 #             with its bases. The BROAD rule (every multi-character quantifier,
 #             tests/eval/withheld/item13_broad_selfskip.patch) is WITHHELD: TW +205
-#             net with 1 gold-legit lost, CN +58; the new findings are mostly
+#             net with 1 gold-legit lost, CN +58 (wave L re-measure, widening
+#             _SELF_INTRO_QUANTIFIERS_* alone on top of R84/R89: TW +155/-27,
+#             CN +78/-18, about 5 of a 22-finding sample real); the new findings are mostly
 #             residue on both sides of a quantified pair and intros the span
 #             hid. CN "one or more" mirror, bare: +50 / -0, unmeasured with the
 #             TW bases.

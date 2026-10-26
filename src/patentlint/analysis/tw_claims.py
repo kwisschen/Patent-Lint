@@ -2767,6 +2767,11 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 排列 is rare and FN-guarded by validate_fix. CN parity measured on
         # the CN corpus before mirroring (DR-1: no CN report yet).
         "排列",
+        # 受壓 (wave L, report #353): `所述按鍵受壓而下移` kept the
+        # predicate, because the noun scan halts at 而 before any interior cut
+        # can see it. 受壓 heads element names (受壓面, 受壓部) only at PREFIX
+        # position, which the endswith strip never touches.
+        "受壓",
         # R16 (2026-06-26): trailing predicate verbs from the normalization-
         # asymmetry probe (intro exists; the clause verb bled into the reference).
         # 引起 (cause), 調整 (adjust). Noun compounds carry them at PREFIX (調整機構)
@@ -3416,6 +3421,10 @@ _XIAO_FINAL_NOUNS_TW: tuple[str, ...] = ("大小",)
 # head of 包括 / 包含, and cut these to 電池 / 資料. 封包 (所述封包 32) is
 # WITHHELD: guarding it surfaced 10 references whose introductions are relative
 # clauses or abbreviations TW does not read (傳輸包括數據資料的封包 ... 該封包).
+# Re-measured wave L (2026-10-27): still +10 unpaired, 9 of them on drafts
+# that introduce the packet without an article (傳輸一個含有數據資料封包的方法,
+# 組裝封包之第一層); the 8 paired shifts repair mid-word cuts (第一封 ->
+# 第一封包). The lever is the bare-noun rescue reaching those introductions.
 _BAO_FINAL_NOUNS_TW: tuple[str, ...] = ("電池包", "資料包", "數據包")
 _ORDINAL_BAO_RE_TW: re.Pattern[str] = re.compile(r"第[一二三四五六七八九十0-9]+包")
 
@@ -3666,6 +3675,12 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #     超過 is verb-only in TIPO claim register, but the cardinal gate is
         #     kept for parity with its class-mates and costs nothing.
         "超過一",
+        # === Wave L (2026-10-27, reports #330 / #353 / #356) ===
+        # 呈一 ("takes a"), 沿一 ("along a"), 相夾 ("forms an angle with"):
+        # `所述簧片呈一閉合位置`, `所述導軌沿一水平方向` and `所述蓋板相夾有`
+        # each ran the reference past its element. The first two take the
+        # cardinal gate of their class-mates.
+        "呈一", "沿一", "相夾",
         #   藉一 ("by means of a", #526): the instrumental coverb 藉 opens a
         #     complete second NP - `所述處理模組的至少一功能藉一外部電子裝置運作`
         #     captured 功能藉一外部電子裝置運作 as one inventory phrase. Bare 藉
@@ -7004,8 +7019,9 @@ def _is_zhong_self_intro_tw(m, text: str) -> bool:
         # 所述一組 is also "the set" itself (所述一組是第一組): left as before.
         return False
     if q in _OR_FAMILY_QUANTIFIERS_TW:
-        if m.group(0)[len(q):].startswith("所"):
+        if m.group(0)[len(q):].startswith("所") and not m.group(0)[len(q):].startswith("所述"):
             # 該一或多個所選擇的X: a relative clause, not an element name.
+            # 一或多個所述X is "one or more of the X": a reference.
             return False
         det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_TW if text[: m.start()].endswith(d)), "")
         if det and text[: m.start() - len(det)].endswith(("的", "之")):
