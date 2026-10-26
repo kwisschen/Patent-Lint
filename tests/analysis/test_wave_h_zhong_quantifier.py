@@ -165,3 +165,25 @@ class TestYiZuQuantifier:
             "如請求項1之方法，其進一步包括核准該至少一種佣金。",
         )
         assert "佣金" in found
+
+
+class TestOneCharNounAfterQuantifier:
+    # Wave I: a one-character noun after a measure-word quantifier keyed the
+    # quantifier tail (個塊 / 或多个柱); it now keys the noun itself.
+    def test_tw_one_char_noun(self):
+        assert normalize_candidate_intro("複數個塊") == "塊"
+        assert normalize_reference_term("該至少一個孔") == "孔"
+
+    def test_cn_one_char_noun(self):
+        assert normalize_candidate_intro_cn("一个或多个柱") == "柱"
+        assert normalize_reference_term_cn("所述至少一个槽") == "槽"
+
+    def test_cn_ordinal_member_of_quantified_one_char_owner(self):
+        # Other 第一 elements (第一引脚) block the ordinal bridge, so only the
+        # possessive owner (所述多个匝中的第一匝) can introduce 第一匝.
+        found = _cn(
+            "一种线圈组件，包括：第一引脚和第二引脚；以及导线，其包括串联连接在所述第一引脚与"
+            "所述第二引脚之间的多个匝；以及与所述多个匝中的第一匝相对应的匝间电容。",
+            "根据权利要求1所述的线圈组件，其中，所述匝间电容在不同于所述第一引脚的位置处连接至所述第一匝。",
+        )
+        assert "第一匝" not in found

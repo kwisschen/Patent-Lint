@@ -127,3 +127,27 @@ class TestRulingR8:
             "一種系統，包括一高爐及一控制器，所述控制器監測該高爐的溫度。",
         )
         assert "高爐" not in found
+
+
+class TestRulingR9:
+    # Ruling R9 (2026-10-26, TW and CN): the content of X has no basis from X,
+    # unless 含量 is followed by a comparison that makes it context.
+    def test_tw_content_needs_its_own_introduction(self):
+        found = _tw("一種組合物，包括一溶劑。", "如請求項1所述之組合物，其中降低該溶劑含量。")
+        assert "溶劑含量" in found
+
+    def test_tw_content_with_comparison_resolves(self):
+        found = _tw("一種組合物，包括一溶劑。", "如請求項1所述之組合物，其中該溶劑含量大於百分之五。")
+        assert not any(t.startswith("溶劑") for t in found)
+
+    def test_cn_content_needs_its_own_introduction(self):
+        found = _cn("一种组合物，包括一种溶剂。", "根据权利要求1所述的组合物，其中降低所述溶剂含量。")
+        assert "溶剂含量" in found
+
+    def test_cn_content_with_comparison_resolves(self):
+        found = _cn("一种组合物，包括一种溶剂。", "根据权利要求1所述的组合物，其中所述溶剂含量大于5%。")
+        assert not any(t.startswith("溶剂") for t in found)
+
+    def test_cn_possessive_content_untouched(self):
+        found = _cn("一种组合物，包括一种溶剂。", "根据权利要求1所述的组合物，其中所述溶剂的含量大于5%。")
+        assert not any(t.startswith("溶剂") for t in found)

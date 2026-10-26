@@ -3199,6 +3199,70 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN101680294B",
+      "jurisdiction": "CN",
+      "source": "wave-i-ruling-r9 (2026-10-26)",
+      "_note": "Ruling R9 (Christopher 2026-10-26): 所述X含量 has no basis from an intro of X unless 含量 is followed by a comparison. Claims 27-29 write 所述惰性气体含量 with no comparison after 含量 and nothing introduces the content. Supersedes the wave H walker_fp correction.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 27,
+            "term": "惰性气体含量",
+            "reference_form": "所述惰性气体含量"
+          },
+          {
+            "claim_id": 28,
+            "term": "惰性气体含量",
+            "reference_form": "所述惰性气体含量"
+          },
+          {
+            "claim_id": 29,
+            "term": "惰性气体含量",
+            "reference_form": "所述惰性气体含量"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120729045A",
+      "jurisdiction": "CN",
+      "source": "wave-i-one-char-noun (2026-10-26)",
+      "_note": "所述两个 is a cut of 所述两个相 (the two phases); the term is the bare quantifier, never an element. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "两个",
+            "reference_form": "所述两个"
+          },
+          {
+            "claim_id": 20,
+            "term": "两个",
+            "reference_form": "所述两个"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

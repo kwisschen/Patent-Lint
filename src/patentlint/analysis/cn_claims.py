@@ -2102,8 +2102,17 @@ def _is_guarded_zu_cn(text: str, pos: int) -> bool:
 
 def _pre_clean_quantifier_strip_cn(text: str) -> tuple[str, int]:
     """Return the text without its leading quantifier, and the quantifier length."""
-    for q in _PRE_CLEAN_QUANTIFIERS_CN:
-        if text.startswith(q) and len(text) - len(q) >= 2:
+    # Wave I (2026-10-26): longest quantifier first, and a ONE-character noun
+    # after a measure-word or or-family quantifier (複數個塊, 一个或多个柱) is
+    # stripped too: it kept a garbage key (個塊 / 或多个柱) before. One-character
+    # keys are inert in lookup; garbage ones are not.
+    for q in sorted(_PRE_CLEAN_QUANTIFIERS_CN, key=len, reverse=True):
+        if not text.startswith(q):
+            continue
+        rest = len(text) - len(q)
+        if rest >= 2 or (
+            rest == 1 and (q[-1] in "个种条根支片块层组对件套" or "或" in q) and "\u4e00" <= text[-1] <= "\u9fff"
+        ):
             return text[len(q):], len(q)
     if _is_guarded_zu_cn(text, 0) and len(text) >= 4:
         return text[2:], 2
@@ -2429,6 +2438,23 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
 # sets it to size the short-stem class the next CN round targets (a 2-char stem
 # such as 电路 resolving 所述电路板). Never set it from shipped code.
 _PREFIX_FALLBACK_OBSERVER = None
+
+# Ruling R9 (Christopher 2026-10-26, TW and CN): 所述X含量 (the content of X)
+# has no basis from an intro of X, unless 含量 is followed by a comparison that
+# makes it context rather than the term (所述X含量大於5% says X's content
+# exceeds 5%: basis from X). Same family as R8 (過程).
+_CONTENT_COMPARISONS_CN: tuple[str, ...] = ("大于", "小于", "高于", "低于", "等于", "不大于", "不小于", "不超过", "不低于", "超过", "少于", "多于", "介于", "为", "是", "在", "达", "至少", "至多", "约", "≥", "≤", ">", "<", "=")
+
+
+def _content_of_stem_cn(stem: str, reference: str, claim_text: str, ref_start: int) -> bool:
+    if not reference.startswith(stem + "含量"):
+        return False
+    # Read the source: the capture can stop inside the comparison (大於 -> 大).
+    i = claim_text.find(stem + "含量", ref_start)
+    follow = claim_text[i + len(stem) + 2:].lstrip() if i >= 0 else reference[len(stem) + 2:]
+    return not follow.startswith(_CONTENT_COMPARISONS_CN)
+
+
 
 # Dev-time hook: called with (raw noun, normalized term, claim id) whenever a
 # reference normalizes to one character and is dropped unchecked. Used by
@@ -5110,6 +5136,15 @@ def has_possessive_introduction_cn(
                             return not any(
                                 c in base[len(term):] for c in _NEW_ARGUMENT_COVERBS_CN
                             )
+                # Wave I (2026-10-26): a quantified one-character element (所述
+                # 多个匝中的第一匝) now keys its single character, not the garbage
+                # 个匝 it used to match by accident.
+                if (
+                    stripped != owner
+                    and stripped[:1] in intros_by_term
+                    and stripped[1:] in ("", "中", "之中", "內", "内", "上")
+                ):
+                    return True
                 return False
         return False
 
@@ -5499,6 +5534,7 @@ def check_antecedent_basis_cn(
                         len(intro) >= 2
                         and len(intro) > best_len
                         and normalized_term.startswith(intro)
+                        and not _content_of_stem_cn(intro, normalized_term, claim.text, m.start())
                         and not (
                             _short_stem_opens_compound_cn(intro, normalized_term)
                             and not _mentioned_before_cn(
