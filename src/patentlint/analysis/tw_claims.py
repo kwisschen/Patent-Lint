@@ -2310,6 +2310,29 @@ _INTRO_MULTI_QUANTIFIERS = (
     # the leading 一個 was stripped, so both sides keyed a garbage 或多個X that
     # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
     # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+    # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+    # Wave G (2026-10-26): the two/three-or-more family (兩個或更多個 x96 TW, 两个或更多个 x98 CN).
+    "兩個或更多個",
+    "兩種或更多種",
+    "兩條或更多條",
+    "二個或更多個",
+    "三個或更多個",
+    "二或更多個",
+    "二或更多種",
+    "三或更多個",
+    "兩個或多個",
+    "二或多個",
+    "二或多種",
+    "兩個或更多",
+    "二個或更多",
+    "二或更多",
+    "三或更多",
+    "一種或更多種",
+    "一種或者多種",
+    "一種或多種",
+    "一組或更多組",
+    "一組或多組",
+    "一條或多條",
     "一個或更多個",
     "一個或者多個",
     "一個或多個",
@@ -3396,6 +3419,29 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
         # the leading 一個 was stripped, so both sides keyed a garbage 或多個X that
         # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
         # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+        # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+        # Wave G (2026-10-26): the two/three-or-more family (兩個或更多個 x96 TW, 两个或更多个 x98 CN).
+        "兩個或更多個",
+        "兩種或更多種",
+        "兩條或更多條",
+        "二個或更多個",
+        "三個或更多個",
+        "二或更多個",
+        "二或更多種",
+        "三或更多個",
+        "兩個或多個",
+        "二或多個",
+        "二或多種",
+        "兩個或更多",
+        "二個或更多",
+        "二或更多",
+        "三或更多",
+        "一種或更多種",
+        "一種或者多種",
+        "一種或多種",
+        "一組或更多組",
+        "一組或多組",
+        "一條或多條",
         "一個或更多個",
         "一個或者多個",
         "一個或多個",
@@ -6752,6 +6798,33 @@ _DEFINITIONAL_FRAME_RE_TW = re.compile(
 )
 
 
+# Wave G (2026-10-26): the "or more" quantifiers, longest first, for the rescan
+# below. (CN also repairs the 时 compound right after the quantifier; in TW 更
+# is not a noun character either, so 該兩個或更多個時間點 is cut inside its
+# quantifier and dropped unchecked - carried with item 6, masked by item 13.)
+_OR_FAMILY_QUANTIFIERS_TW = tuple(sorted(
+    (q for q in _INTRO_MULTI_QUANTIFIERS if "或" in q and q.isalpha()), key=len, reverse=True,
+))
+
+
+def _iter_intro_matches_tw(text: str):
+    """finditer over the intro pattern, plus a rescan wherever a match's noun
+    span swallowed a later "or more" quantifier. The longer quantifiers spend
+    more of the 12-character budget, so 兩個或多個副本分別傳送至兩個或多個輸出接口 kept only the
+    first intro."""
+    for m in _INTRO_PATTERN.finditer(text):
+        yield m
+        start = m.start(1) + 1
+        while True:
+            hits = [i for i in (text.find(q, start, m.end()) for q in _OR_FAMILY_QUANTIFIERS_TW) if i >= 0]
+            if not hits:
+                break
+            mm = _INTRO_PATTERN.match(text, min(hits))
+            if mm and mm.end() > m.end():
+                yield mm
+            start = min(hits) + 1
+
+
 def extract_introductions_tw(
     claim: Claim,
     *,
@@ -6794,7 +6867,7 @@ def extract_introductions_tw(
     _subject_end = (
         _dep_preamble_subject_end(claim.text) if suppress_dep_preamble else 0
     )
-    for m in _INTRO_PATTERN.finditer(claim.text):
+    for m in _iter_intro_matches_tw(claim.text):
         if _subject_end and m.start() < _subject_end:
             continue
         original = m.group(0)
@@ -7307,6 +7380,11 @@ def _abstract_noun_of_stem_tw(stem: str, reference: str) -> bool:
 # Dev-time hook (CN parity): called with (intro, reference, claim id) whenever
 # the longest-prefix fallback resolves a reference. Used by eval probes only.
 _PREFIX_FALLBACK_OBSERVER = None
+
+# Dev-time hook: called with (raw noun, normalized term, claim id) whenever a
+# reference normalizes to one character and is dropped unchecked. Used by
+# tests/eval/fn_mask_probe.py onechar, so the count follows the real walker.
+_ONE_CHAR_DROP_OBSERVER = None
 
 
 # Wave F (2026-10-26): a PLURAL reference (該等接腳 / 該些模組) over two or more ordinal
@@ -8185,6 +8263,8 @@ def check_antecedent_basis(
             # directly - 1-char terms emerge from `該複數個` → `個`,
             # `該等相應X` → `相` cascades that pre-emit cleanup misses.
             if len(normalized_term) < 2:
+                if _ONE_CHAR_DROP_OBSERVER is not None:
+                    _ONE_CHAR_DROP_OBSERVER(raw_noun, normalized_term, claim.id)
                 continue
             if _BARE_ORDINAL_RE_TW.match(normalized_term):
                 continue

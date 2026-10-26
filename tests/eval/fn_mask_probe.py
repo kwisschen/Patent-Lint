@@ -23,11 +23,23 @@
 #             quantified reference (所述至少一個X) introduces itself (carried
 #             item 13). Wave E: TW 11,691 / CN 5,341. Exposure, not FNs: many
 #             of those terms are also introduced properly elsewhere.
+#   stemfallback  references the longest-prefix fallback resolves through a
+#             TWO-character stem with a 2+ character tail (carried item 15).
+#             Wave G (2026-10-26): TW 1,959 / CN 1,294 (CN tails are verbs:
+#             配置, 结合, 操作). Fuller form mentioned after a quantifier
+#             anywhere in the draft: TW 546 / CN 83 (an intro the
+#             extractor cut short, e.g. an interior-verb cut, which the
+#             fallback correctly absorbs); of the rest about half are verb
+#             residue on the right element (該UE執行測量 by UE). A guard on a
+#             noun-head tail plus "no earlier non-determiner mention" added TW
+#             84 findings, about 5 real (abbreviation intros, 第1 vs 第一,
+#             第一及第二X distributives, paraphrases like 修改的參數): WITHHELD.
 #
 # USAGE
 #   python tests/eval/fn_mask_probe.py onechar  [--juris TW|CN|ALL]
 #   python tests/eval/fn_mask_probe.py embedded [--juris ALL]
 #   python tests/eval/fn_mask_probe.py selfintro [--juris ALL]
+#   python tests/eval/fn_mask_probe.py stemfallback [--juris ALL]
 from __future__ import annotations
 
 import argparse
@@ -60,14 +72,29 @@ def _claims(juris: str):
 
 
 def onechar(juris: str, show: int) -> None:
-    pat, norm, _, _ = _JURIS[juris]
+    # Counted at the walker's own drop site (the observer hook), not by
+    # re-running the capture regex: the walker extends 能/應/時 compounds
+    # after capture, which a regex-only count misses (wave G: the regex-only
+    # count was TW 850 / CN 526).
+    mod = tw if juris == "TW" else cn
+    check = tw.check_antecedent_basis if juris == "TW" else cn.check_antecedent_basis_cn
     members: Counter = Counter()
-    for _, claims in _claims(juris):
-        for c in claims:
-            for m in pat.finditer(c.text):
-                t = norm(m.group("prefix") + m.group("noun"))
-                if t and len(t) == 1:
-                    members[(m.group("noun")[:6], t)] += 1
+
+    def observe(raw: str, term: str, _cid: int) -> None:
+        members[(raw[:6], term)] += 1
+
+    mod._ONE_CHAR_DROP_OBSERVER = observe
+    try:
+        for rec in h.load_corpus(juris):
+            doc = h._build_doc(rec, juris)
+            if doc is None:
+                continue
+            try:
+                check(doc)
+            except Exception:  # noqa: BLE001 - a probe counts what it can
+                continue
+    finally:
+        mod._ONE_CHAR_DROP_OBSERVER = None
     print(f"{juris} one-character references dropped: {sum(members.values())}")
     for (raw, t), n in members.most_common(show):
         print(f"    {n:5d}  {raw} -> {t}")
@@ -102,13 +129,52 @@ def selfintro(juris: str, show: int) -> None:
     print(f"{juris} introduction spans right after a determiner: {n}, drafts {len(drafts)}")
 
 
+def stemfallback(juris: str, show: int) -> None:
+    mod = tw if juris == "TW" else cn
+    check = tw.check_antecedent_basis if juris == "TW" else cn.check_antecedent_basis_cn
+    quant = r"(?:一|一種|一个|一個|複數|複數個|多個|多个|至少一|至少一個|至少一个|兩|两|二|若干)"
+    tails: Counter[str] = Counter()
+    rows: list[tuple[str, str, str]] = []
+    cur: dict = {}
+
+    def observe(intro: str, term: str, _cid: int) -> None:
+        if len(intro) == 2 and len(term) - len(intro) >= 2:
+            rows.append((cur["pid"], intro, term))
+            tails[term[2:4]] += 1
+
+    mod._PREFIX_FALLBACK_OBSERVER = observe
+    cut_intro = 0
+    try:
+        for rec in h.load_corpus(juris):
+            doc = h._build_doc(rec, juris)
+            if doc is None:
+                continue
+            cur["pid"] = rec["patent_id"]
+            n0 = len(rows)
+            try:
+                check(doc)
+            except Exception:  # noqa: BLE001 - a probe counts what it can
+                continue
+            text = "".join(c.text for c in doc.claims)
+            for _pid, stem, term in rows[n0:]:
+                if any(re.search(quant + re.escape(term[:k]), text)
+                       for k in range(len(term), len(stem) + 1, -1)):
+                    cut_intro += 1
+    finally:
+        mod._PREFIX_FALLBACK_OBSERVER = None
+    print(f"{juris} 2-char-stem fallbacks {len(rows)}, fuller form introduced earlier {cut_intro}")
+    for tail, n in tails.most_common(show):
+        print(f"  {n:5d} {tail}")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Size the wave E false-negative masks")
-    ap.add_argument("probe", choices=["onechar", "embedded", "selfintro"])
+    ap.add_argument("probe", choices=["onechar", "embedded", "selfintro", "stemfallback"])
     ap.add_argument("--juris", default="ALL", choices=["TW", "CN", "ALL"])
     ap.add_argument("--show", type=int, default=15)
     args = ap.parse_args()
-    fn = {"onechar": onechar, "embedded": embedded, "selfintro": selfintro}[args.probe]
+    fn = {"onechar": onechar, "embedded": embedded, "selfintro": selfintro,
+          "stemfallback": stemfallback}[args.probe]
     for j in (["TW", "CN"] if args.juris == "ALL" else [args.juris]):
         fn(j, args.show)
     return 0

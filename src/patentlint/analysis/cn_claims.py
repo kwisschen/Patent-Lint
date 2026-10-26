@@ -1464,6 +1464,25 @@ _INTRO_MULTI_QUANTIFIERS_CN = (
     # the leading 一个 was stripped, so both sides keyed a garbage 或多个X that
     # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
     # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+    # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+    # Wave G (2026-10-26): the two/three-or-more family (兩個或更多個 x96 TW, 两个或更多个 x98 CN).
+    "两个或者更多个",
+    "两个或更多个",
+    "两种或更多种",
+    "两条或更多条",
+    "两组或更多组",
+    "三个或更多个",
+    "三种或更多种",
+    "两个或多个",
+    "两种或多种",
+    "两个或更多",
+    "三或更多",
+    "一种或更多种",
+    "一种或者多种",
+    "一种或多种",
+    "一组或更多组",
+    "一组或多组",
+    "一条或多条",
     "一个或多于一个",
     "一个或更多个",
     "一个或者多个",
@@ -1978,6 +1997,25 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # the leading 一个 was stripped, so both sides keyed a garbage 或多个X that
         # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
         # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
+        # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+        # Wave G (2026-10-26): the two/three-or-more family (兩個或更多個 x96 TW, 两个或更多个 x98 CN).
+        "两个或者更多个",
+        "两个或更多个",
+        "两种或更多种",
+        "两条或更多条",
+        "两组或更多组",
+        "三个或更多个",
+        "三种或更多种",
+        "两个或多个",
+        "两种或多种",
+        "两个或更多",
+        "三或更多",
+        "一种或更多种",
+        "一种或者多种",
+        "一种或多种",
+        "一组或更多组",
+        "一组或多组",
+        "一条或多条",
         "一个或多于一个",
         "一个或更多个",
         "一个或者多个",
@@ -2358,6 +2396,11 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
 # sets it to size the short-stem class the next CN round targets (a 2-char stem
 # such as 电路 resolving 所述电路板). Never set it from shipped code.
 _PREFIX_FALLBACK_OBSERVER = None
+
+# Dev-time hook: called with (raw noun, normalized term, claim id) whenever a
+# reference normalizes to one character and is dropped unchecked. Used by
+# tests/eval/fn_mask_probe.py onechar, so the count follows the real walker.
+_ONE_CHAR_DROP_OBSERVER = None
 
 
 def _short_stem_opens_compound_cn(stem: str, reference: str) -> bool:
@@ -4208,6 +4251,46 @@ _DEFINITIONAL_FRAME_RE_CN = re.compile(
 )
 
 
+# Wave G (2026-10-26): the "or more" quantifiers, longest first. Two intro-side
+# repairs follow from adding them to the quantifier alternation.
+_OR_FAMILY_QUANTIFIERS_CN = tuple(sorted(
+    (q for q in _INTRO_MULTI_QUANTIFIERS_CN if "或" in q and q.isalpha()), key=len, reverse=True,
+))
+
+
+def _iter_intro_matches_cn(text: str):
+    """finditer over the intro pattern, plus a rescan wherever a match's noun
+    span swallowed a later "or more" quantifier. The longer quantifiers spend
+    more of the 12-character budget, so 两个或多个副本分别传送至两个或多个输出接口 kept only the
+    first intro."""
+    for m in _INTRO_PATTERN_CN.finditer(text):
+        yield m
+        start = m.start(1) + 1
+        while True:
+            hits = [i for i in (text.find(q, start, m.end()) for q in _OR_FAMILY_QUANTIFIERS_CN) if i >= 0]
+            if not hits:
+                break
+            mm = _INTRO_PATTERN_CN.match(text, min(hits))
+            if mm and mm.end() > m.end():
+                yield mm
+            start = min(hits) + 1
+
+
+def _or_family_shi_intro_cn(m, text: str) -> tuple[str, str] | None:
+    """时 is not a noun character, so 兩個或更多個时間點 matched only its own
+    quantifier. Take the 时 compound when its suffix makes it a noun (the
+    reference capture's follow-gate); the general intro 时 gate stays withheld."""
+    original = m.group(0)
+    if original not in _OR_FAMILY_QUANTIFIERS_CN:
+        return None
+    end = m.end()
+    if not text.startswith("时", end) or text[end + 1: end + 2] not in _SHI_NOUN_SUFFIXES_CN:
+        return None
+    ext_m = _NOUN_EXT_RE_CN.match(text, end + 1)
+    bare = "时" + (ext_m.group()[:11] if ext_m else "")
+    return original + bare, bare
+
+
 def extract_introductions_cn(
     claim: Claim,
     *,
@@ -4216,9 +4299,12 @@ def extract_introductions_cn(
     """Extract introductions from a CN claim as (original, normalized) pairs."""
     pairs: list[tuple[str, str]] = []
     seen: set[str] = set()
-    for m in _INTRO_PATTERN_CN.finditer(claim.text):
+    for m in _iter_intro_matches_cn(claim.text):
         original = m.group(0)
         bare_noun = m.group(1)
+        shi_intro = _or_family_shi_intro_cn(m, claim.text)
+        if shi_intro:
+            original, bare_noun = shi_intro
         # Wave F (2026-10-26): the 能 follow-gate the reference capture already
         # has. 能 is not a noun character, so 一个或多个身体功能 was captured as
         # 身体功 and normalized to a phantom 身体 that resolved a real 所述身体.
@@ -5484,6 +5570,8 @@ def check_antecedent_basis_cn(
                 continue
 
             if len(normalized_term) == 1:
+                if _ONE_CHAR_DROP_OBSERVER is not None:
+                    _ONE_CHAR_DROP_OBSERVER(raw_noun, normalized_term, claim.id)
                 continue
 
             # R32 (2026-05-04): TW parity - newline/colon filter. F-anchor
