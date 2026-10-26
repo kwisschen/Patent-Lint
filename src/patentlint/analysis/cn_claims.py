@@ -2430,6 +2430,23 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
 # such as 电路 resolving 所述电路板). Never set it from shipped code.
 _PREFIX_FALLBACK_OBSERVER = None
 
+# Ruling R9 (Christopher 2026-10-26, TW and CN): 所述X含量 (the content of X)
+# has no basis from an intro of X, unless 含量 is followed by a comparison that
+# makes it context rather than the term (所述X含量大於5% says X's content
+# exceeds 5%: basis from X). Same family as R8 (過程).
+_CONTENT_COMPARISONS_CN: tuple[str, ...] = ("大于", "小于", "高于", "低于", "等于", "不大于", "不小于", "不超过", "不低于", "超过", "少于", "多于", "介于", "为", "是", "在", "达", "至少", "至多", "约", "≥", "≤", ">", "<", "=")
+
+
+def _content_of_stem_cn(stem: str, reference: str, claim_text: str, ref_start: int) -> bool:
+    if not reference.startswith(stem + "含量"):
+        return False
+    # Read the source: the capture can stop inside the comparison (大於 -> 大).
+    i = claim_text.find(stem + "含量", ref_start)
+    follow = claim_text[i + len(stem) + 2:].lstrip() if i >= 0 else reference[len(stem) + 2:]
+    return not follow.startswith(_CONTENT_COMPARISONS_CN)
+
+
+
 # Dev-time hook: called with (raw noun, normalized term, claim id) whenever a
 # reference normalizes to one character and is dropped unchecked. Used by
 # tests/eval/fn_mask_probe.py onechar, so the count follows the real walker.
@@ -5499,6 +5516,7 @@ def check_antecedent_basis_cn(
                         len(intro) >= 2
                         and len(intro) > best_len
                         and normalized_term.startswith(intro)
+                        and not _content_of_stem_cn(intro, normalized_term, claim.text, m.start())
                         and not (
                             _short_stem_opens_compound_cn(intro, normalized_term)
                             and not _mentioned_before_cn(

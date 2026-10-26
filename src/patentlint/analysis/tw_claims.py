@@ -7484,6 +7484,22 @@ def _abstract_noun_of_stem_tw(stem: str, reference: str) -> bool:
     return len(stem) == 2 and reference[2:].startswith(_ABSTRACT_NOUN_TAILS_TW)
 
 
+# Ruling R9 (Christopher 2026-10-26, TW and CN): 所述X含量 (the content of X)
+# has no basis from an intro of X, unless 含量 is followed by a comparison that
+# makes it context rather than the term (所述X含量大於5% says X's content
+# exceeds 5%: basis from X). Same family as R8 (過程).
+_CONTENT_COMPARISONS_TW: tuple[str, ...] = ("大於", "小於", "高於", "低於", "等於", "不大於", "不小於", "不超過", "不低於", "超過", "少於", "多於", "介於", "為", "係", "在", "達", "至少", "至多", "約", "≥", "≤", ">", "<", "=")
+
+
+def _content_of_stem_tw(stem: str, reference: str, claim_text: str, ref_start: int) -> bool:
+    if not reference.startswith(stem + "含量"):
+        return False
+    # Read the source: the capture can stop inside the comparison (大於 -> 大).
+    i = claim_text.find(stem + "含量", ref_start)
+    follow = claim_text[i + len(stem) + 2:].lstrip() if i >= 0 else reference[len(stem) + 2:]
+    return not follow.startswith(_CONTENT_COMPARISONS_TW)
+
+
 # Dev-time hook (CN parity): called with (intro, reference, claim id) whenever
 # the longest-prefix fallback resolves a reference. Used by eval probes only.
 _PREFIX_FALLBACK_OBSERVER = None
@@ -8458,6 +8474,7 @@ def check_antecedent_basis(
                         and len(intro) > best_len
                         and normalized_term.startswith(intro)
                         and not _abstract_noun_of_stem_tw(intro, normalized_term)
+                        and not _content_of_stem_tw(intro, normalized_term, claim.text, m.start())
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
