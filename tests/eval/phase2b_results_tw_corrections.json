@@ -3512,7 +3512,7 @@
       "patent_id": "TW202450341A",
       "jurisdiction": "TW",
       "source": "wave-j-or-more-self-intro (2026-10-26)",
-      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26. | Wave K correction 2026-10-27: c3 值輸入 is walker_fp, the claim introduces 一或多個值 itself (相對應的一或多個值的一指示).",
       "ensemble": {
         "findings": [
           {
@@ -3523,7 +3523,7 @@
         ],
         "final_verdicts": [
           {
-            "category": "legit_drafting_error"
+            "category": "walker_fp"
           }
         ]
       }

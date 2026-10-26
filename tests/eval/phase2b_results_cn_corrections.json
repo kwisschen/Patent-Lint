@@ -3263,6 +3263,222 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN114929098A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "光学信号",
+            "reference_form": "所述光学信号"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117119517A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "测量报告来分配",
+            "reference_form": "所述测量报告来分配"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119214783A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "光学信号",
+            "reference_form": "所述光学信号"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119492316A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "3D结构",
+            "reference_form": "所述3D结构"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119894818A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "气体分配器",
+            "reference_form": "所述气体分配器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120146939A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27. The intro is 一个或多个非交易产品; 所述一个或多个产品 is an abbreviated reference (the #453 advisory class).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "产品添加",
+            "reference_form": "所述产品添加"
+          },
+          {
+            "claim_id": 8,
+            "term": "产品添加",
+            "reference_form": "所述产品添加"
+          },
+          {
+            "claim_id": 10,
+            "term": "产品添加",
+            "reference_form": "所述产品添加"
+          },
+          {
+            "claim_id": 15,
+            "term": "产品添加",
+            "reference_form": "所述产品添加"
+          },
+          {
+            "claim_id": 17,
+            "term": "产品添加",
+            "reference_form": "所述产品添加"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120729045A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "控制器",
+            "reference_form": "所述控制器"
+          },
+          {
+            "claim_id": 18,
+            "term": "控制器来控制",
+            "reference_form": "所述控制器来控制"
+          },
+          {
+            "claim_id": 19,
+            "term": "控制器",
+            "reference_form": "所述控制器"
+          },
+          {
+            "claim_id": 20,
+            "term": "控制器",
+            "reference_form": "所述控制器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121708199A",
+      "jurisdiction": "CN",
+      "source": "wave-k-or-more-self-intro (2026-10-27)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (所述一个或多个X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 12,
+            "term": "处理单元",
+            "reference_form": "所述处理单元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }
