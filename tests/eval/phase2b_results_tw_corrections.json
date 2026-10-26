@@ -3295,6 +3295,394 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW201721183A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "取樣位置",
+            "reference_form": "該取樣位置"
+          },
+          {
+            "claim_id": 11,
+            "term": "取樣位置",
+            "reference_form": "該取樣位置"
+          },
+          {
+            "claim_id": 22,
+            "term": "取樣位置",
+            "reference_form": "該取樣位置"
+          },
+          {
+            "claim_id": 35,
+            "term": "取樣位置",
+            "reference_form": "該取樣位置"
+          },
+          {
+            "claim_id": 51,
+            "term": "取樣位置相關",
+            "reference_form": "該取樣位置相關"
+          },
+          {
+            "claim_id": 53,
+            "term": "取樣位置相關",
+            "reference_form": "該取樣位置相關"
+          },
+          {
+            "claim_id": 54,
+            "term": "取樣位置附近",
+            "reference_form": "該取樣位置附近"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 46,
+            "term": "試劑回流",
+            "reference_form": "該試劑回流"
+          },
+          {
+            "claim_id": 62,
+            "term": "試劑回流",
+            "reference_form": "該試劑回流"
+          },
+          {
+            "claim_id": 123,
+            "term": "遺傳加工試劑混合",
+            "reference_form": "該遺傳加工試劑混合"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202314306A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 23,
+            "term": "切割線",
+            "reference_form": "該切割線"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202320566A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第一STA發送一多使用者",
+            "reference_form": "該第一STA發送一多使用者"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202329023A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "資金選項",
+            "reference_form": "該資金選項"
+          },
+          {
+            "claim_id": 14,
+            "term": "資金選項",
+            "reference_form": "該資金選項"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202345796A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "抗憂鬱劑",
+            "reference_form": "該抗憂鬱劑"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202437786A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "使客戶端設備",
+            "reference_form": "該使客戶端設備"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202450341A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "值輸入",
+            "reference_form": "該值輸入"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202503581A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "評價資料集",
+            "reference_form": "所述評價資料集"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202534554A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "額外緩衝器不儲存",
+            "reference_form": "該額外緩衝器不儲存"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI525407B",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "推理",
+            "reference_form": "該推理"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI854340B",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "FN closure: the element is only ever named after a determiner plus a one-or-more quantifier (該一或多個X), which used to introduce itself. No earlier mention outside a reference in the chain. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "物品",
+            "reference_form": "該物品"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202508328A",
+      "jurisdiction": "TW",
+      "source": "wave-j-or-more-self-intro (2026-10-26)",
+      "_note": "The element is introduced in claim 17 as the second member of 一或多個X或一或多個Y; the old capture swallowed it. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 19,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 20,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 26,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 38,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 39,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 40,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          },
+          {
+            "claim_id": 42,
+            "term": "各別機器學習功能性",
+            "reference_form": "該各別機器學習功能性"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

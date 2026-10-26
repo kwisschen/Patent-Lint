@@ -3541,6 +3541,24 @@ def _is_guarded_zu_tw(text: str, pos: int) -> bool:
     return text.startswith("一組", pos) and text[pos + 2: pos + 3] not in ("", *_ZU_NOUN_NEXT_TW)
 
 
+def _extend_or_more_quantifier_tw(raw_noun: str, raw_noun_end: int, text: str) -> tuple[str, int]:
+    """Carry a reference capture over the 更 of 或更多 (一或更多個X)."""
+    if not (raw_noun.endswith("或") and text.startswith("更多", raw_noun_end)):
+        return raw_noun, raw_noun_end
+    ext_m = _NOUN_EXT_RE_TW.match(text, raw_noun_end + 1)
+    if not ext_m:
+        return raw_noun, raw_noun_end
+    # 所/述 are noun characters: never run on into the next reference.
+    added = "更" + re.split("所述|前述", ext_m.group())[0]
+    full = raw_noun + added
+    lead_q = next((q for q in _PRE_CLEAN_QUANTIFIERS_TW if full.startswith(q)), "")
+    if "更" not in lead_q:
+        # 該製品進一步呈現下列一或更多者: the 或 is not a leading quantifier.
+        return raw_noun, raw_noun_end
+    full = full[: len(lead_q) + 12]
+    return full, raw_noun_end + len(full) - len(raw_noun)
+
+
 def _pre_clean_quantifier_strip_tw(text: str) -> tuple[str, int]:
     """Return the text without its leading quantifier, and the quantifier length."""
     # Wave I (2026-10-26): longest quantifier first, and a ONE-character noun
@@ -6855,6 +6873,16 @@ _OR_FAMILY_QUANTIFIERS_TW = tuple(sorted(
 # a clean X would silence real defects (the item-13 mask). Skip only these.
 _ZHONG_QUANTIFIERS_TW = ('至少一種', '至少兩種', '至少二種', '至少三種', '複數種', '若干種', '數種', '二種', '三種', '四種', '一組')
 _ZHONG_SELF_INTRO_DETERMINERS_TW = ("該", "所述", "前述", "該等", "該些")
+# Wave J (2026-10-26): the "one or more" family joins the 種 family in the
+# self-skip and the shared-quantifier basis. 該一或更多個X / 該兩個或多個X right
+# after a determiner is a reference; it introduced itself and hid real
+# defects (an element only ever named with 該 + quantifier).
+_SELF_INTRO_QUANTIFIERS_TW = tuple(sorted(
+    _ZHONG_QUANTIFIERS_TW + _OR_FAMILY_QUANTIFIERS_TW, key=len, reverse=True,
+))
+# A plain 一 inside a skipped span opens a swallowed intro unless the character
+# before it makes it part of a number, an ordinal or a quantifier.
+_YI_NOT_INTRO_PREV_TW = "第之十百千萬或每同唯單統逐"
 
 
 _INTRO_VERB_YI_TW = ("產生一", "包括一", "包含一", "具有一", "形成一", "提供一", "生成一")
@@ -6876,7 +6904,7 @@ def _shared_zhong_mention_tw(term: str, chain, ref_start: int) -> bool:
     quant = re.compile(
         "|".join(
             ("(?<!第)" if q.startswith("一") else "") + re.escape(q)
-            for q in _ZHONG_QUANTIFIERS_TW
+            for q in _SELF_INTRO_QUANTIFIERS_TW
             if q not in ordinal_gray
         )
         + "|(?<!第)[二三四]種"
@@ -6896,6 +6924,67 @@ def _shared_zhong_mention_tw(term: str, chain, ref_start: int) -> bool:
     return False
 
 
+def _same_quantifier_stem_tw(term: str, raw_noun: str, chain, ref_start: int) -> bool:
+    """An "or more" quantified reference whose noun carries predicate residue
+    (該一或多個額外軸內操作) has basis in an earlier mention with the SAME
+    quantifier, outside a determiner, sharing a stem of three or more
+    characters (一或多個額外軸來判定): the intro carries residue too, so
+    neither key is a prefix of the other."""
+    lead = next((q for q in _OR_FAMILY_QUANTIFIERS_TW if raw_noun.startswith(q)), "")
+    if not lead or len(term) < 2 or not raw_noun[len(lead):].startswith(term[:2]):
+        return False
+    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
+    for text in texts:
+        if len(term) >= 3:
+            # a line break can leave a space inside the run (一或多個 處理器)
+            for mm in re.finditer(r"\s*".join(map(re.escape, lead + term[:3])), text):
+                if not text[: mm.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_TW):
+                    return True
+        # A ONE-character element (一或多個值；... 該一或多個值輸入): the earlier
+        # mention must end at the character, or be a possessive part of an
+        # owner (該光子堆疊之該一或多個腔中, ruling R6).
+        for mm in re.finditer(re.escape(lead + term[0]), text):
+            before = text[: mm.start()]
+            det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_TW if before.endswith(d)), "")
+            if not det:
+                if text[mm.end(): mm.end() + 1] in ("", *"，。；：、,;:及和與或"):
+                    return True
+            elif before[: -len(det)].endswith(("的", "之")):
+                return True
+    return False
+
+
+_INSIDE_REFERENCE_RUN_TW = re.compile(r"(?:所述|前述|該)[^，。；：、,;:\s]{0,10}$")
+
+
+def _skipped_self_intro_keys_tw(chain) -> set[str]:
+    """The keys the determiner + "or more" spans (該一或多個X) registered
+    before wave J stopped them introducing themselves."""
+    keys: set[str] = set()
+    for a in chain:
+        for m in _INTRO_PATTERN.finditer(a.text):
+            q = next((q for q in _OR_FAMILY_QUANTIFIERS_TW if m.group(0).startswith(q)), "")
+            if q and _is_zhong_self_intro_tw(m, a.text):
+                for cand in _postprocess_intro_capture(m.group(1), m, a.text):
+                    keys.add(normalize_candidate_intro(cand, source_text=a.text))
+    return keys
+
+
+def _bare_earlier_mention_tw(term: str, chain, ref_start: int) -> bool:
+    """A term the draft also named article-less (將物件裝載, PRS資源的資訊)
+    keeps the basis that a determiner + "or more" span (該一或多個X), which
+    wave J no longer registers, used to give it. Only references that are
+    the element's sole mentions are unmasked; nothing else changes."""
+    texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
+    if term not in _skipped_self_intro_keys_tw(chain):
+        return False
+    for text in texts:
+        for mm in re.finditer(re.escape(term), text):
+            if not _INSIDE_REFERENCE_RUN_TW.search(text[: mm.start()]):
+                return True
+    return False
+
+
 def _zu_set_reference_intro_tw(rest: str, intros_by_term, chain, ref_start: int) -> str | None:
     """The intro a 該組X reference names once 一組X keys X: exact, then the
     longest introduced prefix (the reference may carry residue), then an
@@ -6909,10 +6998,18 @@ def _zu_set_reference_intro_tw(rest: str, intros_by_term, chain, ref_start: int)
 
 
 def _is_zhong_self_intro_tw(m, text: str) -> bool:
-    q = next((q for q in _ZHONG_QUANTIFIERS_TW if m.group(0).startswith(q)), "")
+    q = next((q for q in _SELF_INTRO_QUANTIFIERS_TW if m.group(0).startswith(q)), "")
     if not q or q == "一組":
         # 所述一組 is also "the set" itself (所述一組是第一組): left as before.
         return False
+    if q in _OR_FAMILY_QUANTIFIERS_TW:
+        if m.group(0)[len(q):].startswith("所"):
+            # 該一或多個所選擇的X: a relative clause, not an element name.
+            return False
+        det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_TW if text[: m.start()].endswith(d)), "")
+        if det and text[: m.start() - len(det)].endswith(("的", "之")):
+            # 該光子堆疊之該一或多個腔: a part of an introduced owner (ruling R6).
+            return False
     # 該至少一種X, and 複數種前述X (the determiner after the quantifier)
     return text[: m.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_TW) or m.group(0)[
         len(q):
@@ -6925,14 +7022,22 @@ def _iter_intro_matches_tw(text: str):
     more of the 12-character budget, so 兩個或多個副本分別傳送至兩個或多個輸出接口 kept only the
     first intro."""
     for m in _INTRO_PATTERN.finditer(text):
-        if not _is_zhong_self_intro_tw(m, text):
+        self_intro = _is_zhong_self_intro_tw(m, text)
+        if not self_intro:
             yield m
         start = m.start(1) + 1
         while True:
             hits = [i for i in (text.find(q, start, m.end()) for q in _RESCAN_QUANTIFIERS_TW) if i >= 0]
-            if m.group(0).startswith(_ZHONG_QUANTIFIERS_TW):
+            if m.group(0).startswith(_SELF_INTRO_QUANTIFIERS_TW):
                 # A 種 span can swallow a following 產生一X intro.
                 hits += [i + 2 for i in (text.find(v, start, m.end()) for v in _INTRO_VERB_YI_TW) if i >= 0]
+            if self_intro:
+                # A skipped 該一或多個X span can swallow a plain 一Y intro
+                # (該一或多個處理器執行一操作，該操作包含).
+                hits += [
+                    i for i in range(start, m.end())
+                    if text[i] == "一" and text[i - 1] not in _YI_NOT_INTRO_PREV_TW
+                ][:1]
             if not hits:
                 break
             mm = _INTRO_PATTERN.match(text, min(hits))
@@ -8296,6 +8401,14 @@ def check_antecedent_basis(
                 raw_noun, raw_noun_end, claim.text
             )
 
+            # Wave J (2026-10-26): 更 is not a noun character (該X更包括), so
+            # 該一或更多個X and 該兩個或更多個X stopped at 一或 / 兩個或 and were
+            # dropped as one character, never looked up. Inside 或更多 the 更 is
+            # part of the quantifier.
+            raw_noun, raw_noun_end = _extend_or_more_quantifier_tw(
+                raw_noun, raw_noun_end, claim.text
+            )
+
             # Wave F (2026-10-26): TW mirror of CN R49. A leading quantifier spends
             # the {2,12} budget, so 所述一或多個顯示品質增強演算法 was cut at 演算 while
             # its introduction (whose quantifier the intro pattern consumes) kept 法.
@@ -8507,9 +8620,15 @@ def check_antecedent_basis(
                     resolved_intro = _zu_set_reference_intro_tw(
                         normalized_term[1:], intros_by_term, chain, m.start()
                     )
-                if resolved_intro is None and raw_noun.startswith(_ZHONG_QUANTIFIERS_TW):
+                if resolved_intro is None and raw_noun.startswith(_SELF_INTRO_QUANTIFIERS_TW):
                     if _shared_zhong_mention_tw(normalized_term, chain, m.start()):
                         resolved_intro = normalized_term
+                    elif _same_quantifier_stem_tw(normalized_term, raw_noun, chain, m.start()):
+                        resolved_intro = normalized_term
+                if resolved_intro is None and _bare_earlier_mention_tw(
+                    normalized_term, chain, m.start()
+                ):
+                    resolved_intro = normalized_term
                 if (
                     resolved_intro is not None
                     and _PREFIX_FALLBACK_OBSERVER is not None
