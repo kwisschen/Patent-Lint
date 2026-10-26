@@ -2567,6 +2567,734 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 100 introduces the pathogen with 至少一種 in a when-clause before referring back; the earlier legit label was made while the intro keyed a garbage 種-prefixed term. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 100,
+            "term": "病原體存",
+            "reference_form": "該病原體存"
+          },
+          {
+            "claim_id": 101,
+            "term": "病原體存",
+            "reference_form": "該病原體存"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 103 (in the chain) introduces 至少一種蛋白質 and 至少一種遺傳組分; claims 25, 30 and 129 refer back. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 129,
+            "term": "蛋白質",
+            "reference_form": "該蛋白質"
+          },
+          {
+            "claim_id": 129,
+            "term": "遺傳組分中任一者",
+            "reference_form": "該遺傳組分中任一者"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 137 introduces 至少一種電性質 before claim 142 refers to it. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 142,
+            "term": "電性質",
+            "reference_form": "該電性質"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "The aptamer and oligonucleotide are introduced with 至少一種 in the parent claims; the captures carry a predicate. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 35,
+            "term": "寡核苷酸中至少一者結合",
+            "reference_form": "該寡核苷酸中至少一者結合"
+          },
+          {
+            "claim_id": 51,
+            "term": "寡核苷酸中至少一者結合",
+            "reference_form": "該寡核苷酸中至少一者結合"
+          },
+          {
+            "claim_id": 64,
+            "term": "寡核苷酸中至少一者結合",
+            "reference_form": "該寡核苷酸中至少一者結合"
+          },
+          {
+            "claim_id": 102,
+            "term": "適體功能化",
+            "reference_form": "該適體功能化"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "FN closure: claim 114 refers to 該至少一種目標生物顆粒存在於 but the chain only mentions the particle article-less in a when-clause (claim 103); the same claim's 該目標生物顆粒 was already gold-legit. Surfaced when 種 references stopped introducing themselves. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 114,
+            "term": "目標生物顆粒存",
+            "reference_form": "該目標生物顆粒存"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202308205A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "FN closure: claim 32 refers to 該複數種含氮-氧添加劑 while the chain introduces only 複數種含氮-氧化合物, a different term. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 32,
+            "term": "含氮-氧添加劑",
+            "reference_form": "該含氮-氧添加劑"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202409558A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 22 introduces 至少三種組態 in the same sentence before 該至少三種組態. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 22,
+            "term": "至少三種組態",
+            "reference_form": "該至少三種組態"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202418188A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 16 introduces 至少一種物品 before claim 21 refers to 所述物品. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "物品",
+            "reference_form": "所述物品"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202542522A",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "該分離的樣本 is a participle on an introduced sample, not an element. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "分離",
+            "reference_form": "該分離"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI847562B",
+      "jurisdiction": "TW",
+      "source": "wave-h-zhong-quantifier (2026-10-26)",
+      "_note": "Claim 44 introduces 複數種沈澱化合物 before 該等沈澱化合物. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 44,
+            "term": "沈澱化合物",
+            "reference_form": "該等沈澱化合物"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW201921162A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "Claim 2 (in the chain) introduces 一組照明區域. The legit label was made while the intro keyed a garbage 組照明區域. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "照明區域",
+            "reference_form": "前述照明區域"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202319963A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "Claim 1 introduces 獨特的標識標籤 as a coverb object (將…固定), which is an introduction under the R7 bare-noun rescue; claim 2 also writes 一組標識標籤. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "標識標籤",
+            "reference_form": "所述標識標籤"
+          },
+          {
+            "claim_id": 15,
+            "term": "標識標籤",
+            "reference_form": "所述標識標籤"
+          },
+          {
+            "claim_id": 20,
+            "term": "標識標籤",
+            "reference_form": "所述標識標籤"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202424951A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "組掃描時脈訊號線",
+            "reference_form": "該組掃描時脈訊號線"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202544674A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "Claim 2 introduces 一組佈局 (offset 109) before 該佈局 (offset 364). Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "佈局",
+            "reference_form": "該佈局"
+          },
+          {
+            "claim_id": 5,
+            "term": "佈局",
+            "reference_form": "該佈局"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI446280B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 5,
+            "term": "先驗機率",
+            "reference_form": "該先驗機率"
+          },
+          {
+            "claim_id": 5,
+            "term": "條件機率",
+            "reference_form": "該條件機率"
+          },
+          {
+            "claim_id": 6,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 7,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 10,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 11,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI525407B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "組學習",
+            "reference_form": "該組學習"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI654574B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "交易密碼",
+            "reference_form": "該交易密碼"
+          },
+          {
+            "claim_id": 3,
+            "term": "交易驗證碼符合",
+            "reference_form": "該交易驗證碼符合"
+          },
+          {
+            "claim_id": 13,
+            "term": "二維條碼",
+            "reference_form": "該二維條碼"
+          },
+          {
+            "claim_id": 15,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 15,
+            "term": "區塊鏈票券新增一個",
+            "reference_form": "該區塊鏈票券新增一個"
+          },
+          {
+            "claim_id": 16,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 16,
+            "term": "區塊鏈票券新增一個轉移節",
+            "reference_form": "該區塊鏈票券新增一個轉移節"
+          },
+          {
+            "claim_id": 17,
+            "term": "交易密碼",
+            "reference_form": "該交易密碼"
+          },
+          {
+            "claim_id": 17,
+            "term": "交易驗證碼符合",
+            "reference_form": "該交易驗證碼符合"
+          },
+          {
+            "claim_id": 17,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 17,
+            "term": "區塊鏈票券轉移",
+            "reference_form": "該區塊鏈票券轉移"
+          },
+          {
+            "claim_id": 18,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 19,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 20,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 22,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 22,
+            "term": "區塊鏈票券新增一個時間加",
+            "reference_form": "該區塊鏈票券新增一個時間加"
+          },
+          {
+            "claim_id": 23,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 24,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 25,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 26,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 27,
+            "term": "二維條碼",
+            "reference_form": "該二維條碼"
+          },
+          {
+            "claim_id": 27,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 28,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI668976B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "輸入參數",
+            "reference_form": "該等輸入參數"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI802332B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "組鏈路",
+            "reference_form": "該組鏈路"
+          },
+          {
+            "claim_id": 25,
+            "term": "組可重組態",
+            "reference_form": "該組可重組態"
+          },
+          {
+            "claim_id": 26,
+            "term": "組鏈路",
+            "reference_form": "該組鏈路"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI846980B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "變換",
+            "reference_form": "該變換"
+          },
+          {
+            "claim_id": 6,
+            "term": "數值變換",
+            "reference_form": "該數值變換"
+          },
+          {
+            "claim_id": 20,
+            "term": "變換",
+            "reference_form": "該變換"
+          },
+          {
+            "claim_id": 23,
+            "term": "數值變換",
+            "reference_form": "該數值變換"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

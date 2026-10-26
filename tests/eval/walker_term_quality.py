@@ -119,7 +119,7 @@ THIS_DIR = Path(__file__).resolve().parent
 #       phrase". A gate that is permanently red gets ignored, so it stays out.
 #
 # RAISING ANY NUMBER IS A REGRESSION. Lowering one is the next round's win.
-_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 51, "CN": 32, "US": 0}
+_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 51, "CN": 29, "US": 0}
 
 # Mid-word truncation residuals, re-derived 2026-09-07 with jieba 0.42.1.
 # These are a BASELINE to drive DOWN, not an accepted state: each one is a
@@ -133,7 +133,9 @@ _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 51, "CN": 32, "US": 0}
 # CN 951 -> 945; TW structurally bad 54 -> 52. Then CN 945 -> 940 (CN R81).
 # RATCHETED 2026-10-26 after wave F (quantifier family): TW 1118 -> 1092, CN 940 -> 925;
 # structurally bad TW 52 -> 51, CN 33 -> 32.
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1092, "CN": 925}
+# RATCHETED 2026-10-26 after wave H (the 種 quantifiers): TW 1092 -> 1088, CN 925 -> 921;
+# structurally bad CN 32 -> 30. Then the 一組 round: TW 1088 -> 1083, CN 921 -> 919, CN bad 30 -> 29.
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1083, "CN": 919}
 
 
 def _load_segmenter():
