@@ -1581,6 +1581,10 @@ _SHU_FINAL_NOUNS_CN: tuple[str, ...] = ("金属", "菌属")
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # 受压 (wave L, TW parity, report #353): the noun scan halts at 而, so
+        # 所述按键受压而 keeps the predicate. 受压面 / 受压部 carry it at
+        # PREFIX position, which the endswith strip never touches.
+        "受压",
         # === R63 (2026-08-17) - TW R41 mirror, the V+于 STRANDING family.
         # 于 is excluded from _NOUN_CHARS_CN exactly as 於 is on TW, so the same
         # verbs strand. Both REPRODUCED on the CN normalizer first rather than
@@ -2192,6 +2196,9 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         #   超过一 ("exceeds a"): latent-verified on the CN normalizer -
         #     对位温度差值超过一对位温 came back unchanged. 3 corpus occurrences.
         "超过一",
+        # === Wave L (2026-10-27) - TW parity (reports #330 / #353 / #356) ===
+        # 呈一, 沿一 and 相夹.
+        "呈一", "沿一", "相夹",
         #   借一 ("by means of a"): the instrumental coverb. Bare 借 is already a
         #     CN trailing strip; the interior form is a free parity add with 0
         #     corpus occurrences today, so it is a no-op that closes the gap
