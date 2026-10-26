@@ -2807,6 +2807,494 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW201921162A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "Claim 2 (in the chain) introduces 一組照明區域. The legit label was made while the intro keyed a garbage 組照明區域. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "照明區域",
+            "reference_form": "前述照明區域"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202319963A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "Claim 1 introduces 獨特的標識標籤 as a coverb object (將…固定), which is an introduction under the R7 bare-noun rescue; claim 2 also writes 一組標識標籤. Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "標識標籤",
+            "reference_form": "所述標識標籤"
+          },
+          {
+            "claim_id": 15,
+            "term": "標識標籤",
+            "reference_form": "所述標識標籤"
+          },
+          {
+            "claim_id": 20,
+            "term": "標識標籤",
+            "reference_form": "所述標識標籤"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202424951A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "組掃描時脈訊號線",
+            "reference_form": "該組掃描時脈訊號線"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202544674A",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "Claim 2 introduces 一組佈局 (offset 109) before 該佈局 (offset 364). Verified 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "佈局",
+            "reference_form": "該佈局"
+          },
+          {
+            "claim_id": 5,
+            "term": "佈局",
+            "reference_form": "該佈局"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI446280B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 5,
+            "term": "先驗機率",
+            "reference_form": "該先驗機率"
+          },
+          {
+            "claim_id": 5,
+            "term": "條件機率",
+            "reference_form": "該條件機率"
+          },
+          {
+            "claim_id": 6,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 7,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 10,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          },
+          {
+            "claim_id": 11,
+            "term": "組功能單元",
+            "reference_form": "該組功能單元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI525407B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "組學習",
+            "reference_form": "該組學習"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI654574B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "交易密碼",
+            "reference_form": "該交易密碼"
+          },
+          {
+            "claim_id": 3,
+            "term": "交易驗證碼符合",
+            "reference_form": "該交易驗證碼符合"
+          },
+          {
+            "claim_id": 13,
+            "term": "二維條碼",
+            "reference_form": "該二維條碼"
+          },
+          {
+            "claim_id": 15,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 15,
+            "term": "區塊鏈票券新增一個",
+            "reference_form": "該區塊鏈票券新增一個"
+          },
+          {
+            "claim_id": 16,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 16,
+            "term": "區塊鏈票券新增一個轉移節",
+            "reference_form": "該區塊鏈票券新增一個轉移節"
+          },
+          {
+            "claim_id": 17,
+            "term": "交易密碼",
+            "reference_form": "該交易密碼"
+          },
+          {
+            "claim_id": 17,
+            "term": "交易驗證碼符合",
+            "reference_form": "該交易驗證碼符合"
+          },
+          {
+            "claim_id": 17,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 17,
+            "term": "區塊鏈票券轉移",
+            "reference_form": "該區塊鏈票券轉移"
+          },
+          {
+            "claim_id": 18,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 19,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 20,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 22,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 22,
+            "term": "區塊鏈票券新增一個時間加",
+            "reference_form": "該區塊鏈票券新增一個時間加"
+          },
+          {
+            "claim_id": 23,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 24,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 25,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 26,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 27,
+            "term": "二維條碼",
+            "reference_form": "該二維條碼"
+          },
+          {
+            "claim_id": 27,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          },
+          {
+            "claim_id": 28,
+            "term": "區塊鏈票券",
+            "reference_form": "該區塊鏈票券"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI668976B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "輸入參數",
+            "reference_form": "該等輸入參數"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI802332B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "組鏈路",
+            "reference_form": "該組鏈路"
+          },
+          {
+            "claim_id": 25,
+            "term": "組可重組態",
+            "reference_form": "該組可重組態"
+          },
+          {
+            "claim_id": 26,
+            "term": "組鏈路",
+            "reference_form": "該組鏈路"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI846980B",
+      "jurisdiction": "TW",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "變換",
+            "reference_form": "該變換"
+          },
+          {
+            "claim_id": 6,
+            "term": "數值變換",
+            "reference_form": "該數值變換"
+          },
+          {
+            "claim_id": 20,
+            "term": "變換",
+            "reference_form": "該變換"
+          },
+          {
+            "claim_id": 23,
+            "term": "數值變換",
+            "reference_form": "該數值變換"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

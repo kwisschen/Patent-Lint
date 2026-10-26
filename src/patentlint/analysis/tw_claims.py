@@ -2311,6 +2311,7 @@ _INTRO_MULTI_QUANTIFIERS = (
     # paired only with itself. Listed in BOTH quantifier lists (a one-sided add
     # left the intro and the reference keyed differently: wave E, 162 TW / 714 CN).
     # Wave G (2026-10-26): the classifier spellings (一种或多种 x339 CN, x57 TW).
+    r"(?<!第)(?<![統统])一組(?![合織件成態裝分別員元])",
     # Wave H (2026-10-26): the 種 measure word after at least / plural (至少一種 x360 TW, 至少一种 x316 CN).
     "至少一種",
     "至少兩種",
@@ -3530,11 +3531,23 @@ _PRE_CLEAN_QUANTIFIERS_TW: tuple[str, ...] = tuple(
 )
 
 
+# Wave H (2026-10-26): 「一組」 ("a set of") is a quantifier unless the next
+# character makes a 組 noun (一組合物 / 一組件 / 一組織 / 一組成 ...). Corpus:
+# TW 477 / CN 319 uses; the guard covers every noun reading in the census.
+_ZU_NOUN_NEXT_TW = "合織件成態裝分別員元"
+
+
+def _is_guarded_zu_tw(text: str, pos: int) -> bool:
+    return text.startswith("一組", pos) and text[pos + 2: pos + 3] not in ("", *_ZU_NOUN_NEXT_TW)
+
+
 def _pre_clean_quantifier_strip_tw(text: str) -> tuple[str, int]:
     """Return the text without its leading quantifier, and the quantifier length."""
     for q in _PRE_CLEAN_QUANTIFIERS_TW:
         if text.startswith(q) and len(text) - len(q) >= 2:
             return text[len(q):], len(q)
+    if _is_guarded_zu_tw(text, 0) and len(text) >= 4:
+        return text[2:], 2
     return text, 0
 
 # Reference-form prefixes: stripped from reference terms only. The walker
@@ -6831,7 +6844,7 @@ _OR_FAMILY_QUANTIFIERS_TW = tuple(sorted(
 # span right after a determiner (該至少一種X) is a REFERENCE; before wave H its
 # self-registration keyed a garbage 種X that resolved nothing, and letting it key
 # a clean X would silence real defects (the item-13 mask). Skip only these.
-_ZHONG_QUANTIFIERS_TW = ('至少一種', '至少兩種', '至少二種', '至少三種', '複數種', '若干種', '數種', '二種', '三種', '四種')
+_ZHONG_QUANTIFIERS_TW = ('至少一種', '至少兩種', '至少二種', '至少三種', '複數種', '若干種', '數種', '二種', '三種', '四種', '一組')
 _ZHONG_SELF_INTRO_DETERMINERS_TW = ("該", "所述", "前述", "該等", "該些")
 
 
@@ -6850,7 +6863,15 @@ def _shared_zhong_mention_tw(term: str, chain, ref_start: int) -> bool:
     quantifier is the evidence; a bare 該X gets no such reading."""
     if len(term) < 2:
         return False
-    quant = re.compile("|".join(_ZHONG_QUANTIFIERS_TW[:7]) + "|(?<!第)[二三四]種")
+    ordinal_gray = ("二種", "三種", "四種")
+    quant = re.compile(
+        "|".join(
+            ("(?<!第)" if q.startswith("一") else "") + re.escape(q)
+            for q in _ZHONG_QUANTIFIERS_TW
+            if q not in ordinal_gray
+        )
+        + "|(?<!第)[二三四]種"
+    )
     pat = re.compile("[^，。；：、,;:]{0,20}?" + re.escape(term))
     texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
     for text in texts:
@@ -6866,9 +6887,22 @@ def _shared_zhong_mention_tw(term: str, chain, ref_start: int) -> bool:
     return False
 
 
+def _zu_set_reference_intro_tw(rest: str, intros_by_term, chain, ref_start: int) -> str | None:
+    """The intro a 該組X reference names once 一組X keys X: exact, then the
+    longest introduced prefix (the reference may carry residue), then an
+    earlier same-clause mention with a quantifier."""
+    if rest in intros_by_term:
+        return rest
+    best = max((i for i in intros_by_term if len(i) >= 2 and rest.startswith(i)), key=len, default=None)
+    if best:
+        return best
+    return rest if _shared_zhong_mention_tw(rest, chain, ref_start) else None
+
+
 def _is_zhong_self_intro_tw(m, text: str) -> bool:
     q = next((q for q in _ZHONG_QUANTIFIERS_TW if m.group(0).startswith(q)), "")
-    if not q:
+    if not q or q == "一組":
+        # 所述一組 is also "the set" itself (所述一組是第一組): left as before.
         return False
     # 該至少一種X, and 複數種前述X (the determiner after the quantifier)
     return text[: m.start()].endswith(_ZHONG_SELF_INTRO_DETERMINERS_TW) or m.group(0)[
@@ -8427,6 +8461,17 @@ def check_antecedent_basis(
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+                # 該組X ("that set of X") after 一組X, which now keys X. A bare 組
+                # is not stripped in the normalizer: 所述組包括 is "the set includes".
+                if (
+                    resolved_intro is None
+                    and normalized_term.startswith("組")
+                    and len(normalized_term) >= 3
+                    and normalized_term[1] not in _ZU_NOUN_NEXT_TW
+                ):
+                    resolved_intro = _zu_set_reference_intro_tw(
+                        normalized_term[1:], intros_by_term, chain, m.start()
+                    )
                 if resolved_intro is None and raw_noun.startswith(_ZHONG_QUANTIFIERS_TW):
                     if _shared_zhong_mention_tw(normalized_term, chain, m.start()):
                         resolved_intro = normalized_term

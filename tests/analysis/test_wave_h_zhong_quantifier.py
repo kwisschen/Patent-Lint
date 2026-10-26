@@ -131,3 +131,37 @@ class TestZhongRescan:
             "一種方法，包括偵測至少兩種訊號；從該等至少兩種訊號產生一校驗曲線；及基於該校驗曲線決定一濃度。"
         )
         assert "校驗曲線" not in found
+
+
+class TestYiZuQuantifier:
+    # 一組 ("a set of") strips unless the next character makes a 組 noun.
+    @pytest.mark.parametrize("noun", ["組合物", "組件", "組織", "組態"])
+    def test_tw_zu_nouns_survive(self, noun):
+        assert normalize_candidate_intro(f"一{noun}") == noun
+
+    def test_tw_set_of_strips(self):
+        assert normalize_candidate_intro("一組安全標準") == "安全標準"
+        assert normalize_reference_term("該一組安全標準") == "安全標準"
+
+    def test_cn_set_of_strips(self):
+        assert normalize_candidate_intro_cn("一组关节") == "关节"
+        assert normalize_candidate_intro_cn("一组合物") == "组合物"
+
+    def test_tw_that_set_of_resolves(self):
+        found = _tw("一種系統，包括一組安全標準及一處理器，該處理器強制該組安全標準。")
+        assert not any("安全標準" in t for t in found)
+
+    def test_cn_that_set_of_resolves(self):
+        found = _cn(
+            "一种系统，所述系统具有一组安全标准。",
+            "根据权利要求1所述的系统，其中所述组安全标准被更新。",
+        )
+        assert not any("安全标准" in t for t in found)
+
+    def test_tw_ordinal_set_is_not_a_quantifier_mention(self):
+        # 第一組 is an ordinal: its 一組 must not count as a shared quantifier.
+        found = _tw(
+            "一種方法，包括分配一第一組佣金。",
+            "如請求項1之方法，其進一步包括核准該至少一種佣金。",
+        )
+        assert "佣金" in found

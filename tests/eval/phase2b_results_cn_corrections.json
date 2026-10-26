@@ -3159,6 +3159,46 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN117501464A",
+      "jurisdiction": "CN",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 19,
+            "term": "纳米结构化光学元件",
+            "reference_form": "所述纳米结构化光学元件"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117501464B",
+      "jurisdiction": "CN",
+      "source": "wave-h-yizu-quantifier (2026-10-26)",
+      "_note": "The element is introduced with 一組 (a set of) in the chain; the old key kept 組 and matched nothing. Claim-read 2026-10-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "纳米结构化光学元件",
+            "reference_form": "所述纳米结构化光学元件"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }
