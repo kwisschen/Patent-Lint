@@ -2250,6 +2250,8 @@ def _trim_dangling_ying_verb_head_tw(
 # their findings; 神秘黑屏哥 c10 emits with full
 # `前述島狀的奈米片積層體` reference_form.
 _STATE_MODIFIER_SUFFIXES_TW = ("狀", "形")
+_LAI_WORDS_TW: frozenset[str] = frozenset({"未來", "原來", "本來", "外來", "後來", "從來"})
+_SHI_WORD_TAILS_TW: tuple[str, ...] = ("時間", "時刻", "時序", "時脈", "時鐘", "時段")
 _DE_HEAD_NOUN_RE = re.compile(
     r"的(?P<head>[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更由]{2,12})"
 )
@@ -3418,14 +3420,12 @@ _XIAO_FINAL_NOUNS_TW: tuple[str, ...] = ("大小",)
 
 # Wave E - 包-final NOUN lexemes, mined from the drafter's own references
 # (所述電池包 16, 所述資料包 3); the trailing 包 strip exists for the stranded
-# head of 包括 / 包含, and cut these to 電池 / 資料. 封包 (所述封包 32) is
-# WITHHELD: guarding it surfaced 10 references whose introductions are relative
-# clauses or abbreviations TW does not read (傳輸包括數據資料的封包 ... 該封包).
-# Re-measured wave L (2026-10-27): still +10 unpaired, 9 of them on drafts
-# that introduce the packet without an article (傳輸一個含有數據資料封包的方法,
-# 組裝封包之第一層); the 8 paired shifts repair mid-word cuts (第一封 ->
-# 第一封包). The lever is the bare-noun rescue reaching those introductions.
-_BAO_FINAL_NOUNS_TW: tuple[str, ...] = ("電池包", "資料包", "數據包")
+# head of 包括 / 包含, and cut these to 電池 / 資料. 封包 (所述封包 32) was
+# withheld through wave L: guarding it surfaced references whose introductions
+# TW did not read. Wave M ships it: 組裝 now introduces its object, a quantified
+# relative clause introduces its head, and ruling R10 (a shortened name of an
+# introduced compound has no basis) makes the rest real findings.
+_BAO_FINAL_NOUNS_TW: tuple[str, ...] = ("電池包", "資料包", "數據包", "封包")
 _ORDINAL_BAO_RE_TW: re.Pattern[str] = re.compile(r"第[一二三四五六七八九十0-9]+包")
 
 
@@ -6313,6 +6313,11 @@ def _extract_supplementary_intros(
                 continue
             if normalized.startswith(('所述', '該', '前述')):
                 continue
+            # Wave M: in 該所選擇的X the 所-clause is a relative clause, not a
+            # possessor, and the span is a reference to X, not its introduction.
+            owner = m.group(0)[2 if m.group(0).startswith(('所述', '前述')) else 1:]
+            if owner.startswith('所') and not owner.startswith(('所述', '所有')):
+                continue
             # Check follower - reject if followed by content verb
             end_pos = m.end()
             follower = text[end_pos:end_pos + 2]
@@ -7439,7 +7444,9 @@ _BARE_NOUN_INTRO_VERBS_TW: tuple[str, ...] = tuple(
         # Wave D (2026-10-25): bare 有 (成型有X, 開設有X) and 導入 introduce
         # their object under ruling 2 (2026-10-24); 所有/沒有/只有/僅有 are
         # quantifiers or negations, see _BARE_NOUN_NON_INTRO_YOU_TW.
-        | {"有", "導入"},
+        | {"有", "導入"}
+        # Wave M: 組裝 (適以組裝封包之第一層 ... 該封包).
+        | {"組裝"},
         key=len,
         reverse=True,
     )
@@ -7513,6 +7520,57 @@ def _bare_noun_verb_led_tw(text: str, i: int) -> bool:
     if text[:i].endswith(_BARE_NOUN_NON_INTRO_YOU_TW) or _bare_noun_after_you_word_tw(text, i):
         return False
     return any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW)
+
+
+# Wave M - QUANTIFIED RELATIVE-CLAUSE INTRODUCTION. A quantifier that is
+# immediately followed by a verb cannot count the verb, so it counts the head
+# of the relative clause the verb opens: 一個含有感測資料的封包 introduces 封包.
+# A bare relative clause (相對應的程式資料) is still not an introduction; the
+# quantifier right before the verb is what tells the two apart.
+_REL_CLAUSE_QUANTIFIERS_TW: tuple[str, ...] = (
+    "至少一個", "至少一種", "至少一", "複數個", "多個", "一個", "一種", "一",
+)
+_REL_CLAUSE_STOPS_TW = frozenset("，,；;：:。、的之")
+
+
+def _quantified_relative_intro_tw(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    """True if ``term`` heads a quantified relative clause earlier in the chain."""
+    t = (term or "").strip()
+    if len(t) < 2 or any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find("的" + t, start)
+            if idx < 0 or (limit is not None and idx >= limit):
+                return False
+            start = idx + 1
+            end = idx + 1 + len(t)
+            # A term followed by another 的 / 之 modifies a later noun, which
+            # is the head the quantifier counts.
+            if text.startswith(("的", "之"), end) or not _bare_noun_right_clean_tw(text, end):
+                continue
+            k = idx
+            while k > 0 and text[k - 1] not in _REL_CLAUSE_STOPS_TW and idx - k < 30:
+                k -= 1
+            clause = text[k:idx]
+            for j in range(len(clause)):
+                q = next((q for q in _REL_CLAUSE_QUANTIFIERS_TW if clause.startswith(q, j)), None)
+                if q is None:
+                    continue
+                lead = text[: k + j]
+                if lead.endswith(("所述", "前述", "該")) or (lead and lead[-1] in "進統唯同單第萬"):
+                    continue
+                rest = clause[j + len(q):]
+                # Two-character verbs only: a single 有 / 在 / 依 also opens
+                # words (一有效次級裝置).
+                if any(len(v) >= 2 and rest.startswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW):
+                    return True
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
 
 
 _BARE_NOUN_ACTION_LEADS_TW: tuple[str, ...] = ("進行", "執行", "運行", "實行", "實施", "經")
@@ -8530,6 +8588,32 @@ def check_antecedent_basis(
                     raw_noun = raw_noun + "的" + head_raw
                     raw_noun_end = raw_noun_end + 1 + len(head_raw)
 
+            # Wave M: 該至少一個所選擇的X / 該所接收的X. A 所-relative clause in front
+            # of the element stopped the capture at 的, and the quantified form
+            # normalized to 所 and was dropped unchecked (36 TW references). The
+            # element is the head after 的; the relative clause only narrows it.
+            lead_q = next((q for q in _PRE_CLEAN_QUANTIFIERS_TW if raw_noun.startswith(q)), "")
+            rel = raw_noun[len(lead_q):]
+            if (
+                rel.startswith("所")
+                and not rel.startswith(("所述", "所有"))
+                and 2 <= len(rel) <= 3  # 所需電壓 is a noun, not a clause
+                and raw_noun_end < len(claim.text)
+            ):
+                m_rel = _DE_HEAD_NOUN_RE.match(claim.text, raw_noun_end)
+                if m_rel:
+                    head = m_rel.group("head")
+                    end = raw_noun_end + 1 + len(head)
+                    # 時 ends the head pattern (X時 = "when X"); 傳輸時間 is a word.
+                    if claim.text.startswith(_SHI_WORD_TAILS_TW, end) and len(head) <= 10:
+                        head += claim.text[end:end + 2]
+                    # 基於該等所決定的位置來發送: 來 after the element is the coverb.
+                    k = head.find("來", 2)
+                    if k > 0 and head[k - 1:k + 1] not in _LAI_WORDS_TW and not head.startswith("來源", k):
+                        head = head[:k]
+                    raw_noun_end = raw_noun_end + 1 + len(head)
+                    raw_noun = lead_q + head
+
             full_ref = f"{prefix}{raw_noun}"
             normalized_term = normalize_reference_term(
                 full_ref,
@@ -8722,6 +8806,11 @@ def check_antecedent_basis(
                 )
 
             if resolved_intro is None and has_bare_noun_introduction_tw(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            if resolved_intro is None and _quantified_relative_intro_tw(
                 claim.text, chain, normalized_term, m.start()
             ):
                 continue

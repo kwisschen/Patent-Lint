@@ -1436,6 +1436,8 @@ def _extend_ying_compound_cn(
 # full `所述<state>的<head>` phrase rather than the bare adjective
 # `所述<state>`. See tw_claims.py R66 comment for full rationale.
 _STATE_MODIFIER_SUFFIXES_CN = ("状", "形")
+_LAI_WORDS_CN: frozenset[str] = frozenset({"未来", "原来", "本来", "外来", "后来", "从来"})
+_SHI_WORD_TAILS_CN: tuple[str, ...] = ("时间", "时刻", "时序", "时脉", "时钟", "时段")
 _DE_HEAD_NOUN_RE_CN = re.compile(
     r"的(?P<head>[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在由]{2,12})"
 )
@@ -3773,6 +3775,11 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
                 continue
             if normalized.startswith(_REF_PREFIX_SET_CN):
                 continue
+            # Wave M (TW mirror): in 所述所选择的X the 所-clause is a relative
+            # clause, not a possessor; the span is a reference to X.
+            owner = m.group(0)[2 if m.group(0).startswith(('所述', '前述')) else 1:]
+            if owner.startswith('所') and not owner.startswith(('所述', '所有')):
+                continue
             end_pos = m.end()
             follower = text[end_pos:end_pos + 2]
             if follower in _POSSESSIVE_VERB_DENYLIST_CN:
@@ -5283,6 +5290,31 @@ def has_possessive_introduction_cn(
     return False
 
 
+def _same_suo_clause_intro_cn(claim_text: str, chain: list, clause: str, term: str, ref_offset: int) -> bool:
+    """True if ``clause`` + 的 + ``term`` appears earlier with no determiner.
+
+    Wave M: 确定与…相对应的所确定的聚合量 mentions 聚合量 article-less, which
+    introduces it under the 2026-10-24 ruling, and 所述所确定的聚合量 repeats the
+    very same clause. Only that repeat counts: a different 所-clause before the
+    same noun (所表示的, 所需要的) is not shown to name the same element.
+    """
+    needle = clause + "的" + term
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            k = text.find(needle, start)
+            if k < 0 or (limit is not None and k >= limit):
+                return False
+            start = k + 1
+            if not text[:k].endswith(("所述", "前述", "该", "上述")):
+                return True
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
+
+
 def has_bare_noun_introduction_cn(
     claim_text: str, chain: list, term: str, ref_offset: int
 ) -> bool:
@@ -5590,6 +5622,32 @@ def check_antecedent_basis_cn(
                     raw_noun = raw_noun + "的" + head_raw
                     raw_noun_end = raw_noun_end + 1 + len(head_raw)
 
+            # Wave M (TW mirror): 所述至少一个所选择的X / 所述所接收的X. The 所-relative
+            # clause stopped the capture at 的; the element is the head after 的.
+            suo_clause = ""
+            lead_q = next((q for q in _PRE_CLEAN_QUANTIFIERS_CN if raw_noun.startswith(q)), "")
+            rel = raw_noun[len(lead_q):]
+            if (
+                rel.startswith("所")
+                and not rel.startswith(("所述", "所有"))
+                and 2 <= len(rel) <= 3  # 所需电压 is a noun, not a clause
+                and raw_noun_end < len(claim.text)
+            ):
+                m_rel = _DE_HEAD_NOUN_RE_CN.match(claim.text, raw_noun_end)
+                if m_rel:
+                    head = m_rel.group("head")
+                    end = raw_noun_end + 1 + len(head)
+                    # 时 ends the head pattern (X时 = "when X"); 传输时间 is a word.
+                    if claim.text.startswith(_SHI_WORD_TAILS_CN, end) and len(head) <= 10:
+                        head += claim.text[end:end + 2]
+                    # 基于所述所确定的位置来发送: 来 after the element is the coverb.
+                    k = head.find("来", 2)
+                    if k > 0 and head[k - 1:k + 1] not in _LAI_WORDS_CN and not head.startswith("来源", k):
+                        head = head[:k]
+                    raw_noun_end = raw_noun_end + 1 + len(head)
+                    raw_noun = lead_q + head
+                    suo_clause = rel
+
             full_ref = f"{prefix}{raw_noun}"
             normalized_term = normalize_reference_term_cn(
                 full_ref,
@@ -5737,6 +5795,10 @@ def check_antecedent_basis_cn(
 
             if resolved_intro is None and has_bare_noun_introduction_cn(
                 claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+            if resolved_intro is None and suo_clause and _same_suo_clause_intro_cn(
+                claim.text, chain, suo_clause, normalized_term, m.start()
             ):
                 continue
             # CN R71 - last-resort tier, the tail-compound mirror of TW R27/R43.
