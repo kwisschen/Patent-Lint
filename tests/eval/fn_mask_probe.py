@@ -8,8 +8,8 @@
 #   onechar   references the normalizer cuts to ONE character, which the walker
 #             drops without a lookup (carried item 6). Wave E: TW 1,227 / CN 683,
 #             led by 所述至少一個處理器 -> 個. Wave L (2026-10-27): TW 507 / CN 241,
-#             led by 至少一個所選 -> 所 (36) and 封包 -> 封 (32, guard re-measured
-#             and still withheld, see _BAO_FINAL_NOUNS_TW).
+#             led by 至少一個所選 -> 所 (36) and 封包 -> 封 (32). Wave M shipped
+#             both: TW 400 / CN 235, led by 至少一者 -> 者 (19).
 #   embedded  determiners inside an earlier reference's noun run: 所/述 are noun
 #             characters, so 所述记录器接收所述警报 is ONE capture and 所述警报 is
 #             never looked up (carried item 11). Wave E: TW 2,639 / CN 7,116.

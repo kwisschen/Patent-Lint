@@ -3683,6 +3683,202 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TWI661691B",
+      "jurisdiction": "TW",
+      "source": "wave-m-bao-guard (2026-10-27)",
+      "_note": "Ruling R10 (Christopher 2026-10-27): the preamble introduces only the compound (含有<data>封包, no 的); a shortened name of an introduced compound has no basis, so every 該封包 is a finding. Surfaced by the 封包 lexeme guard (the old trailing 包 strip cut the reference to one character and dropped it). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 4,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 5,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 6,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 8,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 14,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 15,
+            "term": "封包",
+            "reference_form": "該封包"
+          },
+          {
+            "claim_id": 16,
+            "term": "封包",
+            "reference_form": "該封包"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202515210A",
+      "jurisdiction": "TW",
+      "source": "wave-m-bao-guard (2026-10-27)",
+      "_note": "所述封包 in claim 27: the chain introduces only 第一封包 (claim 19), never a bare packet, so the reference is ambiguous. Surfaced by the 封包 lexeme guard. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 27,
+            "term": "封包",
+            "reference_form": "所述封包"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI472887B",
+      "jurisdiction": "TW",
+      "source": "wave-m-suo-relative (2026-10-27)",
+      "_note": "Ruling R11 (Christopher 2026-10-27, TW): dropping 的 changes the name. Claim 1 introduces 已包裝的資料; the later 該(所接收的)已包裝資料 has no basis. Surfaced when 該所V的X stopped introducing itself. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "已包裝資料",
+            "reference_form": "該已包裝資料"
+          },
+          {
+            "claim_id": 10,
+            "term": "已包裝資料",
+            "reference_form": "該已包裝資料"
+          },
+          {
+            "claim_id": 19,
+            "term": "已包裝資料",
+            "reference_form": "該已包裝資料"
+          },
+          {
+            "claim_id": 20,
+            "term": "已包裝資料",
+            "reference_form": "該已包裝資料"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI591997B",
+      "jurisdiction": "TW",
+      "source": "wave-m-suo-relative (2026-10-27)",
+      "_note": "所排程的傳輸時間 in claim 1 is the only mention of 傳輸時間: a reference with no introduction. It used to flag under the wrong term 所排程. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "傳輸時間",
+            "reference_form": "該傳輸時間"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202243515A",
+      "jurisdiction": "TW",
+      "source": "wave-m-suo-relative (2026-10-27)",
+      "_note": "ADR-111 shift: 該所接收的訊息 was flagged as 所接收 (gold walker_fp); the capture now names 訊息. Claim 1 receives the message as the object of 接收 behind an unquantified relative clause, which TW does not yet read as an introduction; still a walker FP. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "訊息",
+            "reference_form": "該訊息"
+          },
+          {
+            "claim_id": 12,
+            "term": "訊息",
+            "reference_form": "該訊息"
+          },
+          {
+            "claim_id": 13,
+            "term": "訊息",
+            "reference_form": "該訊息"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }
