@@ -32,6 +32,17 @@ TO ADD A FRAGMENT after scrubbing one, print its hash and paste that in::
     python3 -c "import hashlib,unicodedata,sys; \
         print(hashlib.sha256(unicodedata.normalize('NFKC', sys.argv[1]).encode()).hexdigest())" '<fragment>'
 
+English (US) reporter text is scanned the same way in WORD windows: the text is
+NFKC-normalised, lowercased and split into runs of ``[a-z0-9]``, so punctuation,
+hyphens and comment markers do not hide a match, and every window of
+``PROTECTED_WORD_LENGTHS`` consecutive words is hashed. To add one, hash each
+six-word window of the scrubbed wording that is specific to the draft (leave
+out windows that are only a generic term of art)::
+
+    python3 -c "import hashlib,re,unicodedata,sys; \
+        w=re.findall(r'[a-z0-9]+', unicodedata.normalize('NFKC', sys.argv[1]).lower()); \
+        [print(hashlib.sha256(' '.join(w[i:i+6]).encode()).hexdigest()) for i in range(len(w)-5)]" '<wording>'
+
 Do not paste the fragment itself into this file, a commit message, a PR body,
 or an issue comment.
 """
@@ -97,6 +108,29 @@ BANNED_HASHES: frozenset[str] = frozenset({
     "e527c4f14d8776d59799bd5221203e4c09635c2788a55c8a66a1a884b1aab510",
 })
 
+# SHA-256 of six-word windows (see the module docstring) of English reporter
+# wording that was scrubbed. Same rules as BANNED_HASHES: hashes only.
+BANNED_LATIN_HASHES: frozenset[str] = frozenset({
+    # 2026-10-27, wave O (#968, US R60): the reporter's element wording reached a
+    # utils.py comment and a commit message; replaced with a synthesized example
+    # before push. Windows of the claim clause, minus the bare term of art.
+    "10c78897590901dbcb495dcdbff7f5087271e0fa3b2048346cb409a7e072a1b2",
+    "cb7b8751f64ceea43a670647c109b6c3bc874549bfd3d5ecd9e37c2d5681aaa8",
+    "ed057d9b95158ccc217293cbf8e0b5282df9cc05e745e312796484acd3c5f1a6",
+    "f5377811f3706424dc83b3f5cd8cf3d9de1238d63e49230620132a714f1078e7",
+    "6d27ea822544e11867c5bda02293251729d52b5329dd180a0760872284ff3756",
+    "6c6cd8a5d8357854a98917c00dd8b6d9f1f487449ae510358c4556803dcf9825",
+    "ab65bc2c789b714f037862e2038271b5be86c8527ea829e2cf750e266de1f9b1",
+    "07964e496b509474a03b888a92a80a1539438ebcca390f71ab531ff8bde4eba2",
+    "210a202d69df768e34f982cb2506f89ee7b25a7250871b0b427676532978e907",
+    "e59fdadf160ae36dae92dd7b2e67d491b090ad059ff9ae19bb4139bcf0b46a98",
+    "bd24541c6fda822236c3a005aae332d35cb854f24b56bce72c9ae24fb0a9db8a",
+})
+
+PROTECTED_WORD_LENGTHS: tuple[int, ...] = (6,)
+
+_LATIN_WORD = re.compile(r"[a-z0-9]+")
+
 # Window sizes to test, derived from the banned fragments' own lengths. Keeping
 # this explicit means the scan stays O(text) rather than O(text x every length).
 PROTECTED_LENGTHS: tuple[int, ...] = (4, 6, 7, 8)
@@ -133,6 +167,20 @@ def _offending_windows(text: str) -> set[str]:
     return hits
 
 
+def _offending_latin_windows(text: str) -> set[str]:
+    """Hashes of any banned English word window appearing in ``text``."""
+    if not BANNED_LATIN_HASHES:
+        return set()
+    words = _LATIN_WORD.findall(unicodedata.normalize("NFKC", text).lower())
+    hits: set[str] = set()
+    for size in PROTECTED_WORD_LENGTHS:
+        for i in range(len(words) - size + 1):
+            h = hashlib.sha256(" ".join(words[i:i + size]).encode()).hexdigest()
+            if h in BANNED_LATIN_HASHES:
+                hits.add(h)
+    return hits
+
+
 def test_no_scrubbed_reporter_fragment_is_present_in_any_tracked_file():
     offenders: dict[str, set[str]] = {}
     for path in _tracked_files():
@@ -140,7 +188,7 @@ def test_no_scrubbed_reporter_fragment_is_present_in_any_tracked_file():
             text = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
-        hits = _offending_windows(text)
+        hits = _offending_windows(text) | _offending_latin_windows(text)
         if hits:
             offenders[str(path.relative_to(REPO_ROOT))] = hits
 
@@ -184,3 +232,44 @@ def test_every_banned_hash_has_a_scannable_window_length():
     """
     assert BANNED_HASHES, "the banned set must not be empty"
     assert PROTECTED_LENGTHS, "no window lengths would make the scan a no-op"
+
+
+def test_the_latin_gate_is_not_vacuous():
+    """The English branch catches a banned window through case, hyphens,
+    parentheses and a comment line break, and nothing else."""
+    synthetic = "a hypothetical twelve-lobe (HTL) bracket assembly"
+    words = _LATIN_WORD.findall(synthetic.lower())
+    h = hashlib.sha256(" ".join(words[:6]).encode()).hexdigest()
+
+    global BANNED_LATIN_HASHES
+    original = BANNED_LATIN_HASHES
+    try:
+        BANNED_LATIN_HASHES = frozenset(original | {h})
+        assert _offending_latin_windows(
+            "# includes A Hypothetical twelve-lobe\n# (HTL) Bracket mount"
+        ) == {h}
+        assert _offending_latin_windows("# a hypothetical twelve lobe bracket assembly") == set()
+    finally:
+        BANNED_LATIN_HASHES = original
+
+
+def test_every_latin_hash_is_well_formed():
+    assert BANNED_LATIN_HASHES, "the English banned set must not be empty"
+    assert PROTECTED_WORD_LENGTHS, "no word window lengths would make the scan a no-op"
+    assert all(re.fullmatch(r"[0-9a-f]{64}", h) for h in BANNED_LATIN_HASHES)
+
+
+if __name__ == "__main__":
+    # The commit-msg hook (.githooks/commit-msg) runs this on the message file:
+    # commit messages are public too, and one carried reporter wording in wave O.
+    import sys
+
+    found = 0
+    for name in sys.argv[1:]:
+        body = Path(name).read_text(encoding="utf-8", errors="replace")
+        found += len(_offending_windows(body) | _offending_latin_windows(body))
+    if found:
+        print(f"[commit-msg] {found} scrubbed reporter fragment(s) in the message; "
+              "replace them with a synthesized example (do not print the fragment).",
+              file=sys.stderr)
+    sys.exit(1 if found else 0)
