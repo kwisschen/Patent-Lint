@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 90,
+    "current_round": 91,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -590,6 +590,14 @@
         "fixtures_silenced": 0,
         "user_attested_issues": [],
         "shipped_at": "2026-10-27T05:00:00+00:00"
+      },
+      {
+        "round": 91,
+        "name": "r91_relative_clause_intro",
+        "description": "Wave O CN R91, mirror of TW R87. CN already read the relative-clause object as an introduction through its article-less rule but still flagged the bare participle (基于从传感器接收的信息 ... 所述信息). _relative_clause_intro_cn, same verbs and guards as TW (Simplified). Corpus vs main: 299 silenced = 127 walker_fp + 11 gold corrections (article-less ruling 2026-10-23 plus R13/R14, wave-o-relative-clause) + 28 coverage + 133 unjudged (all read), 0 gold-legit, 0 new. Fixtures: 0.",
+        "fixtures_silenced": 0,
+        "user_attested_issues": [],
+        "shipped_at": "2026-10-27T07:19:03.353025+00:00"
       }
     ],
     "last_updated": "2026-08-01",

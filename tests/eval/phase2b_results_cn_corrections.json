@@ -3499,6 +3499,202 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN103141021B",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 所述粉状磁性材料包括高分子粘合剂内的磁性材料 introduces 磁性材料. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "磁性材料",
+            "reference_form": "所述磁性材料"
+          },
+          {
+            "claim_id": 13,
+            "term": "磁性材料",
+            "reference_form": "所述磁性材料"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN105846677A",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 均包括用于控制流经电感器的电流的同步整流器MOSFET introduces 同步整流器MOSFET. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "同步整流器MOSFET",
+            "reference_form": "所述同步整流器MOSFET"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN106163558A",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 所述辅助治疗包含用T-DM1和帕妥珠单抗治疗之前和/或之后的化学疗法 introduces 化学疗法. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "化学疗法",
+            "reference_form": "所述化学疗法"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN107852648B",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 发送对于向共享频谱存储库注册以次要使用共享频谱的请求 introduces 请求. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 12,
+            "term": "请求",
+            "reference_form": "所述请求"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN111680968B",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 接收外部输入的查询指令 introduces 查询指令 (and 接收到的查询指令, R14). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "查询指令",
+            "reference_form": "所述查询指令"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114825911A",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 根据具有开关频率和占空比的开关周期 introduces 开关周期. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "开关周期",
+            "reference_form": "所述开关周期"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119523165A",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 所述舱盒包括电子液体贮存器和用于产生蒸汽的加热雾化器 introduces 加热雾化器. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 23,
+            "term": "加热雾化器",
+            "reference_form": "所述加热雾化器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120076766A",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 所述穿刺针使用包含被施术者的体内的目标点 introduces 目标点. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "目标点",
+            "reference_form": "所述目标点"
+          },
+          {
+            "claim_id": 9,
+            "term": "目标点",
+            "reference_form": "所述目标点"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121216181A",
+      "jurisdiction": "CN",
+      "source": "wave-o-relative-clause (2026-10-27)",
+      "_note": "Gold error under the CN article-less ruling (2026-10-23) and rulings R13/R14 (2026-10-27): the article-less object of an introducing verb behind a relative clause introduces its head. 各自包括接合多个凹槽中的一个凹槽的特征 introduces 特征. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 31,
+            "term": "特征",
+            "reference_form": "所述特征"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

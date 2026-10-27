@@ -32,8 +32,14 @@ def test_quantified_relative_clause_in_a_dependent_claim_chain():
     assert "偏轉配置" not in terms
 
 
-def test_bare_relative_clause_still_flags():
-    assert "報告" in _tw("一種方法，包括：產生含有量測數值的報告；以及傳送該報告。")
+def test_bare_relative_clause_introduces_after_ruling_r13():
+    # Ruling R13 (2026-10-27): the article-less object of an introducing verb
+    # behind a relative clause introduces its head (see test_wave_o_*).
+    assert "報告" not in _tw("一種方法，包括：產生含有量測數值的報告；以及傳送該報告。")
+
+
+def test_bare_relative_clause_after_a_withheld_verb_still_flags():
+    assert "報告" in _tw("一種方法，包括：輸入含有量測數值的報告；以及傳送該報告。")
 
 
 def test_modifier_before_another_de_is_not_the_head():

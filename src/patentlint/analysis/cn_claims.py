@@ -5179,6 +5179,62 @@ def _io_attributive_intro_cn(claim_text: str, chain: list, term: str, ref_offset
     return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
 
 
+# Wave O mirror of TW _relative_clause_intro_tw (rulings R13 / R14): the
+# article-less object of an introducing verb behind a relative clause, or a
+# bare participle (基于从传感器接收的信息 ... 所述信息), introduces its head.
+_REL_CLAUSE_INTRO_VERBS_CN: tuple[str, ...] = (
+    "接收", "具有", "发送", "包括", "包含", "产生", "获得",
+)
+_REL_CLAUSE_INTRO_STOPS_CN = frozenset("，,；;：:。")
+_REL_CLAUSE_QUANTIFIERS_CN: tuple[str, ...] = (
+    "至少一个", "至少一种", "至少一", "多个", "一个", "一种", "一",
+)
+_REL_CLAUSE_VERB_NOUN_TAILS_CN: frozenset[str] = frozenset("端者方单元点处率量值")
+
+
+def _relative_clause_intro_cn(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    """True if ``term`` is the article-less head object of an introducing verb."""
+    t = (term or "").strip()
+    if len(t) < 2 or any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find("的" + t, start)
+            if idx < 0 or (limit is not None and idx >= limit):
+                return False
+            start = idx + 1
+            end = idx + 1 + len(t)
+            if text.startswith(("的", "之"), end) or not _bare_noun_right_clean_cn(text, end):
+                continue
+            k = idx
+            while k > 0 and text[k - 1] not in _REL_CLAUSE_INTRO_STOPS_CN and idx - k < 40:
+                k -= 1
+            clause = text[k:idx]
+            for v in _REL_CLAUSE_INTRO_VERBS_CN:
+                j = clause.find(v)
+                while j >= 0:
+                    between = clause[j + len(v):]
+                    lead = clause[:j]
+                    if not (
+                        re.search("该|所述|前述", between)
+                        or between.startswith("的")
+                        or between.startswith(_REL_CLAUSE_QUANTIFIERS_CN)
+                        or between[:1] in _F10_SINGLE_CHAR_SUFFIXES_CN
+                        or between[:1] in _REL_CLAUSE_VERB_NOUN_TAILS_CN
+                        or lead.endswith(("所", "被"))
+                        or lead.endswith(("该", "该等", "该些", "所述", "前述"))
+                        or lead.endswith("在")
+                    ):
+                        return True
+                    j = clause.find(v, j + 1)
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
+
+
 def has_possessive_introduction_cn(
     claim_text: str, chain: list, term: str, ref_offset: int,
     intros_by_term=None,
@@ -5799,6 +5855,10 @@ def check_antecedent_basis_cn(
                 continue
             if resolved_intro is None and suo_clause and _same_suo_clause_intro_cn(
                 claim.text, chain, suo_clause, normalized_term, m.start()
+            ):
+                continue
+            if resolved_intro is None and _relative_clause_intro_cn(
+                claim.text, chain, normalized_term, m.start()
             ):
                 continue
             # CN R71 - last-resort tier, the tail-compound mirror of TW R27/R43.

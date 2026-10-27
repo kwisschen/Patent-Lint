@@ -7573,6 +7573,66 @@ def _quantified_relative_intro_tw(claim_text: str, chain: list, term: str, ref_o
     return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
 
 
+# Wave O (rulings R13 / R14, 2026-10-27): the article-less object of an
+# introducing verb is an introduction even when a relative clause sits
+# between them (從網路接收指示一值的訊息 ... 該所接收的訊息), and so is a bare
+# participle (接收的掃描信號 ... 該掃描信號). Measured per verb; withheld with
+# numbers (silenced walker_fp / gold-legit): 執行 5/9, 形成 11/6, 輸入 11/15.
+_REL_CLAUSE_INTRO_VERBS_TW: tuple[str, ...] = (
+    "接收", "具有", "發送", "包括", "包含", "產生", "獲得",
+)
+_REL_CLAUSE_INTRO_STOPS_TW = frozenset("，,；;：:。")
+# A verb followed by one of these is a noun (接收器的訊號, 接收端的訊號).
+_REL_CLAUSE_VERB_NOUN_TAILS_TW: frozenset[str] = frozenset("端者方單元點處率量值")
+
+
+def _relative_clause_intro_tw(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
+    """True if ``term`` is the article-less head object of an introducing verb."""
+    t = (term or "").strip()
+    if len(t) < 2 or any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find("的" + t, start)
+            if idx < 0 or (limit is not None and idx >= limit):
+                return False
+            start = idx + 1
+            end = idx + 1 + len(t)
+            if text.startswith(("的", "之"), end) or not _bare_noun_right_clean_tw(text, end):
+                continue
+            k = idx
+            while k > 0 and text[k - 1] not in _REL_CLAUSE_INTRO_STOPS_TW and idx - k < 40:
+                k -= 1
+            clause = text[k:idx]
+            for v in _REL_CLAUSE_INTRO_VERBS_TW:
+                j = clause.find(v)
+                while j >= 0:
+                    between = clause[j + len(v):]
+                    lead = clause[:j]
+                    if not (
+                        re.search("該|所述|前述", between)
+                        # 接收的輸入電壓轉換成…的輸出電壓: 接收的 already
+                        # closed its own noun; a later 的X is not its object.
+                        or between.startswith("的")
+                        or between.startswith(_REL_CLAUSE_QUANTIFIERS_TW)
+                        or between[:1] in _F10_SINGLE_CHAR_SUFFIXES_TW
+                        or between[:1] in _REL_CLAUSE_VERB_NOUN_TAILS_TW
+                        or lead.endswith(("所", "被"))
+                        # 該等接收輸入的推理: the verb sits inside a reference.
+                        or lead.endswith(("該", "該等", "該些", "所述", "前述"))
+                        # 在包括…的環境中的環境光: the verb sits inside a locative.
+                        or lead.endswith("在")
+                    ):
+                        return True
+                    j = clause.find(v, j + 1)
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    return any(_scan(getattr(a, "text", "") or "", None) for a in chain[1:])
+
+
 _BARE_NOUN_ACTION_LEADS_TW: tuple[str, ...] = ("進行", "執行", "運行", "實行", "實施", "經")
 # Bare 有 introduces only as a verb; after these it quantifies or negates.
 _BARE_NOUN_NON_INTRO_YOU_TW: tuple[str, ...] = ("所有", "沒有", "只有", "僅有", "未有", "唯有")
@@ -8815,6 +8875,11 @@ def check_antecedent_basis(
                 continue
 
             if resolved_intro is None and _quantified_relative_intro_tw(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            if resolved_intro is None and _relative_clause_intro_tw(
                 claim.text, chain, normalized_term, m.start()
             ):
                 continue
