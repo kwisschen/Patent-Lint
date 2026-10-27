@@ -891,6 +891,29 @@ def _strip_comparison_verb_cn(term: str) -> str:
     return term
 
 
+def _is_cross_clause_tail_cn(orig: str, norm: str) -> bool:
+    """True if the capture ran over a clause comma and kept only the clause after it.
+
+    Mirror of TW _is_cross_clause_tail_tw (包含一电源模块，供电给所述处理器 ->
+    供电). A comma inside parentheses does not end a clause.
+    """
+    j = orig.rfind("，")
+    if j < 0 or not norm or "，" in norm or norm not in orig[j:]:
+        return False
+    # Only a clause about an element already named (it carries a determiner)
+    # is dropped: a tail can be the sole introduction of a list member or an
+    # alternative (其包括至少一散熱器或熱電冷卻器), and of a Markush member.
+    if not re.search("所述|该|前述|上述", norm) or _MARKUSH_GROUP_CN_RE.search(norm):
+        return False
+    depth = 0
+    for ch in orig[:j]:
+        if ch in "(（":
+            depth += 1
+        elif ch in ")）":
+            depth = max(0, depth - 1)
+    return depth == 0
+
+
 def _build_inventory_cn(
     claims: list[Claim],
     *,
@@ -914,6 +937,10 @@ def _build_inventory_cn(
         )
         claim_norms = {norm for _orig, norm in pairs}
         for orig, norm in pairs:
+            # Wave P: measured inert on the CN corpus (220 findings, identical
+            # terms); it ends a verb reaching the inventory from such a tail.
+            if _is_cross_clause_tail_cn(orig, norm):
+                continue
             back_reference = _is_quantified_back_reference_cn(
                 orig, norm, claim.text
             )
