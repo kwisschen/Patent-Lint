@@ -1504,6 +1504,12 @@ _INTRO_MULTI_QUANTIFIERS_CN = (
     "一或多个",
     r"至少[一二三四五六七八九十百千\d]+个?",
     "两个",
+    # Wave Q (#974/#975): a cardinal + the measure words 根 / 条 / 块 (两根导线,
+    # 四根X). Without it the intro keyed 根X and only a reference spelling the
+    # same measure word resolved. 层 / 段 / 排 stay out: 多层X is a compound
+    # (multilayer X). Listed in BOTH quantifier lists.
+    r"(?<!第)(?:[两二三四五六七八九十]|若干|复数)(?:根(?![据部节目状])|条(?![件形纹码带状])|块(?![状体]))",
+    r"(?<!第)[多数]根(?![据部节目状])",
     r"两(?![端侧])",
     r"[二三四五六七八九十]+个",
     "一个", "一种", "一对",
@@ -2006,6 +2012,21 @@ _CHEMISTRY_BEFORE_JI_CN: frozenset[str] = frozenset(
     '性酸碱甲乙丙丁养氨羟羧磷烷烯烃硫氧氮氯氢苯胺酮醛酯醇酚'
 )
 
+# Wave Q (#974/#975): every cardinal + measure-word spelling the intro regex
+# accepts, as plain strings for the startswith-based reference strip. The
+# measure word also opens words (根部, 根节点, 条件, 条形, 条码, 块状), so the strip
+# is blocked before those, exactly as the intro regex is.
+_MEASURE_QUANTIFIERS_CN: tuple[str, ...] = tuple(
+    n + mw for n in ("两", "二", "三", "四", "五", "六", "七", "八", "九", "十", "若干", "复数")
+    for mw in "根条块"
+) + ("多根", "数根")
+_MEASURE_WORD_OPENS_CN: dict[str, str] = {"根": "据部节目状", "条": "件形纹码带状", "块": "状体"}
+
+
+def _measure_strip_blocked_cn(q: str, text: str, pos: int) -> bool:
+    """True if the measure word ending q opens a word at pos (两条形槽)."""
+    return q in _MEASURE_QUANTIFIERS_CN and text[pos:pos + 1] in _MEASURE_WORD_OPENS_CN.get(q[-1], "")
+
 # Leading quantifier denylist (TC→SC).
 _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
@@ -2052,6 +2073,8 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "一或多个",
         "至少一个", "至少一",
         "一个", "一种", "一对",
+        # Wave Q (#974/#975): cardinal + 根 / 条 / 块, mirror of the intro list.
+        *_MEASURE_QUANTIFIERS_CN,
         "复数个", "多个", "数个",
         "复数",
         "一",
@@ -2113,7 +2136,7 @@ def _pre_clean_quantifier_strip_cn(text: str) -> tuple[str, int]:
     # stripped too: it kept a garbage key (個塊 / 或多个柱) before. One-character
     # keys are inert in lookup; garbage ones are not.
     for q in sorted(_PRE_CLEAN_QUANTIFIERS_CN, key=len, reverse=True):
-        if not text.startswith(q):
+        if not text.startswith(q) or _measure_strip_blocked_cn(q, text, len(q)):
             continue
         rest = len(text) - len(q)
         if rest >= 2 or (
@@ -2226,6 +2249,9 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         "所述", "前述", "该等", "该些",
         "传送接收到", "传送一显示影像资", "输出一解锁指令至",
         "通讯连接时", "电性连接", "被带动而向", "分别定义",
+        # Wave Q (#976): 距离 before a determiner is the coverb "from"
+        # (所述导线距离所述底板的高度); the noun 距离 never takes one.
+        "距离所述", "距离该", "距离前述",
         "无法存取", "设置有", "拔除时",
         "连接一第一电子装", "撷取一使用者",
         "电性连", "所施予", "将带动", "被带动",
@@ -2426,7 +2452,9 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
                 head += len(prefix)
                 break
         for quant in _LEADING_QUANTIFIER_DENYLIST_CN:  # longest-first
-            if text.startswith(quant, head):
+            if text.startswith(quant, head) and not _measure_strip_blocked_cn(
+                quant, text, head + len(quant)
+            ):
                 head += len(quant)
                 break
         for lead in _LEADING_VERB_PREFIXES_CN:  # longest-first
@@ -2537,6 +2565,11 @@ _PREDICATE_BEFORE_COMPLEMENT_RE_CN = re.compile(
 _COUPLE_BEFORE_COMPLEMENT_RE_CN = re.compile(
     r"(?:电性|电容性|电容|电|光学|通信地|通讯地|可通信地|通信|通讯|可操作性地|可操作地|操作性地|操作上|直接|间接|机械地|机械|磁性|流体|可移除地|可拆卸地)?(?:耦合|耦接)(?=[至到](?:该|所述|前述|一|第|其|$|大于|小于|高于|低于|等于|[大小高低等]$))"
 )
+# Wave Q: the manner adverbs of _COUPLE_BEFORE_COMPLEMENT_RE_CN that can stand
+# before a trimmed capture-final 电连接.
+_CONNECT_MANNER_TAIL_RE_CN = re.compile(
+    r"(?:通信地|通讯地|可通信地|可操作性地|可操作地|操作性地|机械地|可移除地|可拆卸地|直接|间接)$"
+)
 # 至少 / 至多 open a quantity; they never end a name.
 _QUANTITY_OPENERS_CN: tuple[str, ...] = ("至少", "至多")
 
@@ -2633,6 +2666,7 @@ def clean_noun_phrase_cn(
         # it is a verb, and cutting at it is correct.
         while idx >= 0:
             if (verb == "并"
+                    and not _bing_pai_adverb_cn(text, idx + search_offset)
                     and (text[idx + search_offset + 1:idx + search_offset + 2]
                          in _BING_COMPOUND_SECONDS_CN
                          or _bing_is_ring_fusion_cn(text, idx + search_offset))):
@@ -2713,6 +2747,22 @@ def clean_noun_phrase_cn(
         earliest_idx += 1
 
     current = text[:earliest_idx] if earliest_idx is not None else text
+    # Wave Q (#975): a capture that ENDS in 电连接 stopped because a non-noun
+    # character follows (于 / 至 / 到 / punctuation), so it is the verb
+    # "electrically connected"; the cut at 连接 left 电 on the noun (导线电).
+    # The nouns run on (电连接器 / 电连接件 / 电连接线) and never end the capture.
+    if (
+        len(current) >= 3
+        and current.endswith("电")
+        and text[len(current):] == "连接"
+        and not current.endswith(("所述电", "该电", "前述电", "的电", "之电"))
+        and not re.fullmatch(r"第[一二三四五六七八九十\d]+", current[:-1])
+    ):
+        current = current[:-1]
+        # The manner adverb before the verb goes with it (可拆卸地电连接).
+        m_adv = _CONNECT_MANNER_TAIL_RE_CN.search(current)
+        if m_adv and m_adv.start() >= 2:
+            current = current[: m_adv.start()]
 
     m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_CN.search(text)
     if m_pred and 2 <= m_pred.start() < len(current):
@@ -2863,6 +2913,14 @@ _DUI_LEXEME_SECONDS_CN: frozenset[str] = frozenset("称象话")
 # the CN corpus (6,489 并X bigrams): 并联 81, 并行 31, plus the closed
 # parallel/juxtaposition family. 并且 (4,328), 并将, 并在, 并入 open predicates.
 _BING_COMPOUND_SECONDS_CN: frozenset[str] = frozenset("联列排行接存置网")
+# Wave Q (#973): 并排 before a placement verb (并排设置 / 并排排列 / 并排地布置)
+# is the adverb "side by side", never noun-internal (all 15 CN corpus uses).
+_BING_PAI_VERB_NEXT_CN: frozenset[str] = frozenset("设布排分地列")
+
+
+def _bing_pai_adverb_cn(text: str, i: int) -> bool:
+    """True if the 并 at i opens the adverb 并排 before a placement verb."""
+    return text.startswith("并排", i) and text[i + 2:i + 3] in _BING_PAI_VERB_NEXT_CN
 
 # CN R72: in chemical nomenclature 并 is the ring-FUSION infix, not "and":
 # 二苯并[1,4]二噁英, 吡啶并[2,3-d], 苯并咪唑. Mined from the CN corpus (6,492 并):
@@ -2931,7 +2989,7 @@ def strip_leading_quantifier_cn(text: str) -> str:
     if m and len(text) - m.end() >= 2:
         text = text[m.end():]
     for q in _LEADING_QUANTIFIER_DENYLIST_CN:
-        if text.startswith(q) and len(text) > len(q):
+        if text.startswith(q) and len(text) > len(q) and not _measure_strip_blocked_cn(q, text, len(q)):
             text = text[len(q):]
             break
     m = _POSSESSIVE_其_PREFIX_RE_CN.match(text)
@@ -5000,7 +5058,25 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     if any(text.startswith(c, j) and text.startswith(("所述", "该", "前述", "一"), j + 2)
            for c in ("通过", "经由", "经过")):
         return True
+    # Wave Q (#975): a connection verb taking its own coverb + determiner
+    # object (通过导线电连接于所述底板), or ending the clause (与X电连接，),
+    # ends the noun, as 通过 does above.
+    m_conn = _CONNECT_PREDICATE_RE_CN.match(text, j)
+    if m_conn and (
+        m_conn.group(0)[-1] not in "，,；;。"
+        # Clause-final, the verb reading needs a comitative / instrumental
+        # coverb in the clause (与X连接， / 通过X安装，); 建立网络连接， is the
+        # noun "network connection".
+        or re.search(r"(?:与|和|同|通过|经由|利用)[^，,；;。]*$", text[:j])
+    ):
+        return True
     return not _bare_noun_compound_char_cn(text[j])
+
+
+_CONNECT_PREDICATE_RE_CN = re.compile(
+    r"(?:电|液压|磁|机械|流体)?(?:连接|联接|耦合|耦接|固定|附着|粘附|焊接|安装)"
+    r"(?:(?:于|至|到)(?:所述|该|前述|一|第)|[，,；;。])"
+)
 
 
 _NEW_ARGUMENT_COVERBS_CN: tuple[str, ...] = ("用于", "以", "对", "为", "将", "被", "使")
@@ -5776,6 +5852,15 @@ def check_antecedent_basis_cn(
                     resolved_intro = _zu_set_reference_intro_cn(
                         normalized_term[1:], intros_by_term, chain, m.start()
                     )
+                # Wave Q (#974/#975): 該條X / 所述根X names X with its classifier
+                # once 兩條X keys X. Exact match only, so 所述條紋 never reaches 紋.
+                if (
+                    resolved_intro is None
+                    and normalized_term[:1] in "条根块"
+                    and len(normalized_term) >= 3
+                    and normalized_term[1:] in intros_by_term
+                ):
+                    resolved_intro = normalized_term[1:]
                 if resolved_intro is None and raw_noun.startswith(_SELF_INTRO_QUANTIFIERS_CN):
                     if _shared_zhong_mention_cn(normalized_term, chain, m.start()):
                         resolved_intro = normalized_term

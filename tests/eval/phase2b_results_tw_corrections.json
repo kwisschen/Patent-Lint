@@ -4303,6 +4303,94 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW201440727A",
+      "jurisdiction": "TW",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error: 使用一種具有至少兩條樣本採集通道之樣本採集裝置 introduces the channels (cardinal + measure word 條). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 45,
+            "term": "樣本採集通道",
+            "reference_form": "該等樣本採集通道"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI784767B",
+      "jurisdiction": "TW",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under ruling R15 (Christopher 2026-10-27, TW mirror of the CN article-less ruling for connection clauses): 所述驅動模組的控制端與控制信號端電連接 introduces 控制信號端. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "控制信號端",
+            "reference_form": "所述控制信號端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202345455A",
+      "jurisdiction": "TW",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under ruling R15: 所述第一焊盤延長部經由導電材料電連接於所述… names 導電材料 in a connection clause first. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "導電材料",
+            "reference_form": "所述導電材料"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI784767B",
+      "jurisdiction": "TW",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "ADR-111 dual label (old dirty key walker_fp, new key legit): the wave Q 電連接 trim re-keys the gold-legit finding 第二掃描信號端電 as 第二掃描信號端; it still fires and stays a real defect. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "第二掃描信號端電",
+            "reference_form": "所述第二掃描信號端電"
+          },
+          {
+            "claim_id": 4,
+            "term": "第二掃描信號端",
+            "reference_form": "所述第二掃描信號端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }

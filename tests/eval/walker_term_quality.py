@@ -137,7 +137,8 @@ _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 51, "CN": 29, "US": 0}
 # structurally bad CN 32 -> 30. Then the 一組 round: TW 1088 -> 1083, CN 921 -> 919, CN bad 30 -> 29.
 # Wave M: the 封包 lexeme guard and 所-relative references, TW 1083 -> 1080.
 # Wave O: relative-clause and participle introductions (R13 / R14), TW 1080 -> 1071.
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1071, "CN": 919}
+# Wave Q: measure words and the capture-final 電連接 trim, TW 1071 -> 1061.
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1061, "CN": 919}
 
 
 def _load_segmenter():

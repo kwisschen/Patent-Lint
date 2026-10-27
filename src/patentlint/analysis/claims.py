@@ -41,6 +41,12 @@ from patentlint.models import Claim, CheckItem, UnsupportedTerm
 # definite-ref consumer site. This is tighter than a regex-level
 # _NP_CORE change: cardinal-only gate prevents over-extension in
 # verb-preposition contexts like `the X mounted through holes in the wall`.
+# Wave Q (#972): a cardinal quantifier followed by an "or more" range.
+_CARDINAL_WORDS = frozenset(
+    ("two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+)
+_OR_MORE_TRAIL = re.compile(r"\s+or\s+(?:more|fewer|less)\b")
+
 _BARE_CARDINAL_TAIL = re.compile(
     r"^(?:two|three|four|five|six|seven|eight|nine|ten|\d+)$",
     re.IGNORECASE,
@@ -809,6 +815,13 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 continue
             # Skip standalone quantifiers/pronouns ("the one", "the another")
             if term.lower() in _QUANTIFIER_STOPS:
+                continue
+            # Wave Q (#972): `the two or more spacers` stops the
+            # capture at `or`, leaving the bare cardinal; like `the one or more`
+            # above, the cardinal is a quantifier, never the element.
+            if term.lower() in _CARDINAL_WORDS and _OR_MORE_TRAIL.match(
+                claim_text_lower[m.end():]
+            ):
                 continue
             # R50 (2026-09-02): bare DISTRIBUTIVE SELECTOR, not an element.
             # `a sealing apparatus around the respective said intake and said

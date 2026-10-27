@@ -3,7 +3,7 @@
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
   "framework": "vite",
-  "ignoreCommand": "git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}\" HEAD -- ':(top,exclude)course'",
+  "ignoreCommand": "sh ../scripts/vercel-ignore-build.sh ':(top,exclude)course'",
   "rewrites": [
     {
       "source": "/((?!api/.*|.*\\..*).*)",

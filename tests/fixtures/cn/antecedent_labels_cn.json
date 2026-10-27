@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 92,
+    "current_round": 93,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -606,6 +606,14 @@
         "fixtures_silenced": 0,
         "user_attested_issues": [],
         "shipped_at": "2026-10-27T08:26:34.232246+00:00"
+      },
+      {
+        "round": 93,
+        "name": "r93_measure_word_connection_clause",
+        "description": "Wave Q CN R93 (reports #973-#976, one drafter). (1) cardinal + measure word 根/条/块 in BOTH quantifier lists, guarded where the measure word opens a word (根部/根节点, 条件/条形/条码/条状, 块状/块体); 一 + measure stays out (TW 一根節點 / 一條件). Classifier reference 该条X resolves exactly. (2) capture-final 电连接 is the verb: trim 电 and a manner adverb (guards 的电, ordinal residue). (3) connection verb + coverb + determiner, or clause-final with a 与/和/同/通过/经由/利用 coverb, ends a bare noun (CN article-less ruling 2026-10-23); 建立网络连接 stays a noun. (4) 并排 before a placement verb is the adverb. (5) 距离所述/该/前述 is the coverb. Corpus vs main: 53 walker_fp (11 of them gold corrections, wave-q-connection-clause) + 12 coverage + 19 unjudged (all read), 0 gold-legit, 0 new, UNPAIRED 0. 沿X withheld (2 fp / 5 legit / 23 unj). TW mirror TW R89. Fixtures: 0.",
+        "fixtures_silenced": 0,
+        "user_attested_issues": [],
+        "shipped_at": "2026-10-27T11:31:30.805682+00:00"
       }
     ],
     "last_updated": "2026-08-01",

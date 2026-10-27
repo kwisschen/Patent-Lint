@@ -4,7 +4,7 @@
   "installCommand": "echo 'no install: the course build uses only Node built-ins'",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "ignoreCommand": "git diff --quiet \"${VERCEL_GIT_PREVIOUS_SHA:-HEAD^}\" HEAD -- .",
+  "ignoreCommand": "sh ../scripts/vercel-ignore-build.sh .",
   "redirects": [
     { "source": "/", "destination": "/every-word-counts/", "permanent": false }
   ],
