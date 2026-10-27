@@ -3759,6 +3759,154 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN103918138A",
+      "jurisdiction": "CN",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's 2026-10-23 CN ruling (an article-less earlier mention in the chain is an introduction): 所述固定装置与插座结构连接， names 插座结构 before the reference. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 29,
+            "term": "插座结构",
+            "reference_form": "所述插座结构"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113593466B",
+      "jurisdiction": "CN",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's 2026-10-23 CN ruling (an article-less earlier mention in the chain is an introduction): each line is first named as 控制端与X电连接，. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "目标扫描信号线",
+            "reference_form": "所述目标扫描信号线"
+          },
+          {
+            "claim_id": 5,
+            "term": "目标扫描信号线",
+            "reference_form": "所述目标扫描信号线"
+          },
+          {
+            "claim_id": 6,
+            "term": "目标扫描信号线",
+            "reference_form": "所述目标扫描信号线"
+          },
+          {
+            "claim_id": 5,
+            "term": "第一扫描信号线",
+            "reference_form": "所述第一扫描信号线"
+          },
+          {
+            "claim_id": 6,
+            "term": "第二扫描信号线",
+            "reference_form": "所述第二扫描信号线"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114038383B",
+      "jurisdiction": "CN",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's 2026-10-23 CN ruling (an article-less earlier mention in the chain is an introduction): 与第二节点电连接 / 与第三节点电连接 name the nodes first. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第三节点",
+            "reference_form": "所述第三节点"
+          },
+          {
+            "claim_id": 1,
+            "term": "第二节点",
+            "reference_form": "所述第二节点"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114589680A",
+      "jurisdiction": "CN",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's 2026-10-23 CN ruling (an article-less earlier mention in the chain is an introduction): 所述摄像头通过电动云台安装， names it first. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "电动云台",
+            "reference_form": "所述电动云台"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120396003A",
+      "jurisdiction": "CN",
+      "source": "wave-q-connection-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's 2026-10-23 CN ruling (an article-less earlier mention in the chain is an introduction): 之间通过颈部单元连接， in claim 2 names it first. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "颈部单元",
+            "reference_form": "所述颈部单元"
+          },
+          {
+            "claim_id": 8,
+            "term": "颈部单元",
+            "reference_form": "所述颈部单元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

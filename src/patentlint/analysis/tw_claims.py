@@ -2367,6 +2367,11 @@ _INTRO_MULTI_QUANTIFIERS = (
     # ends) and 兩側 (both sides) are body-part compounds, NOT intros.
     # Corpus: 兩曲柄 ×1 (intro), 兩端 ×3, 兩側 ×2 (all non-intro).
     "兩個",
+    # Wave Q (CN #974/#975 mirror): a cardinal + the measure words 根 / 條 /
+    # 塊 (兩根導線). Without it the intro keyed 根X. 層 / 段 / 排 stay out (多層X
+    # is a compound). Listed in BOTH quantifier lists.
+    r"(?<!第)(?:[兩二三四五六七八九十]|若干|複數)(?:根(?![據部節目狀])|條(?![件形紋碼帶狀])|塊(?![狀體]))",
+    r"(?<!第)[多數]根(?![據部節目狀])",
     r"兩(?![端側])",
     # F4b: bare N個 quantifier (CJK numerals only). Arabic digits
     # excluded - 100個 etc. are measurements, not intros. Safe from
@@ -3432,6 +3437,21 @@ _ORDINAL_BAO_RE_TW: re.Pattern[str] = re.compile(r"第[一二三四五六七八�
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
 # 至少一 is stripped.
+# Wave Q (CN #974/#975 mirror): every cardinal + measure-word spelling the
+# intro regex accepts, as plain strings for the startswith-based reference strip.
+_MEASURE_QUANTIFIERS_TW: tuple[str, ...] = tuple(
+    n + mw for n in ("兩", "二", "三", "四", "五", "六", "七", "八", "九", "十", "若干", "複數")
+    for mw in "根條塊"
+) + ("多根", "數根")
+# The measure word also opens words (根部, 根節點, 條件, 條形, 條碼, 塊狀): the
+# strip is blocked before those, exactly as the intro regex is.
+_MEASURE_WORD_OPENS_TW: dict[str, str] = {"根": "據部節目狀", "條": "件形紋碼帶狀", "塊": "狀體"}
+
+
+def _measure_strip_blocked_tw(q: str, text: str, pos: int) -> bool:
+    """True if the measure word ending q opens a word at pos (兩條形槽)."""
+    return q in _MEASURE_QUANTIFIERS_TW and text[pos:pos + 1] in _MEASURE_WORD_OPENS_TW.get(q[-1], "")
+
 _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
         # Wave F (2026-10-26): the rest of the "one or more" family. Without it only
@@ -3486,6 +3506,8 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
         "一或多個",
         "至少一個", "至少一",
         "一個", "一種", "一對",
+        # Wave Q (CN #974/#975 mirror): cardinal + 根 / 條 / 塊.
+        *_MEASURE_QUANTIFIERS_TW,
         "複數個", "多個", "數個",
         "複數",
         "一",
@@ -3575,7 +3597,7 @@ def _pre_clean_quantifier_strip_tw(text: str) -> tuple[str, int]:
     # stripped too: it kept a garbage key (個塊 / 或多个柱) before. One-character
     # keys are inert in lookup; garbage ones are not.
     for q in sorted(_PRE_CLEAN_QUANTIFIERS_TW, key=len, reverse=True):
-        if not text.startswith(q):
+        if not text.startswith(q) or _measure_strip_blocked_tw(q, text, len(q)):
             continue
         rest = len(text) - len(q)
         if rest >= 2 or (
@@ -4374,7 +4396,9 @@ def _jing_cut_is_verbal_tw(text: str, pos: int) -> bool:
                 head += len(prefix)
                 break
         for quant in _LEADING_QUANTIFIER_DENYLIST:  # longest-first
-            if text.startswith(quant, head):
+            if text.startswith(quant, head) and not _measure_strip_blocked_tw(
+                quant, text, head + len(quant)
+            ):
                 head += len(quant)
                 break
         for lead in _LEADING_VERB_PREFIXES_TW:  # longest-first
@@ -4630,6 +4654,7 @@ def clean_noun_phrase_tw(text: str, *, quantifier_lead: int = 0) -> str:
             # internal. Retry the next 並 rather than abandoning the verb, for
             # the R43 reason: a veto must not leave a later conjunction uncut.
             if (verb == "並"
+                    and not _bing_pai_adverb_tw(text, absolute_idx)
                     and text[absolute_idx + 1:absolute_idx + 2] in _BING_COMPOUND_SECONDS_TW):
                 idx = search_text.find(verb, idx + 1)
                 continue
@@ -4693,6 +4718,24 @@ def clean_noun_phrase_tw(text: str, *, quantifier_lead: int = 0) -> str:
         earliest_idx += 1
 
     current = text[:earliest_idx] if earliest_idx is not None else text
+    # Wave Q (CN #975 mirror): a capture that ENDS in 電連接 stopped before a
+    # non-noun character (於 / 至 / 到 / punctuation), so it is the verb; the cut
+    # at 連接 left 電 on the noun. 電連接器 / 電連接件 run on and never end it.
+    if (
+        len(current) >= 3
+        and current.endswith("電")
+        and text[len(current):] == "連接"
+        and not current.endswith(("所述電", "該電", "前述電", "的電", "之電"))
+        and not re.fullmatch(r"第[一二三四五六七八九十\d]+", current[:-1])
+    ):
+        current = current[:-1]
+        # The manner adverb before the verb goes with it (可拆卸地電連接).
+        m_adv = re.search(
+            r"(?:通信地|通訊地|可通信地|可操作性地|可操作地|操作性地|機械地|可移除地|可拆卸地|直接|間接)$",
+            current,
+        )
+        if m_adv and m_adv.start() >= 2:
+            current = current[: m_adv.start()]
 
     m_pred = _PREDICATE_BEFORE_COMPLEMENT_RE_TW.search(text)
     if m_pred and 2 <= m_pred.start() < len(current):
@@ -4834,6 +4877,14 @@ _DUI_LEXEME_SECONDS_TW: frozenset[str] = frozenset("稱象話")
 # 在 115, 使 88, 與 63, 配 59, 據 ...) opens a predicate. 並非 is deliberately
 # NOT here: it is the conjunction + negation, and cutting at it is correct.
 _BING_COMPOUND_SECONDS_TW: frozenset[str] = frozenset("聯列排行接存置網")
+# Wave Q (CN #973 mirror): 並排 before a placement verb (並排設置 / 並排地設) is
+# the adverb "side by side", never noun-internal (all 13 TW corpus uses).
+_BING_PAI_VERB_NEXT_TW: frozenset[str] = frozenset("設布佈排分地列")
+
+
+def _bing_pai_adverb_tw(text: str, i: int) -> bool:
+    """True if the 並 at i opens the adverb 並排 before a placement verb."""
+    return text.startswith("並排", i) and text[i + 2:i + 3] in _BING_PAI_VERB_NEXT_TW
 
 # TW R62: device-noun heads that turn a leading 夾持 into the noun "clamping X".
 _JIACHI_DEVICE_HEADS_TW: tuple[str, ...] = (
@@ -4931,7 +4982,7 @@ def strip_leading_quantifier(text: str, *, source_text: str = "") -> str:
         text = text[1:]
     else:
         for q in _LEADING_QUANTIFIER_DENYLIST:
-            if text.startswith(q) and len(text) > len(q):
+            if text.startswith(q) and len(text) > len(q) and not _measure_strip_blocked_tw(q, text, len(q)):
                 text = text[len(q):]
                 break
     # R32: 其-possessive strip - applied last. Lookahead in the regex
@@ -7681,7 +7732,23 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     if any(text.startswith(c, j) and text.startswith(("所述", "該", "前述", "一"), j + 2)
            for c in ("通過", "經由", "經過")):
         return True
+    # Wave Q (ruling R15, CN #975 mirror): a connection verb taking its own
+    # coverb + determiner object (通過導線電連接於所述底板), or ending the
+    # clause (與X電連接，), ends the noun when the clause carries a comitative /
+    # instrumental coverb.
+    # Unlike CN, both forms need that coverb: R15 covers connection clauses,
+    # not the locative 在X連接至 (a condition frame in TW, #713).
+    if _CONNECT_PREDICATE_RE_TW.match(text, j) and re.search(
+        r"(?:與|和|同|通過|經由|利用)[^，,；;。]*$", text[:j]
+    ):
+        return True
     return not _bare_noun_compound_char_tw(text[j])
+
+
+_CONNECT_PREDICATE_RE_TW = re.compile(
+    r"(?:電|液壓|磁|機械|流體)?(?:連接|聯接|耦合|耦接|固定|附著|黏附|粘附|焊接|安裝)"
+    r"(?:(?:於|至|到)(?:所述|該|前述|一|第)|[，,；;。])"
+)
 
 
 _NEW_ARGUMENT_COVERBS_TW: tuple[str, ...] = ("用於", "以", "對", "為", "將", "被", "使")
@@ -8815,6 +8882,15 @@ def check_antecedent_basis(
                     resolved_intro = _zu_set_reference_intro_tw(
                         normalized_term[1:], intros_by_term, chain, m.start()
                     )
+                # Wave Q (#974/#975): 該條X / 所述根X names X with its classifier
+                # once 兩條X keys X. Exact match only, so 所述條紋 never reaches 紋.
+                if (
+                    resolved_intro is None
+                    and normalized_term[:1] in "條根塊"
+                    and len(normalized_term) >= 3
+                    and normalized_term[1:] in intros_by_term
+                ):
+                    resolved_intro = normalized_term[1:]
                 if resolved_intro is None and raw_noun.startswith(_SELF_INTRO_QUANTIFIERS_TW):
                     if _shared_zhong_mention_tw(normalized_term, chain, m.start()):
                         resolved_intro = normalized_term

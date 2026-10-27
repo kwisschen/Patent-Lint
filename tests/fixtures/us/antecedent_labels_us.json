@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 60,
+    "current_round": 61,
     "created": "2026-05-03T16:33:29.985652+00:00",
     "source": "tests/eval/phase2b_results_us.json",
     "source_phase": "Phase 2b LLM ensemble (Sonnet 4.6 + gpt-5-mini + Opus 4.7 escalation)",
@@ -652,6 +652,14 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-10-27T06:29:20.398451+00:00"
+      },
+      {
+        "round": 61,
+        "name": "r61_cardinal_or_more",
+        "description": "Wave Q US R61 (#972): `the two or more X` stopped the capture at `or` and emitted the bare cardinal; a cardinal word followed by or more / or fewer / or less is skipped like `the one`. US-only (CN/TW have no such capture). Corpus vs main: 17 walker_fp + 1 coverage + 27 unjudged, all the bare term `two`; 0 legit, 0 new; examiner guard LOST 0 / GAINED 0 (1,383). Fixtures: 0.",
+        "fixtures_silenced": 0,
+        "user_attested_issues": [],
+        "shipped_at": "2026-10-27T11:31:30.805682+00:00"
       }
     ],
     "last_updated": "2026-08-01"
