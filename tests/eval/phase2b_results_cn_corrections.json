@@ -3907,6 +3907,482 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN119605315A",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "Real: claims 31/33 say 所述至少一个处理器 and no claim in their chains (30, 32 and the methods 2-8 / 10-25) names a processor; the self-registration of the reference hid it. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 31,
+            "term": "处理器",
+            "reference_form": "所述处理器"
+          },
+          {
+            "claim_id": 33,
+            "term": "处理器",
+            "reference_form": "所述处理器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN117916759A",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "Real: 零售点 (c7, chain 7-6-1), 预定标准 (c41, chain 41-40) are named only as 所述至少一个X; c33 introduces 至少一个预定最低质量标准 and then writes 所述至少一个预定质量标准 (drops 最低, ruling R16). c42: 满足预定样品质量标准 names it article-less in the same claim (CN ruling 2026-10-23), so the cleaned shift stays an FP. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "零售点",
+            "reference_form": "所述零售点"
+          },
+          {
+            "claim_id": 41,
+            "term": "预定标准",
+            "reference_form": "所述预定标准"
+          },
+          {
+            "claim_id": 33,
+            "term": "预定质量标准",
+            "reference_form": "所述预定质量标准"
+          },
+          {
+            "claim_id": 42,
+            "term": "预定样品质量标准",
+            "reference_form": "所述预定样品质量标准"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114914071A",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "Real: claim 13 introduces only 至少一个辅助功率绕组; 所述至少一个辅助绕组 (c13, c19) has no basis. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 13,
+            "term": "辅助绕组",
+            "reference_form": "所述辅助绕组"
+          },
+          {
+            "claim_id": 19,
+            "term": "辅助绕组同一层",
+            "reference_form": "所述辅助绕组同一层"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120530490A",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "Real: 矩阵区段 is named only with 所述 (c10 每个所述矩阵区段, c11); claim 10 introduces 至少一个区段. Same defect the walker flags on c10/c13. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "矩阵区段构造",
+            "reference_form": "所述矩阵区段构造"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115000735B",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "Real under ruling R16 (2026-10-27, a shortened name has no basis): claim 13 introduces 至少一个腔体(240), claim 20 writes 所述至少一个腔(240). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "腔(240)",
+            "reference_form": "所述腔(240)"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104871268A",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "Gold correction under ruling R16 (2026-10-27): claim 5 introduces 第一磁性材料棒 and 至少一个第二磁性材料棒; claims 6/7/16/17 write the shortened 所述第一棒 / 所述至少一个第二棒, which have no basis. The four 第一棒 labels were walker_fp. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "第一棒",
+            "reference_form": "所述第一棒"
+          },
+          {
+            "claim_id": 7,
+            "term": "第一棒",
+            "reference_form": "所述第一棒"
+          },
+          {
+            "claim_id": 16,
+            "term": "第一棒",
+            "reference_form": "所述第一棒"
+          },
+          {
+            "claim_id": 17,
+            "term": "第一棒",
+            "reference_form": "所述第一棒"
+          },
+          {
+            "claim_id": 6,
+            "term": "第二棒",
+            "reference_form": "所述第二棒"
+          },
+          {
+            "claim_id": 7,
+            "term": "第二棒",
+            "reference_form": "所述第二棒"
+          },
+          {
+            "claim_id": 16,
+            "term": "第二棒",
+            "reference_form": "所述第二棒"
+          },
+          {
+            "claim_id": 17,
+            "term": "第二棒",
+            "reference_form": "所述第二棒"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN115151969B",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "FP: claim 1 introduces 与至少一个时钟一起使用, so every later 所述至少一个时钟 has basis (the dirty 时钟一起使用第二组 included). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "时钟",
+            "reference_form": "所述时钟"
+          },
+          {
+            "claim_id": 5,
+            "term": "时钟",
+            "reference_form": "所述时钟"
+          },
+          {
+            "claim_id": 11,
+            "term": "时钟",
+            "reference_form": "所述时钟"
+          },
+          {
+            "claim_id": 13,
+            "term": "时钟",
+            "reference_form": "所述时钟"
+          },
+          {
+            "claim_id": 1,
+            "term": "时钟一起使用第二组",
+            "reference_form": "所述时钟一起使用第二组"
+          },
+          {
+            "claim_id": 9,
+            "term": "时钟一起使用第二组",
+            "reference_form": "所述时钟一起使用第二组"
+          },
+          {
+            "claim_id": 18,
+            "term": "时钟一起使用第二组",
+            "reference_form": "所述时钟一起使用第二组"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN112888152B",
+      "jurisdiction": "CN",
+      "source": "wave-r-at-least-one (2026-10-27)",
+      "_note": "FP shift: 第一和第二信号通孔 introduces the pair, so the cleaned 所述信号通孔 (from 信号通孔相比) is labeled like c10/c18/c25. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "信号通孔",
+            "reference_form": "所述信号通孔"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114474136A",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: claim 10 names 操作第一可展开部件 / 操作第二可展开部件 article-less (CN ruling 2026-10-23), so the cleaned references keep basis. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "第一可展开部件",
+            "reference_form": "所述第一可展开部件"
+          },
+          {
+            "claim_id": 10,
+            "term": "第二可展开部件",
+            "reference_form": "所述第二可展开部件"
+          },
+          {
+            "claim_id": 12,
+            "term": "第一可展开部件",
+            "reference_form": "所述第一可展开部件"
+          },
+          {
+            "claim_id": 12,
+            "term": "第二可展开部件",
+            "reference_form": "所述第二可展开部件"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121460992A",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: claim 8 names 包括内壁（350）和外壁（352） article-less. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "外壁",
+            "reference_form": "所述外壁"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121452339A",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: claim 2 names 外表面上的狭槽 and claim 3 由连续分段函数定义, both article-less. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "狭槽",
+            "reference_form": "所述狭槽"
+          },
+          {
+            "claim_id": 3,
+            "term": "连续分段函数",
+            "reference_form": "所述连续分段函数"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120418556A",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: claim 1 lists 输入轴（110）、中间轴（120）、输出轴（130） article-less. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "输出轴（130）",
+            "reference_form": "所述输出轴（130）"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN104019200A",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: the preamble names 围绕纵向轴线 article-less. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 35,
+            "term": "纵向轴线",
+            "reference_form": "该纵向轴线"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113752256A",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: claim 1 names 路线规划机构包括--路线规划导管 article-less (the 大体 residue stays). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "路线规划导管大体",
+            "reference_form": "所述路线规划导管大体"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN101960530B",
+      "jurisdiction": "CN",
+      "source": "wave-r-yan-coverb (2026-10-27)",
+      "_note": "Shift of a gold FP: 经由反铁磁层 names it article-less in claim 7. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "反铁磁层",
+            "reference_form": "所述反铁磁层"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

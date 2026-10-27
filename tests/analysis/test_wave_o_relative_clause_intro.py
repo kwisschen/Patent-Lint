@@ -41,7 +41,8 @@ def test_tw_bare_participle_introduces():
 
 
 def test_tw_withheld_verb_still_flags():
-    assert "通知" in _tw("一種方法，包括：輸入指示一參數的通知；以及儲存該通知。")
+    # 儲存 stays withheld; 輸入 joined the list in wave R (noun-guarded).
+    assert "通知" in _tw("一種方法，包括：儲存指示一參數的通知；以及顯示該通知。")
 
 
 def test_tw_wave_p_execute_introduces_its_object():

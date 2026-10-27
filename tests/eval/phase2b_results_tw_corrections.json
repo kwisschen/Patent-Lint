@@ -4391,6 +4391,34 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202318205A",
+      "jurisdiction": "TW",
+      "source": "wave-r-relative-clause-shuru (2026-10-27)",
+      "_note": "Gold error under ruling R13 (2026-10-27): claim 1 introduces the read request as the article-less object behind a relative clause (回應於從外部裝置輸入的讀取請求), so 所述讀取請求 in claims 1 and 3 has basis. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "讀取請求",
+            "reference_form": "所述讀取請求"
+          },
+          {
+            "claim_id": 3,
+            "term": "讀取請求",
+            "reference_form": "所述讀取請求"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }
