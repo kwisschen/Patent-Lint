@@ -136,7 +136,8 @@ _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 51, "CN": 29, "US": 0}
 # RATCHETED 2026-10-26 after wave H (the 種 quantifiers): TW 1092 -> 1088, CN 925 -> 921;
 # structurally bad CN 32 -> 30. Then the 一組 round: TW 1088 -> 1083, CN 921 -> 919, CN bad 30 -> 29.
 # Wave M: the 封包 lexeme guard and 所-relative references, TW 1083 -> 1080.
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1080, "CN": 919}
+# Wave O: relative-clause and participle introductions (R13 / R14), TW 1080 -> 1071.
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1071, "CN": 919}
 
 
 def _load_segmenter():

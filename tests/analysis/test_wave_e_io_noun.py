@@ -160,8 +160,9 @@ class TestIoAttributiveIntro:
 
     def test_attributive_head_outside_an_introducing_clause_still_flags(self):
         # TW: no introducing verb in the clause, so the 的 phrase is not an intro.
+        # (接收 introduces its object since ruling R13, so the verb here is 比較.)
         assert "輸出" in _tw(
-            "1. 一種電路，包括一比較器，所述比較器用於接收半橋電路的輸出。",
+            "1. 一種電路，包括一比較器，所述比較器用於比較半橋電路的輸出。",
             "2. 如請求項1所述的電路，其中所述輸出經由一觸發器耦合到所述半橋電路。")
 
     def test_couple_to_a_comparative(self):

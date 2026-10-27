@@ -2090,8 +2090,31 @@ def extract_abbreviation_intros(text: str) -> list[str]:
         trailing = m.group(2)
         if trailing:
             results.append(f"{abbrev} {trailing.lower()}")
+            ordinal = _ordinal_before_expansion(text, m.start(1) - 1)
+            if ordinal:
+                results.append(f"{ordinal} {abbrev} {trailing.lower()}")
         results.append(abbrev)
     return results
+
+
+# US R60 (report #968): `a first low-noise amplifier (LNA) stage` introduces
+# `first LNA stage` as well as `LNA stage`; the ordinal sits
+# before the expansion, so the arm above dropped it. Only an ordinal that
+# directly follows `a`/`an` opens the expansion, and an expansion that itself
+# contains an ordinal (`a first in first out (FIFO) buffer`) is skipped,
+# because there the ordinal belongs to the expanded name.
+_ORDINAL_EXPANSION_RE = re.compile(
+    r"(?<![\w-])(?:a|an)\s+(?P<ord>first|second|third|fourth|fifth|sixth|"
+    r"seventh|eighth|ninth|tenth)\s+(?P<exp>(?:[a-z][\w-]*\s+){1,5})$",
+    re.IGNORECASE,
+)
+
+
+def _ordinal_before_expansion(text: str, paren: int) -> str:
+    m = _ORDINAL_EXPANSION_RE.search(text[max(0, paren - 120) : paren])
+    if not m or re.search(rf"\b{_ORDINAL_WORD}\b", m.group("exp"), re.IGNORECASE):
+        return ""
+    return m.group("ord").lower()
 
 
 # ---------------------------------------------------------------------------
@@ -2544,6 +2567,7 @@ def extract_introductions(text: str) -> list[str]:
     refs.extend(extract_method_step_intros(lowered))
     refs.extend(extract_gerund_head_intros(lowered))
     refs.extend(extract_having_bare_noun_intros(lowered))
+    refs.extend(distributive_ordinal_intro_offsets(lowered))
     return refs
 
 
@@ -2572,6 +2596,55 @@ def pattern_a_intro_offsets(text: str) -> dict[str, list[int]]:
         cleaned = clean_noun_phrase(m.group(1).strip())
         if cleaned:
             out.setdefault(cleaned, []).append(m.start())
+    return out
+
+
+# US R60 (report #968): distributive ordinals. `a first and a second sensor`,
+# `first and second sensors` and `a first, second, and third electrode`
+# introduce one element per ordinal, but the intro patterns capture only the
+# LAST ordinal with the noun (`second sensor`) and leave the earlier ones as
+# bare `first`, so the drafter's own `the first sensor` matched nothing. Each
+# earlier ordinal borrows the noun phrase of the last one, and the last one is
+# registered too (no article precedes it in `first and second sensors`, so
+# the Pattern A arm never sees it). A definite run
+# (`the first and second sensors`, `between the first and second plates`) is a
+# reference, not an introduction, and is skipped like every other arm. `or`
+# is left out: it moved no corpus finding, and `first or second sensors`
+# does not plainly introduce both.
+_ORDINAL_WORD = (
+    r"(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)"
+)
+_DISTRIBUTIVE_ORDINAL_RE = re.compile(
+    rf"(?<![\w-])(?:(?:a|an)\s+)?"
+    rf"(?P<ords>{_ORDINAL_WORD}(?:\s*,\s*(?:(?:a|an)\s+)?{_ORDINAL_WORD})*)"
+    rf"\s*,?\s+and\s+(?:(?:a|an)\s+)?"
+    rf"(?P<last>{_ORDINAL_WORD}\s+{_NP_CORE})",
+    re.IGNORECASE,
+)
+
+
+def distributive_ordinal_intro_offsets(text: str) -> dict[str, list[int]]:
+    """Intros for the earlier ordinals of a distributive run, with offsets.
+
+    Offsets let the walker apply the same-claim ordering rule (US R48) to
+    these intros exactly as it does to Pattern A intros.
+    """
+    lowered = text.lower()
+    out: dict[str, list[int]] = {}
+    for m in _DISTRIBUTIVE_ORDINAL_RE.finditer(lowered):
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            continue
+        last = clean_noun_phrase(m.group("last").strip())
+        words = last.split()
+        if len(words) < 2 or not re.fullmatch(_ORDINAL_WORD, words[0]):
+            continue
+        rest = " ".join(words[1:])
+        out.setdefault(last, []).append(m.start("last"))
+        for ordinal in re.findall(_ORDINAL_WORD, m.group("ords")):
+            cleaned = clean_noun_phrase(f"{ordinal} {rest}")
+            if cleaned:
+                out.setdefault(cleaned, []).append(m.start())
     return out
 
 

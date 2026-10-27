@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 59,
+    "current_round": 60,
     "created": "2026-05-03T16:33:29.985652+00:00",
     "source": "tests/eval/phase2b_results_us.json",
     "source_phase": "Phase 2b LLM ensemble (Sonnet 4.6 + gpt-5-mini + Opus 4.7 escalation)",
@@ -642,6 +642,16 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-10-23T12:04:43.851147+00:00"
+      },
+      {
+        "round": 60,
+        "name": "r60_distributive_ordinal_and_acronym",
+        "description": "US R60 - two additive introduction arms (report #968). (a) An ordinal before an inline acronym: 'a first <expansion> (ABBR) <noun>' also registers 'first abbr noun' (ruling R12, Christopher 2026-10-27: an acronym defined in parentheses at the introduction gives basis to the ordinal plus acronym form); skipped when the expansion itself contains an ordinal (first in first out (FIFO)). (b) Distributive ordinals: 'a first and a second X', 'first and second Xs', 'a first, second, and third X' register every ordinal with the noun of the last; definite runs are references and are skipped; the intros carry offsets so the R48 same-claim ordering rule applies. 'or' was measured (0 corpus findings) and left out. Corpus vs main: 107 silenced = 80 gold walker_fp + 27 unjudged (all read: distributive intros), 0 gold-legit, 0 new findings. Ablation: acronym arm 23 walker_fp; distributive arm 57 walker_fp + 27 unjudged. Real examiner guard LOST 0 / GAINED 0 of 1,383 recalled. Not reached: PDF-collapsed 'andfirst' (corpus scrape artifact). US-only: CJK has no articles and no inline-acronym convention of this shape.",
+        "user_attested_issues": [
+          "#968"
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-10-27T06:29:20.398451+00:00"
       }
     ],
     "last_updated": "2026-08-01"
