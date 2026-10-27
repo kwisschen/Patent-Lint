@@ -25,6 +25,13 @@ Then re-stage the rebuilt wheel and retry the commit.
 No wheel rebuild happens inside the hook - it only compares mtimes. The
 tighter byte-level check lives in CI (Phase 9 #40).
 
+### `commit-msg` - reporter-text guard
+
+Runs the scanner from `tests/test_no_reporter_draft_fragments.py` on the
+commit message, so a scrubbed reporter fragment (CJK or English word
+window) cannot reach the public history through a message. Remediation:
+reword the message with a synthesized example.
+
 ## Skipping
 
 If you have a genuine reason to bypass (you almost certainly don't),

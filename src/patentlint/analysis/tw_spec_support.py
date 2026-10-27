@@ -1271,6 +1271,30 @@ _BACK_REFERENCE_PREFIXES_TW: tuple[str, ...] = ("所述", "前述", "上述", "�
 _QUANTIFIER_OPENERS_TW: tuple[str, ...] = ("至少", "一", "複數", "多", "數", "兩")
 
 
+def _is_cross_clause_tail_tw(orig: str, norm: str) -> bool:
+    """True if the capture ran over a clause comma and kept only the clause after it.
+
+    包含一電源模組，供電給所述處理器 normalizes to the second clause, whose verb
+    (供電) then reaches the inventory as a claim term. A comma inside
+    parentheses (fibrosis，IPF) does not end a clause.
+    """
+    j = orig.rfind("，")
+    if j < 0 or not norm or "，" in norm or norm not in orig[j:]:
+        return False
+    # Only a clause about an element already named (it carries a determiner)
+    # is dropped: a tail can be the sole introduction of a list member or an
+    # alternative (其包括至少一散熱器或熱電冷卻器), and of a Markush member.
+    if not re.search("所述|該|前述|上述", norm) or _MARKUSH_GROUP_RE.search(norm):
+        return False
+    depth = 0
+    for ch in orig[:j]:
+        if ch in "(（":
+            depth += 1
+        elif ch in ")）":
+            depth = max(0, depth - 1)
+    return depth == 0
+
+
 def _is_quantified_back_reference_tw(
     orig: str, norm: str, claim_text: str
 ) -> bool:
@@ -1511,6 +1535,10 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
             # 最外側部分) is followed by a particle/noun/clause-end, NOT a verb,
             # so it is untouched (a blanket trailing strip would FN-drop those).
             if _starts_inside_compound_tw(orig, norm):
+                continue
+            # Wave P: measured inert on the TW corpus (59 findings, identical
+            # terms); it ends a verb reaching the inventory from such a tail.
+            if _is_cross_clause_tail_tw(orig, norm):
                 continue
             back_reference = _is_quantified_back_reference_tw(orig, norm, claim.text)
             for final in _inventory_terms_tw(orig, norm, claim, claim_norms):

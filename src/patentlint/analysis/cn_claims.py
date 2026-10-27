@@ -5183,7 +5183,7 @@ def _io_attributive_intro_cn(claim_text: str, chain: list, term: str, ref_offset
 # article-less object of an introducing verb behind a relative clause, or a
 # bare participle (基于从传感器接收的信息 ... 所述信息), introduces its head.
 _REL_CLAUSE_INTRO_VERBS_CN: tuple[str, ...] = (
-    "接收", "具有", "发送", "包括", "包含", "产生", "获得",
+    "接收", "具有", "发送", "包括", "包含", "产生", "获得", "执行", "形成",
 )
 _REL_CLAUSE_INTRO_STOPS_CN = frozenset("，,；;：:。")
 _REL_CLAUSE_QUANTIFIERS_CN: tuple[str, ...] = (

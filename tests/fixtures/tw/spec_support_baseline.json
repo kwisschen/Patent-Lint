@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "commit": "b04331e93681f643053efc67501001d923730122",
+    "commit": "874a0a218013d339a205f3c9467f1544f14633c7",
     "fixture_count": 20,
-    "total_findings": 77,
+    "total_findings": 67,
     "implementation_function": "patentlint.analysis.tw_spec_support.check_spec_support_tw",
     "note": "Drift baseline for TW spec-support extractor. Captured via tests/fixtures/tw/_spec_support_harness.py --capture. Re-capture after every walker change that intentionally shifts the spec-support output set."
   },
@@ -31,14 +31,6 @@
     "110P000368US-JP,KR案派譯版-FV": [],
     "110P000631US.JP.DE派譯版-FV": [
       {
-        "claim_id": 1,
-        "phrase": "L1"
-      },
-      {
-        "claim_id": 1,
-        "phrase": "L2"
-      },
-      {
         "claim_id": 3,
         "phrase": "重複使用性吸管"
       },
@@ -50,10 +42,6 @@
     "110P000633US.JP派譯版-FV": [],
     "110P000633US.JP派譯版-FV_1": [],
     "110P000641JP派譯版-FV": [
-      {
-        "claim_id": 3,
-        "phrase": "三個"
-      },
       {
         "claim_id": 14,
         "phrase": "預定扭力值"
@@ -118,10 +106,6 @@
       },
       {
         "claim_id": 5,
-        "phrase": "其中"
-      },
-      {
-        "claim_id": 5,
         "phrase": "固定件"
       },
       {
@@ -148,14 +132,6 @@
       },
       {
         "claim_id": 3,
-        "phrase": "L-3"
-      },
-      {
-        "claim_id": 3,
-        "phrase": "L-4"
-      },
-      {
-        "claim_id": 3,
         "phrase": "述電容元件之電容值符合式"
       },
       {
@@ -172,18 +148,10 @@
       },
       {
         "claim_id": 4,
-        "phrase": "R1"
-      },
-      {
-        "claim_id": 4,
         "phrase": "電阻值"
       }
     ],
     "tw_markush": [
-      {
-        "claim_id": 1,
-        "phrase": "群組"
-      },
       {
         "claim_id": 2,
         "phrase": "金屬離子"
@@ -223,10 +191,6 @@
       {
         "claim_id": 3,
         "phrase": "電腦可讀儲存媒體"
-      },
-      {
-        "claim_id": 4,
-        "phrase": "供電給"
       },
       {
         "claim_id": 4,
@@ -343,11 +307,6 @@
         "phrase": "指令序列"
       }
     ],
-    "spec1": [
-      {
-        "claim_id": 9,
-        "phrase": "間具有一上壁部"
-      }
-    ]
+    "spec1": []
   }
 }

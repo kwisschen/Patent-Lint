@@ -4135,6 +4135,174 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202206813A",
+      "jurisdiction": "TW",
+      "source": "wave-p-relative-clause (2026-10-27)",
+      "_note": "Gold error under rulings R13/R14 (Christopher 2026-10-27). R13: 標記目標以形成經標記的目標 introduces 目標 (article-less object of 標記 and of 形成 behind 經標記的). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "目標",
+            "reference_form": "該目標"
+          },
+          {
+            "claim_id": 7,
+            "term": "目標",
+            "reference_form": "該目標"
+          },
+          {
+            "claim_id": 13,
+            "term": "目標",
+            "reference_form": "該目標"
+          },
+          {
+            "claim_id": 14,
+            "term": "目標",
+            "reference_form": "該目標"
+          },
+          {
+            "claim_id": 16,
+            "term": "目標",
+            "reference_form": "該目標"
+          },
+          {
+            "claim_id": 17,
+            "term": "目標",
+            "reference_form": "該目標"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202240413A",
+      "jurisdiction": "TW",
+      "source": "wave-p-relative-clause (2026-10-27)",
+      "_note": "Gold error under rulings R13/R14 (Christopher 2026-10-27). R13: 執行與PCIe介面相關聯的操作 in claim 1 introduces 操作. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "操作",
+            "reference_form": "所述操作"
+          },
+          {
+            "claim_id": 5,
+            "term": "操作",
+            "reference_form": "所述操作"
+          },
+          {
+            "claim_id": 8,
+            "term": "操作",
+            "reference_form": "所述操作"
+          },
+          {
+            "claim_id": 9,
+            "term": "操作",
+            "reference_form": "所述操作"
+          },
+          {
+            "claim_id": 10,
+            "term": "操作",
+            "reference_form": "所述操作"
+          },
+          {
+            "claim_id": 12,
+            "term": "操作",
+            "reference_form": "所述操作"
+          },
+          {
+            "claim_id": 14,
+            "term": "操作",
+            "reference_form": "所述操作"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202241149A",
+      "jurisdiction": "TW",
+      "source": "wave-p-relative-clause (2026-10-27)",
+      "_note": "Gold error under rulings R13/R14 (Christopher 2026-10-27). R13/R14: 儲存可由一或多個處理器執行的指令 in claim 58 introduces 指令. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 61,
+            "term": "指令",
+            "reference_form": "該等指令"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202544674A",
+      "jurisdiction": "TW",
+      "source": "wave-p-relative-clause (2026-10-27)",
+      "_note": "Gold error under rulings R13/R14 (Christopher 2026-10-27). R13: 重複執行佈局與/或佈線的流程 introduces 流程 earlier in the same claim. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "流程",
+            "reference_form": "該流程"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }
