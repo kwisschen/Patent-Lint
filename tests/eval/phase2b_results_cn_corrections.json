@@ -3695,6 +3695,70 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN105190783A",
+      "jurisdiction": "CN",
+      "source": "wave-p-relative-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's rulings. R13 mirror: 在所述第一层上形成不同热塑性聚合物的第二层 in claim 24 introduces 第二层 (claim 26 on the same intro is already gold walker_fp). Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 25,
+            "term": "第二层",
+            "reference_form": "所述第二层"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN110225854B",
+      "jurisdiction": "CN",
+      "source": "wave-p-relative-clause (2026-10-27)",
+      "_note": "Gold error under Christopher's rulings. CN ruling 2026-10-23 (an article-less earlier mention in the chain is an introduction): claim 17 mentions 车辆系统的发动机和变速器的操作 article-less before 所述发动机. Claim-read 2026-10-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "发动机",
+            "reference_form": "所述发动机"
+          },
+          {
+            "claim_id": 18,
+            "term": "发动机",
+            "reference_form": "所述发动机"
+          },
+          {
+            "claim_id": 19,
+            "term": "发动机",
+            "reference_form": "所述发动机"
+          },
+          {
+            "claim_id": 20,
+            "term": "发动机",
+            "reference_form": "所述发动机"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

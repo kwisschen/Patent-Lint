@@ -7576,10 +7576,12 @@ def _quantified_relative_intro_tw(claim_text: str, chain: list, term: str, ref_o
 # Wave O (rulings R13 / R14, 2026-10-27): the article-less object of an
 # introducing verb is an introduction even when a relative clause sits
 # between them (從網路接收指示一值的訊息 ... 該所接收的訊息), and so is a bare
-# participle (接收的掃描信號 ... 該掃描信號). Measured per verb; withheld with
-# numbers (silenced walker_fp / gold-legit): 執行 5/9, 形成 11/6, 輸入 11/15.
+# participle (接收的掃描信號 ... 該掃描信號). Measured per verb. Wave P added
+# 執行 and 形成 (their 15 silenced gold-legit were all R13 / R14 gold errors);
+# 輸入 stays withheld (2 walker_fp / 8 legit): it mostly hits the noun
+# (第二輸入電壓, 輸入/輸出節點, 該等接收輸入), not the verb.
 _REL_CLAUSE_INTRO_VERBS_TW: tuple[str, ...] = (
-    "接收", "具有", "發送", "包括", "包含", "產生", "獲得",
+    "接收", "具有", "發送", "包括", "包含", "產生", "獲得", "執行", "形成",
 )
 _REL_CLAUSE_INTRO_STOPS_TW = frozenset("，,；;：:。")
 # A verb followed by one of these is a noun (接收器的訊號, 接收端的訊號).
