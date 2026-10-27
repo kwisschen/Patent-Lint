@@ -18,6 +18,7 @@ from patentlint.analysis.utils import (
     extract_introductions, extract_introductions_permissive,
     extract_pattern_a_intros,
     pattern_a_intro_offsets,
+    distributive_ordinal_intro_offsets,
     extract_abbreviation_intros, clean_noun_phrase, gerund_display_head,
     _PREDICATIVE_ADJECTIVES, _strip_comparative_tail,
     _strip_measurement_condition_tail, strip_display_negation,
@@ -769,6 +770,12 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         # reachable only through arms that carry no offset (those are never
         # vetoed). Computed once per claim, not per reference.
         pattern_a_offsets = pattern_a_intro_offsets(claim_text_lower)
+        # US R60: distributive-ordinal intros carry offsets too, so they obey
+        # the same ordering rule.
+        for _phrase, _starts in distributive_ordinal_intro_offsets(
+            claim_text_lower
+        ).items():
+            pattern_a_offsets.setdefault(_phrase, []).extend(_starts)
         non_pattern_a_intros = set(
             extract_introductions(claim_text_lower)
         ) - set(pattern_a_offsets)
