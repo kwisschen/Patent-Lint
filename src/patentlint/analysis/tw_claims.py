@@ -7597,6 +7597,10 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     """True if the term is not the head of a longer noun compound (guard a)."""
     if j >= len(text):
         return True
+    # Wave N (#970): a closing parenthesis ends the noun before a locative
+    # 中 / 內 + 的 / 之 (位於無線區域網路（WLAN）中的一頻段).
+    if text[j - 1] in "）)" and text[j] in "中內" and text[j + 1:j + 2] in ("的", "之"):
+        return True
     # R29 (2026-07-18): a stranded relational head followed by a DETERMINER is
     # the preposition 對 ("perform ... on the ..."), which ends the noun - not
     # a compounding character. Without this, trimming 人工智慧模型對 -> 人工智慧模型

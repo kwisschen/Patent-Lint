@@ -1030,7 +1030,12 @@ def _strip_trailing_bufen_before_verb(term: str, claim_text: str) -> str:
 # or another noun, never these markers, so it is left intact.
 # #335 - 內凹 ("recessed inward") is a stative verb in `…第二擋牆內凹形成`
 # ("formed by … being recessed inward"), not part of the noun phrase.
-_TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "內凹", "受", "自")
+# Wave N (#971): 耦接 / 耦合 before 於 / 至 / a determiner (共接點耦接於…). A
+# census of the TW corpus cut 147 + 120 such tails, every one a coupling verb
+# after its element. 連接 is withheld: 兩個連接 ("two connections") is a noun
+# before the same markers.
+_TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "內凹", "耦接", "耦合", "受", "自")
+_TW_PREDICATE_TAILS_2: tuple[str, ...] = tuple(t for t in _TW_PREDICATE_TAILS if len(t) >= 2)
 # R36 (#485/#488) - lexicalized 用-final words. A term ending in one of these
 # is a noun or a settled verb compound, so the 用以 strip must not reach it.
 _TW_YONG_FINAL_WORDS: frozenset[str] = frozenset({
@@ -1047,7 +1052,9 @@ _TW_PREDICATE_FOLLOW_MARKERS: tuple[str, ...] = (
 _TW_FORMATION_FOLLOW_MARKERS: tuple[str, ...] = ("形成", "而成", "構成")
 
 
-def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
+def _strip_trailing_predicate_before_marker(
+    term: str, claim_text: str, tails: tuple[str, ...] | None = None
+) -> str:
     """Strip a trailing gray predicate token when the claim continues with a
     preposition / coverb / formation marker (the verbal signature). Iterative so
     a stacked `坡面…鄰近` (then `分別` via the plain trailing strip) fully unwinds.
@@ -1058,7 +1065,7 @@ def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
     for _ in range(4):
         if not claim_text:
             break
-        hit = next((t for t in _TW_PREDICATE_TAILS if term.endswith(t)), None)
+        hit = next((t for t in (tails or _TW_PREDICATE_TAILS) if term.endswith(t)), None)
         if hit is None or len(term) - len(hit) < 2:
             break
         pos = claim_text.find(term)
@@ -1153,6 +1160,11 @@ def _spec_support_final_term_tw(orig: str, norm: str, claim_text: str) -> str:
     term = _drop_clause_fragment_tw(orig, term)
     term = _cut_at_relative_suo_tw(term)
     term = _strip_paired_predicate_tail_tw(term, claim_text)
+    # Wave N (#971): the capture often runs past 於 (共接點耦接於該模) and only the
+    # later cuts expose the predicate tail, so run the same gated strip again,
+    # with the two-character tails only: after the cuts a single 受 / 自 is
+    # often the end of a word (接受, 各自, 源自).
+    term = _strip_trailing_predicate_before_marker(term, claim_text, _TW_PREDICATE_TAILS_2)
     # An interior cut can expose a conjunction the earlier strips ran before
     # (一第一閥門及至少一第二閥門 cut at 至少 leaves 第一閥門及).
     term = _strip_trailing_conjunction(term)
