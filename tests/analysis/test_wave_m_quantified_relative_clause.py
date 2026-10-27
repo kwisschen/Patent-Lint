@@ -39,7 +39,9 @@ def test_bare_relative_clause_introduces_after_ruling_r13():
 
 
 def test_bare_relative_clause_after_a_withheld_verb_still_flags():
-    assert "報告" in _tw("一種方法，包括：輸入含有量測數值的報告；以及傳送該報告。")
+    # 儲存 stays out of the relative-clause verbs (wave M: 28 fp / 11 legit);
+    # 輸入 joined them in wave R behind a noun guard.
+    assert "報告" in _tw("一種方法，包括：儲存含有量測數值的報告；以及傳送該報告。")
 
 
 def test_modifier_before_another_de_is_not_the_head():

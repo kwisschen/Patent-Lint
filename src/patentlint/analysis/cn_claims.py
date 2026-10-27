@@ -1593,6 +1593,9 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # 所述按键受压而 keeps the predicate. 受压面 / 受压部 carry it at
         # PREFIX position, which the endswith strip never touches.
         "受压",
+        # Wave R (2026-10-27): 呈 (TW parity: 所述分子筛呈) and the comparison
+        # 与X相比 (所述信号通孔相比). Both are predicate-only at the tail.
+        "呈", "相比",
         # === R63 (2026-08-17) - TW R41 mirror, the V+于 STRANDING family.
         # 于 is excluded from _NOUN_CHARS_CN exactly as 於 is on TW, so the same
         # verbs strand. Both REPRODUCED on the CN normalizer first rather than
@@ -2166,6 +2169,9 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 
 # Interior-boundary tokens (mechanical TC→SC swap). See tw_claims.py
 # lines 1138-1331 for the historical risk-review rationale per verb.
+# Wave R: the 沿 interior cut stands down inside 边沿 / 上沿 / 内沿 ... and before a noun ending.
+_YAN_EDGE_HEADS_CN = frozenset("边前后上下外内顶底周")
+_YAN_NOUN_NEXT_CN = frozenset("，,。；;的部是之口面")
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
         # === R69 (2026-09-10, TW R59 mirror, report #744) ===
@@ -2224,6 +2230,14 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # === Wave L (2026-10-27) - TW parity (reports #330 / #353 / #356) ===
         # 呈一, 沿一 and 相夹.
         "呈一", "沿一", "相夹",
+        # Wave R (2026-10-27): bare 呈 before its shape object (所述垫块(27)呈U型,
+        # 所述第二棒呈矩形). 呈现 / 呈色 / 呈味 open words and are skipped below.
+        "呈",
+        # Wave R (2026-10-27): the coverb 沿 / 沿着 ("along") ends the reference
+        # (所述夹具沿着扭转…, 所述输出轴(130)沿轴向彼此…). 沿着 always cuts; bare
+        # 沿 does not after an edge head (边沿 25, 上沿 24, 内沿, 后沿 in the corpus)
+        # or before a noun ending (沿，/ 沿部 / 沿口).
+        "沿",
         #   借一 ("by means of a"): the instrumental coverb. Bare 借 is already a
         #     CN trailing strip; the interior form is a free parity add with 0
         #     corpus occurrences today, so it is a no-op that closes the gap
@@ -2706,6 +2720,12 @@ def clean_noun_phrase_cn(
                 continue
             if verb == "建立" and text[absolute_idx + 2:].startswith(_JIANLI_NOUN_HEADS_CN):
                 continue
+            if verb == "呈" and text[absolute_idx + 1:absolute_idx + 2] in "现色味":
+                continue
+            if (verb == "沿" and text[absolute_idx + 1:absolute_idx + 2] != "着"
+                    and (text[absolute_idx - 1:absolute_idx] in _YAN_EDGE_HEADS_CN
+                         or text[absolute_idx + 1:absolute_idx + 2] in _YAN_NOUN_NEXT_CN)):
+                continue
             # R63 (2026-08-17): 经 position guard - see _jing_cut_is_verbal_cn.
             if verb == "经" and not _jing_cut_is_verbal_cn(text, absolute_idx):
                 continue
@@ -2820,6 +2840,9 @@ def clean_noun_phrase_cn(
                 continue
             if verb == "下" and current[-2:-1] in _XIA_WORD_HEADS_CN:
                 continue  # 如下 / 以下 / 向下 / 按下: 下 is part of a word
+            if (verb == "沿" and current[-2:-1] in _YAN_EDGE_HEADS_CN
+                    and current[-3:-1] not in ("本上", "体上", "质上", "际上")):
+                continue  # wave R: 边沿 / 上沿 / 内沿 name an edge (基本上沿 does not)
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
                     min_residual = 1
@@ -4398,8 +4421,12 @@ _ZHONG_SELF_INTRO_DETERMINERS_CN = ("该", "所述", "前述")
 # Wave K (2026-10-27): CN mirror of TW R82. The "one or more" family joins the
 # 种 family in the self-skip and the shared-quantifier basis: 所述一个或多个X
 # right after a determiner is a reference and no longer introduces itself.
+# Wave R (2026-10-27): 至少一个 joins them. 所述至少一个X right after a
+# determiner is a reference too, and the "or more" repairs below take it.
+_AT_LEAST_ONE_QUANTIFIERS_CN = ("至少一个",)
+_SKIPPED_SELF_INTRO_QUANTIFIERS_CN = _OR_FAMILY_QUANTIFIERS_CN + _AT_LEAST_ONE_QUANTIFIERS_CN
 _SELF_INTRO_QUANTIFIERS_CN = tuple(sorted(
-    _ZHONG_QUANTIFIERS_CN + _OR_FAMILY_QUANTIFIERS_CN, key=len, reverse=True,
+    _ZHONG_QUANTIFIERS_CN + _SKIPPED_SELF_INTRO_QUANTIFIERS_CN, key=len, reverse=True,
 ))
 # The TW 所-relative guard and plain-一 rescan were measured here and carry
 # nothing on the CN corpus, so they are not mirrored.
@@ -4450,7 +4477,7 @@ def _same_quantifier_stem_cn(term: str, raw_noun: str, chain, ref_start: int) ->
     quantifier, outside a determiner, sharing a stem of three or more
     characters, or a one-character element whose mention ends at the
     character or is a possessive part of an owner (ruling R6)."""
-    lead = next((q for q in _OR_FAMILY_QUANTIFIERS_CN if raw_noun.startswith(q)), "")
+    lead = next((q for q in _SKIPPED_SELF_INTRO_QUANTIFIERS_CN if raw_noun.startswith(q)), "")
     if not lead or len(term) < 2 or not raw_noun[len(lead):].startswith(term[:2]):
         return False
     texts = [a.text for a in chain[1:]] + [chain[0].text[:ref_start]]
@@ -4481,7 +4508,7 @@ def _skipped_self_intro_keys_cn(chain) -> set[str]:
     keys: set[str] = set()
     for a in chain:
         for m in _INTRO_PATTERN_CN.finditer(a.text):
-            q = next((q for q in _OR_FAMILY_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
+            q = next((q for q in _SKIPPED_SELF_INTRO_QUANTIFIERS_CN if m.group(0).startswith(q)), "")
             if q and _is_zhong_self_intro_cn(m, a.text):
                 for cand in _postprocess_intro_capture_cn(m.group(1), m, a.text):
                     keys.add(normalize_candidate_intro_cn(cand))
@@ -4521,7 +4548,7 @@ def _is_zhong_self_intro_cn(m, text: str) -> bool:
         # 所述一组 is also "the set" itself (所述一组是第一組): left as before.
         return False
     # 該至少一種X, and 複數種前述X (the determiner after the quantifier)
-    if q in _OR_FAMILY_QUANTIFIERS_CN:
+    if q in _SKIPPED_SELF_INTRO_QUANTIFIERS_CN:
         det = next((d for d in _ZHONG_SELF_INTRO_DETERMINERS_CN if text[: m.start()].endswith(d)), "")
         if det and text[: m.start() - len(det)].endswith(("的", "之")):
             # 所述光子堆叠的所述一个或多个腔: a part of an introduced owner (ruling R6).

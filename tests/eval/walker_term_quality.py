@@ -138,7 +138,8 @@ _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 51, "CN": 29, "US": 0}
 # Wave M: the 封包 lexeme guard and 所-relative references, TW 1083 -> 1080.
 # Wave O: relative-clause and participle introductions (R13 / R14), TW 1080 -> 1071.
 # Wave Q: measure words and the capture-final 電連接 trim, TW 1071 -> 1061.
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1061, "CN": 919}
+# Wave R: the CN 至少一个 self-skip and the 呈 / 相比 / 沿 boundaries, CN 919 -> 909.
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1061, "CN": 909}
 
 
 def _load_segmenter():

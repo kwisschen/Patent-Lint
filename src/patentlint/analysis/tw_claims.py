@@ -7632,11 +7632,19 @@ def _quantified_relative_intro_tw(claim_text: str, chain: list, term: str, ref_o
 # 輸入 stays withheld (2 walker_fp / 8 legit): it mostly hits the noun
 # (第二輸入電壓, 輸入/輸出節點, 該等接收輸入), not the verb.
 _REL_CLAUSE_INTRO_VERBS_TW: tuple[str, ...] = (
-    "接收", "具有", "發送", "包括", "包含", "產生", "獲得", "執行", "形成",
+    "接收", "具有", "發送", "包括", "包含", "產生", "獲得", "執行", "形成", "輸入",
 )
 _REL_CLAUSE_INTRO_STOPS_TW = frozenset("，,；;：:。")
 # A verb followed by one of these is a noun (接收器的訊號, 接收端的訊號).
 _REL_CLAUSE_VERB_NOUN_TAILS_TW: frozenset[str] = frozenset("端者方單元點處率量值")
+# Wave R: 輸入 is also the noun "input". It is the noun after an ordinal
+# (第二輸入電壓), after 的 (接收的輸入電壓), as the object of 接收, after
+# 電壓 (多個電壓輸入之間), and before / (輸入/輸出節點) or 之.
+_SHURU_NOUN_LEAD_RE_TW = re.compile(r"(?:第[一二三四五六七八九十\d]+|的|之|接收|電壓)$")
+
+
+def _shuru_is_noun_tw(lead: str, between: str) -> bool:
+    return bool(_SHURU_NOUN_LEAD_RE_TW.search(lead)) or between.startswith(("/", "／", "之"))
 
 
 def _relative_clause_intro_tw(claim_text: str, chain: list, term: str, ref_offset: int) -> bool:
@@ -7677,6 +7685,7 @@ def _relative_clause_intro_tw(claim_text: str, chain: list, term: str, ref_offse
                         or lead.endswith(("該", "該等", "該些", "所述", "前述"))
                         # 在包括…的環境中的環境光: the verb sits inside a locative.
                         or lead.endswith("在")
+                        or (v == "輸入" and _shuru_is_noun_tw(lead, between))
                     ):
                         return True
                     j = clause.find(v, j + 1)
