@@ -24,7 +24,16 @@ const ROUTES = [
   '', 'start-here', 'part-1-anatomy', 'part-2-specification', 'part-3-claims',
   'part-4-find-it-fix-it', 'part-5-filing-ready', 'part-6-wrap-up',
   'word-wall', 'ask', 'sources', 'accessibility', 'about',
+  'part-5-filing-ready/answer-key',
 ]
+
+// Learner downloads, served next to the page that offers them.
+const DOWNLOADS = [
+  'part-5-filing-ready/Filing-Ready-Draft-Self-Watering-Planter.docx',
+  'part-5-filing-ready/Note-to-a-Colleague-Template.docx',
+]
+// The one third-party frame on the site: the Part 5 submission form.
+const FRAME_ORIGIN = 'https://tally.so/embed/'
 
 const site = mkdtempSync(join(tmpdir(), 'ewc-'))
 const out = join(site, DIR)
@@ -62,8 +71,13 @@ describe('site', () => {
     assert.deepEqual(readdirSync(site).sort(), ['404.html', DIR])
     assert.deepEqual(
       readdirSync(out).sort(),
-      ['course.css', 'course.js', 'favicon.svg', 'index.html', ...ROUTES.filter(Boolean)].sort(),
+      ['course.css', 'course.js', 'favicon.svg', 'index.html',
+        ...new Set(ROUTES.filter(Boolean).map((r) => r.split('/')[0]))].sort(),
     )
+  })
+
+  it('publishes the learner downloads', () => {
+    for (const f of DOWNLOADS) assert.ok(existsSync(join(out, f)), f)
   })
 
   it('chains Part 0 through Part 6 with next links', () => {
@@ -119,12 +133,23 @@ for (const slug of [...ROUTES, '404']) {
           assert.ok(doc.getElementById(href.slice(1)), href)
         } else if (!href.startsWith('https://')) {
           assert.ok(href.startsWith(ROOT), href)
-          assert.ok(existsSync(join(out, href.slice(ROOT.length), 'index.html')), href)
+          const rel = href.slice(ROOT.length)
+          if (/\.docx$/.test(rel)) assert.ok(DOWNLOADS.includes(rel), href)
+          else assert.ok(existsSync(join(out, rel, 'index.html')), href)
         }
       }
     })
 
-    it('loads only its own files, and collects nothing', () => {
+    it('frames only the Part 5 submission form, and only on Part 5', () => {
+      for (const f of doc.querySelectorAll('iframe')) {
+        assert.equal(slug, 'part-5-filing-ready')
+        assert.ok(f.getAttribute('src').startsWith(FRAME_ORIGIN), f.getAttribute('src'))
+        assert.ok(f.getAttribute('title'))
+      }
+      assert.equal(doc.querySelectorAll('object, embed').length, 0)
+    })
+
+    it('loads only its own files, and collects nothing itself', () => {
       const srcs = [...doc.querySelectorAll('script[src], link[href]')].map(
         (el) => (el.getAttribute('src') || el.getAttribute('href')).split('?')[0],
       )
