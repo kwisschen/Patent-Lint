@@ -280,3 +280,13 @@ thead th { background: var(--paper-alt); }
 @media (max-width: 30rem) {
   :root { --step-4: 1.75rem; --step-3: 1.6rem; --step-2: 1.35rem; }
 }
+
+/* Part 5: downloads, steps, submission form, answer key */
+.downloads { list-style: none; padding-left: 0; }
+.downloads a { font-family: var(--font-ui); font-weight: 700; }
+.steps li + li { margin-top: var(--space-3); }
+.form-embed { border: 1px solid var(--rule); margin: 0 0 var(--space-4); }
+.form-embed iframe { display: block; width: 100%; border: 0; }
+.claims li + li { margin-top: var(--space-3); }
+.model-note { border-left: 4px solid var(--accent); background: var(--paper-alt); margin: 0 0 var(--space-5); padding: var(--space-4); }
+.model-note > :last-child { margin-bottom: 0; }

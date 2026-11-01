@@ -15,7 +15,7 @@
 // a registry outage cannot block a course deploy.
 
 import { createHash } from 'node:crypto'
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { EXTRAS, PARTS } from './pages.mjs'
@@ -217,6 +217,10 @@ export function build(siteDir) {
     mkdirSync(dir, { recursive: true })
     writeFileSync(join(dir, 'index.html'), html)
   }
+  // Learner downloads (Word files) are copied next to the page that offers
+  // them: files/<slug>/x.docx is served at /every-word-counts/<slug>/x.docx.
+  const files = join(here, 'files')
+  if (existsSync(files)) cpSync(files, outDir, { recursive: true })
   return pages.map((p) => p.slug)
 }
 

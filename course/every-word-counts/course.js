@@ -59,6 +59,21 @@
     })
   }
 
+  // Part 5: when the embedded submission form (an iframe from tally.so) says it
+  // was submitted, open the answer key. No form script is loaded on the page.
+  window.addEventListener('message', function (ev) {
+    if (ev.origin !== 'https://tally.so') return
+    var data = ev.data
+    try {
+      if (typeof data === 'string') data = JSON.parse(data)
+    } catch (e) {
+      return
+    }
+    if (!data || data.event !== 'Tally.FormSubmitted') return
+    var frame = document.querySelector('.form-embed iframe[data-done]')
+    if (frame) window.location.href = frame.getAttribute('data-done')
+  })
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init)
   else init()
 })()
