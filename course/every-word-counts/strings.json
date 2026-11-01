@@ -1,7 +1,7 @@
 {
   "en": {
     "skip": "Skip to main content",
-    "draft": "Course in development, placeholder content",
+    "draft": "Course in development: some parts still have placeholder content",
     "courseTitle": "Every Word Counts",
     "menuJump": "Course menu",
     "langGroup": "Language",
@@ -41,7 +41,7 @@
   },
   "zh-Hant": {
     "skip": "跳至主要內容",
-    "draft": "課程製作中，內容為暫定版本",
+    "draft": "課程製作中，部分內容仍為暫定版本",
     "courseTitle": "一字千金",
     "menuJump": "課程選單",
     "langGroup": "語言",
