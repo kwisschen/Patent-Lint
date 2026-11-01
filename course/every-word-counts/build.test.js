@@ -24,7 +24,7 @@ const ROUTES = [
   '', 'start-here', 'part-1-anatomy', 'part-2-specification', 'part-3-claims',
   'part-4-find-it-fix-it', 'part-5-filing-ready', 'part-6-wrap-up',
   'word-wall', 'ask', 'sources', 'accessibility', 'about',
-  'part-5-filing-ready/answer-key',
+  'part-5-filing-ready/answer-key', 'part-5-filing-ready/submitted',
 ]
 
 // Learner downloads, served next to the page that offers them.
