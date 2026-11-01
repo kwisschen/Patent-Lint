@@ -133,7 +133,7 @@ function homeMain() {
   ).join('\n')
   return `<h1>Every Word Counts: The Format and Language of a U.S. Patent Application</h1>
 <p class="subtitle" lang="zh-Hant">一字千金：美國專利申請文件的格式與用語</p>
-<p class="lede">A self-paced unit of about six hours for anyone who works on U.S. patent applications: engineers, formalities and filing staff, paralegals, translators, and attorneys new to U.S. practice. You can take it with a one-week cohort or alone at any time.</p>
+<p class="lede">An online unit of about six hours for anyone who works on U.S. patent applications: engineers, formalities and filing staff, paralegals, translators, and attorneys new to U.S. practice. You take it with a cohort over one week, working at your own pace within that week.</p>
 <p><a class="button" href="${href(PARTS[0].slug)}">${t('start')}</a></p>
 <h2>The seven parts</h2>
 <ol class="part-list" start="0">
