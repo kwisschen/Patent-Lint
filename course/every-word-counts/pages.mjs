@@ -120,6 +120,19 @@ ${ph('Cohort results', 'How your answers compare with other learners in your coh
 <li>explain a change to a colleague clearly and respectfully, with the rule behind it</li>
 </ul>`,
     learn: `<p class="part-meta">About 75 minutes · Individual · Not timed · You can do it across several sittings · Best on a computer</p>
+<details class="panel" lang="zh-Hant">
+<summary>中文摘要</summary>
+<p>這份評量模擬事務所的真實工作：同事交給你一份即將送件的專利申請草稿（自動給水花盆），請你把它修正到可以送件的狀態，並寫一段給同事的說明。</p>
+<ul>
+<li>要交兩份檔案：開啟「追蹤修訂」的修正後草稿，以及約 150 字的英文說明，解釋你最重要的三項修改。</li>
+<li>草稿中約有 10 個格式與用語問題，類型都和第 4 部分練習過的相同。</li>
+<li>如果修改會改變請求項的範圍（例如 comprising 與 consisting of），請不要直接修改，而是加上註解詢問撰稿人。適當的提問也算答對。</li>
+<li>說明中的每項修改都要寫出：改了什麼、為什麼重要、依據哪一條規定。</li>
+<li>提交前先用評分表自我評估。提交後會直接看到解答與範例。</li>
+<li>參加梯次者請在梯次第 6 天結束前提交；自行學習者沒有期限。</li>
+</ul>
+<p>全程約 75 分鐘，不計時，可以分次完成。說明請用英文撰寫，本摘要僅供參考。</p>
+</details>
 <h3>What you will do</h3>
 <p>A colleague has handed you a draft application for a new invention, a self-watering planter. It needs to be filed soon. Your job is to make it filing-ready, and then to tell a colleague what you changed and why.</p>
 <p>You will hand in two things:</p>
@@ -164,7 +177,7 @@ ${ph('Cohort results', 'How your answers compare with other learners in your coh
 <li><strong>In a cohort:</strong> due by the end of Day 6 of your cohort week, so your note is ready for the Part 6 talk-through on Day 7.</li>
 <li><strong>On your own:</strong> no due date. Uploading is optional, but the self-rating is required. It opens the answer key.</li>
 </ul>
-<p>Please use only the course files. Never upload client documents.</p>
+<p>Please use only the course files. Never upload client documents. Uploaded files are deleted 90 days after you submit.</p>
 ${submitForm()}`,
     check: `<h3>What happens after you submit</h3>
 <ul>
